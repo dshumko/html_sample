@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+	<script type="text/javascript">
+		function init() {
+		var SAMPLE_VIDEO1 = "http://10.0.12.35/media/Layer_Accedo_logo_video.mp4";
+		var SAMPLE_VIDEO2 = "http://10.0.12.35/media/Layer_Accedo logo video.mp4";
+		var SAMPLE_VIDEO3 = "http://10.0.12.35/media/Layer¥²_Accedo logo video.mp4";
+		var vodObject;
+		var btnPlay1 = document.getElementById("buttonPlay1");
+		var btnPlay2 = document.getElementById("buttonPlay2");
+		var btnPlay3 = document.getElementById("buttonPlay3");
+		var btnPause = document.getElementById("buttonPause");
+		var btnStop = document.getElementById("buttonStop");
+		var btnSource = document.getElementById("buttonSetsource");
+		var btnSourcesame = document.getElementById("buttonSetsourcesame");
+		var tagLog = document.getElementById("log");
+		var tagVod = document.getElementById("vod");
+
+		var printLog = function(str) {
+			tagLog.value += str + '\n';
+			tagLog.scrollTop = tagLog.scrollHeight;
+		};
+		var onPlayStateChange = function() {
+			if(vodObject) {
+				printLog("onPlayStateChange playState="+vodObject.playState);
+			}
+		}
+		var onPlayPositionChanged = function(position) {
+			if(vodObject) {
+				printLog("onPlayPositionChanged position="+position+", playPosition="+vodObject.playPosition+", playTime="+vodObject.playTime);
+			}
+		}
+		var onPlaySpeedChanged = function(speed) {
+			if(vodObject) {
+				printLog("onPlaySpeedChanged speed="+speed+", vodObject.speed="+vodObject.speed);
+			}
+		}
+
+		btnPlay1.onclick = function clickBtnPlay1() {
+			printLog('clickBtnPlay 1!!');	
+			createObject(SAMPLE_VIDEO1);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			printLog('clickBtnPlay:video played.');
+		};
+		
+		btnPlay2.onclick = function clickBtnPlay2() {
+			printLog('clickBtnPlay 2!!');	
+			createObject(SAMPLE_VIDEO2);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			printLog('clickBtnPlay:video played.');
+		};
+		
+		btnPlay3.onclick = function clickBtnPlay3() {
+			printLog('clickBtnPlay 3!!');	
+			createObject(SAMPLE_VIDEO3);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			printLog('clickBtnPlay:video played.');
+		};
+
+		btnPause.onclick = function clickBtnPause() {
+		};
+
+		btnStop.onclick = function clickBtnStop() {
+			printLog('clickBtnStop !!');	
+			var result = vodObject.stop();
+			vodObject = null;
+			destroyObject();
+			printLog('clickBtnPlay:video stopped.');
+		};
+		
+		btnSource.onclick = function clickBtnSetSource() {
+			printLog('clickBtnSetSource !!');	
+			vodObject.stop();
+			vodObject.setSource(SAMPLE_VIDEO2);
+			vodObject.play(1);
+		};
+
+		btnSourcesame.onclick = function clickBtnSetSourcesame(){
+			printLog('clickBtnSetSource - same !!');	
+			vodObject.stop();
+			vodObject.setSource(SAMPLE_VIDEO);
+			vodObject.play(1);
+		};
+		
+		function createObject(videoSrc) {
+			vodObject = null;
+			vodObject = document.createElement("object");  // create new object
+			vodObject.setAttribute("id", "video");
+			vodObject.setAttribute("data", videoSrc);
+			vodObject.setAttribute("type", "video/mpeg4"); // set correct mimetype
+			vodObject.setAttribute("width", 100);
+			vodObject.setAttribute("height", 100);
+
+			var mainVideoDiv = document.getElementById('mainvideo');
+			if(mainVideoDiv.firstChild) {
+				mainVideoDiv.removeChild(mainVideoDiv.firstChild);
+			}
+			mainVideoDiv.appendChild(vodObject);
+		}
+
+		function destroyObject() {
+			document.getElementById("mainvideo").innerHTML = "";
+		}
+	}
+	</script>
+</head>
+<body onload="init()">
+	<div id="mainvideo"></div>
+	<div>
+		<button id="buttonPlay1">Play1</button>
+		<button id="buttonPlay2">Play2</button>
+		<button id="buttonPlay3">Play3</button>
+		<button id="buttonPause">Pause</button>
+		<button id="buttonStop">Stop</button>
+		<button id="buttonSetsource">SetSource</button>
+		<button id="buttonSetsourcesame">SetSource-same</button>
+	</div>	
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

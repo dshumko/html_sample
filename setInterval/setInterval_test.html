@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<h1>setInterval test</h1>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var hmxws = function() {
+            this.a = "hello";
+        }
+        hmxws.prototype = {
+            start: function() {
+                setInterval(function(){
+                    if ( wss ) console.log(wss.a);
+                }, 3000);
+            }
+        }
+
+        var wss = new hmxws();
+        wss.start();
+    });
+</script>
+</body>
+</html>

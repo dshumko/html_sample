@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    </title>
+    <script>
+        var player4 = null;
+        var HLS_URL = "";
+
+         var URL_HLS400 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV400_16X9.mp4/master.m3u8";
+         var URL_HLS600 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV600_16X9.mp4/master.m3u8";
+         var URL_HLS800 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV800_16X9.mp4/master.m3u8";
+         var URL_HLS1200 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV1200_16X9.mp4/master.m3u8";
+
+         /*
+         var URL_HLS400 = "http://10.0.12.35/media/1.mp4";
+         var URL_HLS600 = "http://10.0.12.35/media/2.mp4";
+         var URL_HLS800 = "http://10.0.12.35/media/3.mp4";
+         var URL_HLS1200 = "http://10.0.12.35/media/1.mp4";
+         */
+
+        function LOG(log) {
+            window.debug("#### WEBLOG : " + log);
+        }
+
+        function control(player, c){
+            var p = document.getElementById(player);
+
+            if(c == 'play'){
+                media_play();
+                console.log("play");
+            }
+            else if(c == 'pause'){
+                p.pause();
+                console.log("pause");
+            }
+            else if(c == 'stop'){
+                media_stop();
+            }
+        }
+
+        function media_play(){
+            if( player4 )
+            {
+                if( player4.paused )
+                {
+                    media_play_only();
+                }
+                else
+                {
+                    media_stop();
+                    media_create_play();
+                }
+            }
+            else
+            {
+                media_create_play();
+            }
+        }
+
+        function media_create_play(){
+            var pos = document.getElementById("node");
+            player4 = document.createElement('video');
+            pos.appendChild(player4);
+
+            player4.src = HLS_URL;
+            player4.setAttribute('id', 'player4');
+            player4.setAttribute('width', 640);
+            player4.setAttribute('height', 480);
+            player4.style.display = "block";
+            //player4.load();
+            player4.play();
+        }
+
+        function media_stop() {
+            if(player4) {
+                player4.pause();
+                player4.src = "";
+                player4.load();
+                player4.parentNode.removeChild(player4);
+                player4 = null;
+            }
+        }
+
+        function media_pause() {
+            if(player4) player4.pause();
+        }
+
+        function media_play_only() {
+            if(player4) player4.play();
+        }
+
+        function select_change() {
+            var x = document.getElementById("select_url").value;
+            var url_text = URL_HLS400;
+            switch(x)
+            {
+                case "HLS400":
+                    HLS_URL = url_text = URL_HLS400;
+                    break;
+                case "HLS600":
+                    HLS_URL = url_text = URL_HLS600;
+                    break;
+                case "HLS800":
+                    HLS_URL = url_text = URL_HLS800;
+                    break;
+                case "HLS1200":
+                    HLS_URL = url_text = URL_HLS1200;
+                    break;
+                case "HLSEMPTY":
+                    HLS_URL = url_text = URL_HLS400;
+                    break;
+            }
+            document.getElementById("select_hls_url").innerHTML = url_text;
+        }
+
+
+    </script>
+</head>
+<body bgcolor="white">
+<br>
+<select id="select_url" onchange="select_change()">
+    <option value="HLSEMPTY"></option>
+    <option value="HLS400">400 HLS stream</option>
+    <option value="HLS600">600 HLS stream</option>
+    <option value="HLS800">800 HLS stream</option>
+    <option value="HLS1200">1200 HLS stream</option>
+</select>
+<p id="select_hls_url"></p>
+<br>
+<button style="width:70px;" onclick="control('player4','play')"> play </button>
+<button style="width:70px;" onclick="control('player4','pause')"> pause </button>
+<button style="width:70px;" onclick="control('player4','stop')"> stop </button>
+<br>
+
+<div id="node">
+</div>
+</body>
+</html>

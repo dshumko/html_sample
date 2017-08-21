@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+	<script type="text/javascript">
+		function init() {
+		var SAMPLE_VIDEO = "http://10.0.12.35/media/Layer_Accedo logo video.mp4";//"http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+		var SAMPLE_VIDEO2 = "http://video-js.zencoder.com/oceans-clip.mp4";
+		var vodObject;
+		var myInterval;
+		var btnPlay = document.getElementById("buttonPlay");
+		var btnPause = document.getElementById("buttonPause");
+		var btnStop = document.getElementById("buttonStop");
+		var btnSource = document.getElementById("buttonSetsource");
+		var btnSource2 = document.getElementById("buttonSetsource2");
+		var btnSeek = document.getElementById("buttonSeek");
+		var btnCreate = document.getElementById("buttonCreate");
+		var btnPlayonly = document.getElementById("buttonPlayonly");
+		
+		var tagLog = document.getElementById("log");
+		var tagVod = document.getElementById("vod");
+
+		var printLog = function(str) {
+			tagLog.value += str + '\n';
+			tagLog.scrollTop = tagLog.scrollHeight;
+			console.log("THIS IS WEBLOG !!!!! ===> " + str);
+		};
+		var onPlayStateChange = function() {
+			if(vodObject) {
+				printLog("onPlayStateChange=" + vodObject.playState);
+				//printLog("onPlayStateChange playState="+vodObject.playState);
+			}else
+			{
+					printLog("onPlayStateChange " + "not vodobject");
+			}
+		}
+		var onPlayPositionChanged = function() {
+			if(vodObject) {
+				printLog("vodObject.playPosition="+vodObject.playPosition); 
+				//printLog("onPlayPositionChanged");
+			}
+			else
+			{
+				printLog("onPlayPositionChanged " + "not vodobject");
+			}
+		}
+		var onPlaySpeedChanged = function(speed) {
+			if(vodObject) {
+				printLog("onPlaySpeedChanged");
+				//printLog("onPlaySpeedChanged speed="+speed+", vodObject.speed="+vodObject.speed);
+			}
+			else
+			{
+				printLog("onPlaySpeedChanged " + "not vodobject");
+			}
+		}
+
+		btnPlay.onclick = function clickBtnPlay() {
+			printLog('clickBtnPlay !!');	
+			//createObject(SAMPLE_VIDEO);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			myInterval = setInterval(updateProperty, 1000);
+			printLog('clickBtnPlay:video played.');
+		};
+
+		btnPause.onclick = function clickBtnPause() {
+		};
+
+		btnStop.onclick = function clickBtnStop() {
+			printLog('clickBtnStop !!');	
+			var result = vodObject.stop();
+			vodObject = null;
+			destroyObject();
+			clearInterval(myInterval);
+			vodObject.removeEventListener("PlayStateChange",onPlayStateChange);
+			vodObject.removeEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.removeEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+			printLog('clickBtnPlay:video stopped.');
+		};
+		
+		btnSource.onclick = function clickBtnSetSource() {
+			printLog('clickBtnSetSource !!');	
+			vodObject.stop();
+			printLog('clickBtnSetSource 2!!' + SAMPLE_VIDEO2);	
+			vodObject.setSource(SAMPLE_VIDEO2);
+			printLog('clickBtnSetSource 3!!' + SAMPLE_VIDEO2);	
+			vodObject.play(1);
+			printLog('clickBtnSetSource 4!!');	
+		};
+		
+		btnSource2.onclick = function clickBtnSetSource2() {
+			printLog('clickBtnSetSource2 !!');	
+			vodObject.stop();
+			vodObject.setSource(SAMPLE_VIDEO);
+			vodObject.play(1);
+		};
+		
+		btnSeek.onclick = function clickBtnSeek() {
+			printLog('clickBtnSeek !!');	
+			vodObject.seek(2);
+		};
+
+		btnCreate.onclick = function clickBtnCreate() {
+			printLog('clickBtnCreate !!');	
+			createObject(SAMPLE_VIDEO);
+		};
+		
+		btnPlayonly.onclick = function clickBtnPlayonly() {
+			printLog('clickBtnPlayonly !!');	
+			vodObject.play(1);
+		};
+		
+		
+		function updateProperty() {
+			if(vodObject)
+				printLog('playposition = '); //+ vodObject.playPosition);
+			else
+				printLog('playposition = ' + 'error');
+		}
+		
+		function createObject(videoSrc) {
+			vodObject = null;
+			vodObject = document.createElement("object");  // create new object
+			vodObject.setAttribute("id", "video");
+			vodObject.setAttribute("data", videoSrc);
+			vodObject.setAttribute("type", "video/mpeg4"); // set correct mimetype
+			vodObject.setAttribute("width", 100);
+			vodObject.setAttribute("height", 100);
+			vodObject.addEventListener("PlayStateChange", onPlayStateChange);
+			vodObject.addEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.addEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+
+			var mainVideoDiv = document.getElementById('mainvideo');
+			
+			if(mainVideoDiv.firstChild) {
+				mainVideoDiv.removeChild(mainVideoDiv.firstChild);
+			}
+			mainVideoDiv.appendChild(vodObject);
+		}
+
+		function destroyObject() {
+			document.getElementById("mainvideo").innerHTML = "";
+		}
+	}
+	</script>
+</head>
+<body onload="init()">
+	<div id="mainvideo"></div>
+	<div>
+		<button id="buttonCreate">create</button>
+		<button id="buttonPlay">Play</button>
+		<button id="buttonPause">Pause</button>
+		<button id="buttonStop">Stop</button>
+		<button id="buttonSetsource">SetSource</button>
+		<button id="buttonSetsource2">SetSource-same</button>
+		<button id="buttonSeek">Seek</button>
+		<button id="buttonPlayonly">Playonly</button>
+	</div>	
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

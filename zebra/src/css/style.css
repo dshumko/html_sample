@@ -1,0 +1,258 @@
+
+#container  {
+    background-color:#F0F0F0;
+    margin:20px 100px;
+    width:1060px;
+}
+
+#runner, #lister {
+    visibility:hidden;
+    display:none;
+}
+
+.zone1_board {
+    background-color: #556273;
+    font-size: 130%;
+    width:1060px;
+    height: 40px;
+    overflow:hidden;
+}
+
+.zone2_board {
+    background-color: #908483;
+    font-size: 150%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+
+.zone3_board {
+    background-color: #dbc8b6;
+    font-size: 120%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+
+.zone4_board {
+    background-color:#f1f2ed;
+    font-size: 90%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+.zone5_board {
+    background-color: #556273;
+    font-size: 100%;
+    width:1060px;
+    height: 20px;
+    overflow:hidden;
+}
+
+.tc_board {
+    background-color:#f1f2ed;
+    width: 500px;
+    font-size: 90%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+
+.zone2_p_width  {
+    width:1000px;
+}
+.zone2_p_width .zone2_c_width {
+    width:inherit;
+}
+.zone3_p_width {
+    width:30px;
+}
+.zone3_p_width .zone3_c_width {
+    width:inherit;
+}
+
+.zone4_p_width {
+    width:30px;
+}
+.zone4_p_width .zone4_c_width {
+    width:inherit;
+}
+
+.zone2_btn {
+    background-color: #908483;
+    font-size: 70%;
+    height: 35px;
+    float:left;
+    overflow: hidden;
+    text-overflow: clip;
+    /*transition: all 1s;*/
+}
+
+.zone3_btn {
+    background-color: #dbc8b6;
+    font-size: 80%;
+    height:25px;
+    float:left;
+    overflow: hidden;
+    text-overflow: clip;
+    /*transition: all 1s;*/
+}
+
+.zone4_btn {
+    background-color:#f1f2ed;
+    font-size: 110%;
+    height:20px;
+    float:left;
+    overflow: hidden;
+    text-overflow: clip;
+    /*transition: all 1s;*/
+}
+
+.width40 {
+    width: 30px;
+    opacity:1.0;
+}
+
+.width400 {
+    width: 310px;
+}
+
+.width840 {
+    width: 720px;
+}
+
+.width1200 {
+    width: 1000px;
+}
+
+.width500 {
+    width: 500px;
+}
+
+.help {
+    width: 440px;
+    height: 20px;
+    float:left;
+    color: white;
+    border: 3px;
+    font-size: 85%;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: clip;
+    text-align: left;
+}
+
+.blank {
+    width:45px;
+    height: 20px;
+    float:left;
+}
+
+.page {
+    width: 75px;
+    height: 20px;
+    float:left;
+    color: white;
+    border: 3px;
+    font-size: 75%;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: clip;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.logo {
+    width: 110px;
+    height: 40px;
+    float:left;
+    background-image: url("../../res/zebra_logo1.png");
+    background-size: contain;
+}
+
+.title {
+    width: 450px;
+    height: 40px;
+    float:left;
+}
+.state_bar {
+    width: 500px;
+    height: 40px;
+    float:left;
+}
+.state {
+    width: 500px;
+    font-size: 60%;
+    float:left;
+    color: white;
+    height:10px;
+    vertical-align:bottom;
+    text-align: right;
+}
+
+.path {
+    width: 500px;
+    height: 20px;
+    float:left;
+    color: white;
+    border: 3px;
+    font-size: 75%;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: clip;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.result_pass {
+    background-color: #6495ED;
+    font-weight: bold;
+}
+
+.result_fail {
+    background-color: #FF5675;
+    font-weight: bold;
+}
+
+.checked {
+    background-color:#97aba2;
+}
+
+.focused {
+    background-color: #b7cbc2;
+}
+
+.btn3_result {
+    width: 15px;
+    height:15px;
+    float: left;
+    color: white;
+    font-size: 80%;
+    border:1px;
+    border-radius:3px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn3_depth {
+    height:25px;
+    float: left;
+}
+
+.btn3_text {
+    float: left;
+}
+
+.btn3_text_bold {
+    font-weight: bold;
+    float: left;
+}
+
+
+.layer {display:none; position:fixed; position:absolute; top:0; left:0; width:100%; height:100%; z-index:100;}
+.layer .bg {position:absolute; top:0; left:0; width:100%; height:100%; background:#000; opacity:.5; filter:alpha(opacity=50);}
+.layer .pop-layer {display:block;}
+.pop-layer {display:none; position: absolute; top: 50%; left: 50%; width: 410px; height:auto;  background-color:#f1f2ed; border: 1px solid #4C5444; z-index: 10;}
+.pop-layer .pop-container {padding: 20px 25px;}
+.pop-layer p.ctxt {color: black; line-height: 25px;}
+.pop-layer .btn-r {width: 100%; margin:10px 0 20px; padding-top: 10px; border-top: 1px solid #DDD; text-align:right;}

@@ -1,0 +1,9 @@
+#Tue Nov 25 10:52:54 KST 2014
+WARNING=DO NOT MODIFY THIS FILE IF YOU DON'T UNDERSTAND
+defaultDestination=Z\:/work/test
+defaultVariables=
+eclipse.preferences.version=1
+includeTeamPrivateFiles=false
+map|0=/|,|,|js/|,
+map|1=js|,|,|,|,
+useCurrentDateForDestinationFiles=false

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TVAMain xml:lang="en" xmlns="urn:tva:metadata:2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tva="urn:tva:metadata:2012" xmlns:tva2="urn:tva:metadata:extended:2012" xmlns:fv="http://refdata.freeview.co.uk/schemas/Metadata/2014-07-15" xmlns:mpeg7="urn:tva:mpeg7:2008" xmlns:type="tva2:ExtendedTVAMainType">
+    <ProgramDescription>
+        <ProgramInformationTable>
+            <ProgramInformation xml:lang="en" programId="crid://bbc.co.uk/nitro/episode/b04xw3sn/version/b04xw2lz">
+                <BasicDescription xsi:type="tva2:ExtendedContentDescriptionType">
+                    <Title type="main"><![CDATA[Eastenders]]></Title>
+                    <Title type="secondary"><![CDATA[09/01/2015]]></Title>
+                    <ParentalGuidance>
+                        <mpeg7:ParentalRating href="urn:dtg:metadata:cs:DTGContentWarningCS:2011:G"/>
+                        <ExplanatoryText length="long"><![CDATA[Contains strong language (example)]]></ExplanatoryText>
+                    </ParentalGuidance>
+                    <Duration>PT30M</Duration>
+                </BasicDescription>
+                <DerivedFrom crid="crid://www.bbc.co.uk/nitro/programme/b04xw3sn"/>
+            </ProgramInformation>
+        </ProgramInformationTable>
+        <GroupInformationTable>
+            <GroupInformation xml:lang="en" serviceIDRef="http://www.bbc.co.uk/nitro/service/content_owning/bbc_one" groupId="crid://www.bbc.co.uk/nitro/programme/b04xw3sn">
+                <GroupType xsi:type="ProgramGroupTypeType" value="programConcept"/>
+                <BasicDescription xsi:type="tva2:ExtendedContentDescriptionType">
+                    <Title type="main"><![CDATA[09/01/2015]]></Title>
+                    <Synopsis length="short"><![CDATA[Stacey and Alfie learn the truth about what is troubling Kat.]]></Synopsis>
+                    <Synopsis length="medium"><![CDATA[Lauren confronts Max over his suspicious behaviour. Stacey and Alfie learn the truth about what is troubling Kat.]]></Synopsis>
+                    <Synopsis length="long"><![CDATA[In the office, Max looks at a photo of him and Emma then produces a bottle of champagne and tells Charlie they’re celebrating. Lauren continues to pore over the evidence in Emma’s file and begs Stacey to confront Max with her. Sharon feels like everyone’s staring at her. She gives Ben some paperwork to chase up - they need to clear Phil’s name fast and they need cash. Ben’s smug when Sharon notes he’s only got one car booked in at the Arches today – don’t believe everything you read. Jay later finds Ben working on the cars for Max. He thinks the deal sounds too good to be true and wants nothing to do with it. However, when Sharon demands to know what Ben is up to Jay refuses to grass him up. Sharon visits Ben and realises what’s going on. She’s angry – one slip up and they’ll throw the key away on Phil. Ben’s dismissive when she tells him to get rid of the cars. When Sharon confronts Max, he claims he thought she knew about the deal. Max pretends he’s helping Ben because he believes Phil’s innocent. Sharon thanks Max but explains they have to keep everything squeaky clean. She mentions that she’s getting the power of attorney revoked. Max tells Ben Sharon’s planning to take the Arches off him, advising him to fight fire with fire. With Stacey’s support, Lauren shows Max Emma’s file and asks why he didn’t give it to the police. Max realises she’s asking if he killed Lucy. He tells Lauren Emma was desperate to prove herself, explaining her obsession with the case killed her and that’s why he got rid of the file - he’s not a murderer. Ben and Abi confront Sharon and realise Max is right. Now alone, Max takes Emma’s necklace from an envelope and holds it for a moment, then puts it away when Ben and Abi arrive. Max tells Ben he could probably have put about 10 cars a week through The Arches at £100 a pop. He says he can’t stop Sharon revoking the power of attorney but notes that if Ben had already signed the business over to another company, there wouldn’t be anything for her to take over. Ben’s unsure but eventually signs the paperwork Max gives him. Later, Charlie finds Max pouring champagne in the office. Max explains Ben’s signed over the Arches – it’ll be R&R and The Albert next. Charlie’s still unsure about using Ben to get at Phil but Max is clear - this is payback and it’s just the start... Stacey finds Kat in bed with a strange man. Kat’s adamant Alfie’s ancient history and she’s getting a divorce. Mo explains to Stacey that Harry left Kat some money in his will. On the market, Kat’s cold to Alfie, telling him about the man she spent the night with. Kat explains to Stacey why she doesn’t want Harry’s money. Later, Stacey and Mo tell Alfie about the money, explaining Charlie tried to give it to Kat before and hopes she’s changed her mind - it’s £19,500. Alfie finds Kat in the Vic. Kat insists it’s blood money but Alfie suggests it could mean a new home for the kids and a fresh start. Kat gets Harry’s cheque from Mo and shows it to Alfie. She explains the thought of Alfie, someone else who hurt her, telling her to take the money makes her feel sick. Kat rips up the cheque – Harry’s out of her life for good and so is Alfie. Aleks apologises to Roxy and looks after the baby so she can go to the hospital. Aleks tries to talk to Charlie but he dashes off, claiming to have a test drive. Aleks then tracks Charlie down at Dot’s house. Dot’s thrilled to see the baby but Charlie again avoids spending any time with his son. Aleks thinks it’s weird that the baby hasn’t got a real name yet but Charlie’s adamant it doesn’t feel right to choose one without Ronnie. Later, Aleks tells Roxy that as long as the baby’s with them he should have a proper name – inspired by one of Dot’s bible quotes, he’s started calling the baby Matthew.]]></Synopsis>
+                    <Genre href="urn:fvc:metadata:cs:ContentSubjectCS:2014-07:8"/>
+                    <CreditsList>
+                        <CreditsItem role="urn:mpeg:mpeg7:cs:RoleCS:2001:ACTOR">
+                            <PersonName>
+                                <mpeg7:GivenName><![CDATA[Jake]]></mpeg7:GivenName>
+                                <mpeg7:FamilyName><![CDATA[Wood]]></mpeg7:FamilyName>
+                            </PersonName>
+                            <Character>
+                                <mpeg7:GivenName><![CDATA[Max Branning]]></mpeg7:GivenName>
+                            </Character>
+                            <PresentationRole>
+                                Actor
+                            </PresentationRole>
+                        </CreditsItem>
+                        <CreditsItem role="urn:mpeg:mpeg7:cs:RoleCS:2001:EXECUTIVE-PRODUCER">
+                            <PersonName>
+                                <mpeg7:GivenName><![CDATA[Dominic]]></mpeg7:GivenName>
+                                <mpeg7:FamilyName><![CDATA[Treadwell-Collins]]></mpeg7:FamilyName>
+                            </PersonName>
+                            <PresentationRole>
+                                Executive Producer
+                            </PresentationRole>
+                        </CreditsItem>
+                    </CreditsList>
+                    <RelatedMaterial>
+                        <HowRelated href="urn:tva:metadata:cs:HowRelatedCS:2012:19"/>
+                        <Format href="urn:mpeg:mpeg7:cs:FileFormatCS:2001:1"/>
+                        <MediaLocator>
+                            <tva:MediaUri xmlns="urn:tva:mpeg7:2008"><![CDATA[http://ichef.bbci.co.uk/images/ic/1024x576/p02g9xc9.jpg]]></tva:MediaUri>
+                        </MediaLocator>
+                    </RelatedMaterial>
+                </BasicDescription>
+                <MemberOf xsi:type="MemberOfType" crid="crid://www.bbc.co.uk/nitro/brand/b006m86d" index="4995"/>
+            </GroupInformation>
+            <GroupInformation xml:lang="en" serviceIDRef="http://www.bbc.co.uk/nitro/service/content_owning/bbc_one" groupId="crid://www.bbc.co.uk/nitro/brand/b006m86d" ordered="true">
+                <GroupType xsi:type="ProgramGroupTypeType" value="brand"/>
+                <BasicDescription xsi:type="tva2:ExtendedContentDescriptionType">
+                    <Title type="main"><![CDATA[Eastenders]]></Title>
+                    <Synopsis length="short"><![CDATA[Welcome to Walford, E20.]]></Synopsis>
+                    <Synopsis length="medium"><![CDATA[Welcome to Walford, E20.]]></Synopsis>
+                    <Genre href="urn:fvc:metadata:cs:OriginationCS:2014-07:8"/>
+                    <Genre href="urn:tva:metadata:cs:MediaTypeCS:2010:7.1.3"/>
+                    <Genre href="urn:tva:metadata:cs:OriginationCS:2011:5.8"/>
+                    <RelatedMaterial>
+                        <HowRelated href="urn:tva:metadata:cs:HowRelatedCS:2012:19"/>
+                        <Format href="urn:mpeg:mpeg7:cs:FileFormatCS:2001:1"/>
+                        <MediaLocator>
+                            <tva:MediaUri xmlns="urn:tva:mpeg7:2008"><![CDATA[http://ichef.bbci.co.uk/images/ic/1024x576/p01vg679.jpg]]></tva:MediaUri>
+                        </MediaLocator>
+                    </RelatedMaterial>
+                </BasicDescription>
+            </GroupInformation>
+        </GroupInformationTable>
+        <ProgramLocationTable>
+            <BroadcastEvent serviceIDRef="4164" xml:lang="en">
+                <Program crid="crid://bbc.co.uk/nitro/episode/b04xw3sn/version/b04xw2lz"/>
+                <ProgramURL>dvb://233A..1044;D330</ProgramURL>
+                <InstanceMetadataId>imi:b04xw2lz.imi:bds.tv/453751919</InstanceMetadataId>
+                <InstanceDescription>
+                    <Genre href="urn:fvc:metadata:cs:PublicationTypeCS:2014-07:broadcast-canonical"/>
+                    <AVAttributes>
+                        <AudioAttributes>
+                            <MixType href="urn:mpeg:mpeg7:cs:AudioPresentationCS:2001:3"/>
+                            <AudioLanguage purpose="urn:tva:metadata:cs:AudioPurposeCS:2007:6">en</AudioLanguage>
+                        </AudioAttributes>
+                        <VideoAttributes>
+                            <HorizontalSize>576</HorizontalSize>
+                            <VerticalSize>512</VerticalSize>
+                            <AspectRatio>16:9</AspectRatio>
+                            <Color type="color"/>
+                        </VideoAttributes>
+                    </AVAttributes>
+                    <OtherIdentifier authority="pcrid.freeview.co.uk">crid://fp.bbc.co.uk/1FH7GB</OtherIdentifier>
+                </InstanceDescription>
+                <PublishedStartTime>2015-01-09T20:00:00Z</PublishedStartTime>
+                <PublishedDuration>PT30M</PublishedDuration>
+            </BroadcastEvent>
+            <BroadcastEvent serviceIDRef="4221" xml:lang="en">
+                <Program crid="crid://bbc.co.uk/nitro/episode/b04xw3sn/version/b04xw2lz"/>
+                <ProgramURL>dvb://233A..1044;D330</ProgramURL>
+                <InstanceMetadataId>imi:b04xw2lz.imi:bds.tv/453751780</InstanceMetadataId>
+                <InstanceDescription>
+                    <Genre href="urn:fvc:metadata:cs:PublicationTypeCS:2014-07:broadcast-canonical"/>
+                    <AVAttributes>
+                        <AudioAttributes>
+                            <MixType href="urn:mpeg:mpeg7:cs:AudioPresentationCS:2001:3"/>
+                            <AudioLanguage purpose="urn:tva:metadata:cs:AudioPurposeCS:2007:6">en</AudioLanguage>
+                        </AudioAttributes>
+                        <VideoAttributes>
+                            <HorizontalSize>576</HorizontalSize>
+                            <VerticalSize>512</VerticalSize>
+                            <AspectRatio>16:9</AspectRatio>
+                            <Color type="color"/>
+                        </VideoAttributes>
+                    </AVAttributes>
+                    <OtherIdentifier authority="pcrid.freeview.co.uk">crid://fp.bbc.co.uk/1FH7GB</OtherIdentifier>
+                </InstanceDescription>
+                <PublishedStartTime>2015-01-09T20:00:00Z</PublishedStartTime>
+                <PublishedDuration>PT30M</PublishedDuration>
+            </BroadcastEvent>
+            <!-- ... BroadcastEvent list truncated - one per service required -->
+            <OnDemandProgram serviceIDRef="http://www.bbc.co.uk/nitro/service/ondemand/iplayer" xml:lang="en">
+                <Program crid="crid://bbc.co.uk/nitro/episode/b04xw3sn/version/b04xw2lz"/>
+                <ProgramURL contentType="application/vnd.dvb.ait+xml"><![CDATA[http://api-ctv.stub-ext.digitaluk.co.uk/assets/ait/deeplink]]></ProgramURL>
+                <AuxiliaryURL contentType="application/vnd.dvb.ait+xml"><![CDATA[http://api-ctv.stub-ext.digitaluk.co.uk/assets/ait/template]]></AuxiliaryURL>
+                <InstanceMetadataId>imi:www.bbc.co.uk:b04xw2lz</InstanceMetadataId>
+                <InstanceDescription>
+                    <Genre type="other" href="urn:fvc:metadata:cs:MediaAvailabilityCS:2014-07:media_available"/>
+                    <Genre type="other" href="urn:fvc:metadata:cs:FEPGAvailabilityCS:2014-10:fepg_available"/>
+                    <CaptionLanguage closed="true">en</CaptionLanguage>
+                    <SignLanguage>bfi</SignLanguage>
+                    <AVAttributes>
+                        <AudioAttributes>
+                            <MixType href="urn:mpeg:mpeg7:cs:AudioPresentationCS:2001:3"/>
+                            <AudioLanguage purpose="urn:tva:metadata:cs:AudioPurposeCS:2007:6">en</AudioLanguage>
+                        </AudioAttributes>
+                        <VideoAttributes>
+                            <HorizontalSize>576</HorizontalSize>
+                            <VerticalSize>512</VerticalSize>
+                            <AspectRatio>16:9</AspectRatio>
+                            <Color type="color"/>
+                        </VideoAttributes>
+                        <CaptioningAttributes>
+                            <Coding href="urn:tva:metadata:cs:CaptionCodingFormatCS:2010:2.2"/>
+                        </CaptioningAttributes>
+                    </AVAttributes>
+                </InstanceDescription>
+                <PublishedDuration>PT30M</PublishedDuration>
+                <!-- Using actual_start instead of scheduled_time@start -->
+                <StartOfAvailability>2015-01-07T13:00:19Z</StartOfAvailability>
+                <EndOfAvailability>2015-02-08T23:00:00Z</EndOfAvailability>
+                <Free value="true"/>
+            </OnDemandProgram>
+        </ProgramLocationTable>
+    </ProgramDescription>
+</TVAMain>

@@ -1,0 +1,188 @@
+describe("7.8 Communication Services APIs", function() {
+    var oipfobjectFactory;
+    var communicationServices;
+    var userDataCollection;
+    var userData;
+    var featureTagCollection;
+    var featureTag;
+    var contactCollection;
+    var contact;
+    var deviceInfoCollection;
+    var deviceInfo;
+    var codecInfoCollection;
+    var codecInfo;
+
+    beforeEach(function() {
+        oipfobjectFactory = window.oipfObjectFactory;
+        communicationServices = oipfobjectFactory.createCommunicationServicesObject();
+        communicationServices;// = oipfobjectFactory, application/oipfCommunicationServices
+    });
+
+    describe("7.8.1 The application/oipfCommunicationServices embedded object", function() {
+        describe("7.8.1.1 Constants", function() {
+            it("STATE_REGISTERED", function() { expect(communicationServices.STATE_REGISTERED).toBeDefined(); });
+            it("STATE_REGISTERED_SUBSCRIPTION_PENDING", function() { expect(communicationServices.STATE_REGISTERED_SUBSCRIPTION_PENDING).toBeDefined(); });
+            it("STATE_REGISTERED_SUBSCRIPTION_ACTIVE", function() { expect(communicationServices.STATE_REGISTERED_SUBSCRIPTION_ACTIVE).toBeDefined(); });
+            it("STATE_DEREGISTERED", function() { expect(communicationServices.STATE_DEREGISTERED).toBeDefined(); });
+            it("STATE_FAILURE", function() { expect(communicationServices.STATE_FAILURE).toBeDefined(); });
+        });
+        describe("7.8.1.2 Properties", function() {
+            it("onNotification", function() { expect(communicationServices.onNotification).toBeDefined(); });
+            it("onNotificationResult", function() { expect(communicationServices.onNotificationResult).toBeDefined(); });
+            it("onRegistrationContextUpdate", function() { expect(communicationServices.onRegistrationContextUpdate).toBeDefined(); });
+            it("currentUser", function() { expect(communicationServices.currentUser).toBeDefined(); });
+        });
+        describe("7.8.1.3 Methods", function() {
+            it("getRegisteredUsers", function() { expect(communicationServices.getRegisteredUsers).toBeDefined(); });
+            it("registerUser", function() { expect(communicationServices.registerUser).toBeDefined(); });
+            it("deRegisterUser", function() { expect(communicationServices.deRegisterUser).toBeDefined(); });
+            it("getAllUsers", function() { expect(communicationServices.getAllUsers).toBeDefined(); });
+            it("setUser", function() { expect(communicationServices.setUser).toBeDefined(); });
+            it("subscribeNotification", function() { expect(communicationServices.subscribeNotification).toBeDefined(); });
+            it("unsubscribeNotification", function() { expect(communicationServices.unsubscribeNotification).toBeDefined(); });
+        });
+    });
+    describe("7.8.2 Extensions to application/oipfCommunicationServices for presence and messaging services", function() {
+        describe("7.8.2.1 Properties", function() {
+            it("onNotification", function() { expect(communicationServices.onIncomingMessage).toBeDefined(); });
+            it("onContactStatusChange", function() { expect(communicationServices.onContactStatusChange).toBeDefined(); });
+            it("onNewWatcher", function() { expect(communicationServices.onNewWatcher).toBeDefined(); });
+        });
+        describe("7.8.2.2 Methods", function() {
+            it("openChatSession", function() { expect(communicationServices.openChatSession).toBeDefined(); });
+            it("sendMessageInSession", function() { expect(communicationServices.sendMessageInSession).toBeDefined(); });
+            it("closeChatSession", function() { expect(communicationServices.closeChatSession).toBeDefined(); });
+            it("sendMessage", function() { expect(communicationServices.sendMessage).toBeDefined(); });
+            it("setStatus", function() { expect(communicationServices.setStatus).toBeDefined(); });
+            it("subscribeToStatus", function() { expect(communicationServices.subscribeToStatus).toBeDefined(); });
+            it("getContacts", function() { expect(communicationServices.getContacts).toBeDefined(); });
+            it("allowContact", function() { expect(communicationServices.allowContact).toBeDefined(); });
+            it("blockContact", function() { expect(communicationServices.blockContact).toBeDefined(); });
+            it("createContactList", function() { expect(communicationServices.createContactList).toBeDefined(); });
+            it("getContacts", function() { expect(communicationServices.getContacts).toBeDefined(); });
+            it("addToContactList", function() { expect(communicationServices.addToContactList).toBeDefined(); });
+            it("removeFromContactList", function() { expect(communicationServices.removeFromContactList).toBeDefined(); });
+            it("deleteContactList", function() { expect(communicationServices.deleteContactList).toBeDefined(); });
+            it("allowAllContacts", function() { expect(communicationServices.allowAllContacts).toBeDefined(); });
+            it("blockAllContacts", function() { expect(communicationServices.blockAllContacts).toBeDefined(); });
+        });
+    });
+    describe("7.8.3 The UserData class", function() {
+        beforeEach(function() {
+            userDataCollection = communicationServices.getAllUsers;
+            userData = userDataCollection[0];
+        });
+        describe("7.8.3.1 Properties", function() {
+            it("userId", function() { expect(userData.userId).toBeDefined(); });
+            it("featureTags", function() { expect(userData.featureTags).toBeDefined(); });
+            it("friendlyName", function() { expect(userData.friendlyName).toBeDefined(); });
+        });
+    });
+    describe("7.8.4 The UserDataCollection class", function() {
+        beforeEach(function() {
+            userDataCollection = communicationServices.getAllUsers;
+        });
+        it("UserDataCollection", function() { expect(UserDataCollection).toBeDefined(); });
+    });
+    describe("7.8.5 The FeatureTag class", function() {
+        beforeEach(function() {
+            userDataCollection = communicationServices.getAllUsers;
+            userData = userDataCollection[0];
+            featureTagCollection = userData.featureTags;
+            featureTag = featureTagCollection[0];
+        });
+        describe("7.8.5.1 Properties", function() {
+            it("featureTag", function() { expect(featureTag.featureTag).toBeDefined(); });
+        });
+    });
+    describe("7.8.6 The FeatureTagCollection class", function() {
+        beforeEach(function() {
+            userDataCollection = communicationServices.getAllUsers;
+            userData = userDataCollection[0];
+            featureTagCollection = userData.featureTags;
+        });
+        it("FeatureTagCollection", function() { expect(featureTagCollection).toBeDefined(); });
+    });
+    describe("7.8.7 The Contact class", function() {
+        beforeEach(function() {
+            contactCollection = communicationServices.getContacts;
+            contact = contactCollection[0];
+        });
+        describe("7.8.7.1 Properties", function() {
+            it("contactId", function() { expect(contact.contactId).toBeDefined(); });
+            it("friendlyName", function() { expect(contact.friendlyName).toBeDefined(); });
+        });
+    });
+    describe("7.8.8 The ContactCollection class", function() {
+        beforeEach(function() {
+            contactCollection = communicationServices.getContacts;
+        });
+        describe("7.8.8.1 Methods", function() {
+            it("remove", function() { expect(contactCollection.remove).toBeDefined(); });
+            it("add", function() { expect(contactCollection.add).toBeDefined(); });
+        });
+    });
+    describe("7.8.9 Extensions to application/oipfCommunicationServices for voice telephony services", function() {
+        describe("7.8.9.1 Properties", function() {
+            it("onCallEvent", function() { expect(communicationServices.onCallEvent).toBeDefined(); });
+            it("callParameters", function() { expect(communicationServices.callParameters).toBeDefined(); });
+        });
+        describe("7.8.9.2 Methods", function() {
+            it("call", function() { expect(communicationServices.call).toBeDefined(); });
+            it("answer", function() { expect(communicationServices.answer).toBeDefined(); });
+            it("hangUp", function() { expect(communicationServices.hangUp).toBeDefined(); });
+            it("getDeviceList", function() { expect(communicationServices.getDeviceList).toBeDefined(); });
+            it("setCaptureDevice", function() { expect(communicationServices.setCaptureDevice).toBeDefined(); });
+            it("getCodecList", function() { expect(communicationServices.getCodecList).toBeDefined(); });
+            it("setPreferredCodecList", function() { expect(communicationServices.setPreferredCodecList).toBeDefined(); });
+            it("getCallParameter", function() { expect(communicationServices.getCallParameter).toBeDefined(); });
+            it("setCallParameter", function() { expect(communicationServices.setCallParameter).toBeDefined(); });
+        });
+    });
+    describe("7.8.10 Extensions to application/oipfCommunicationServices for video telephony services", function() {
+        describe("7.8.10.1 Methods", function() {
+            it("showRemoteVideo", function() { expect(communicationServices.showRemoteVideo).toBeDefined(); });
+            it("showLocalVideoPreview", function() { expect(communicationServices.showLocalVideoPreview).toBeDefined(); });
+            it("callUpdate", function() { expect(communicationServices.callUpdate).toBeDefined(); });
+            it("callAnswerUpdate", function() { expect(communicationServices.callAnswerUpdate).toBeDefined(); });
+        });
+    });
+    describe("7.8.11 The DeviceInfo class", function() {
+        beforeEach(function() {
+            deviceInfoCollection = communicationServices.getDeviceList(0); // type 0=audio, 1=video
+            deviceInfo = deviceInfoCollection[0];
+        });
+        describe("7.8.11.1 Properties", function() {
+            it("id", function() { expect(deviceInfo.id).toBeDefined(); });
+            it("deviceType", function() { expect(deviceInfo.deviceType).toBeDefined(); });
+            it("deviceName", function() { expect(deviceInfo.deviceName).toBeDefined(); });
+            it("deviceProductName", function() { expect(deviceInfo.deviceProductName).toBeDefined(); });
+        });
+    });
+    describe("7.8.12 The DeviceInfoCollection class", function() {
+        beforeEach(function() {
+            deviceInfoCollection = communicationServices.getDeviceList(0); // type 0=audio, 1=video
+        });
+        it("DeviceInfoCollection", function() { expect(deviceInfoCollection).toBeDefined(); });
+    });
+    describe("7.8.13 The CodecInfo class", function() {
+        beforeEach(function() {
+            codecInfoCollection = communicationServices.getCodecList(0); // type 0=audio, 1=video
+            codecInfo = codecInfoCollection[0];
+        });
+        describe("7.8.13.1 Properties", function() {
+            it("codecName", function() { expect(codecInfo.codecName).toBeDefined(); });
+            it("mimeType", function() { expect(codecInfo.mimeType).toBeDefined(); });
+            it("profile", function() { expect(codecInfo.profile).toBeDefined(); });
+        });
+    });
+    describe("7.8.14 The CodecInfoCollection class", function() {
+        beforeEach(function() {
+            codecInfoCollection = communicationServices.getCodecList(0); // type 0=audio, 1=video
+        });
+        describe("7.8.14.1 Methods", function() {
+            it("moveAt", function() { expect(codecInfoCollection.moveAt).toBeDefined(); });
+            it("remove", function() { expect(codecInfoCollection.remove).toBeDefined(); });
+        });
+    });
+});

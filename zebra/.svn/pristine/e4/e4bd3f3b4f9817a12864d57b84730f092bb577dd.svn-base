@@ -1,0 +1,57 @@
+describe("7.15 Miscellaneous APIs", function() {
+    var object;
+
+
+    try{
+        var oipfobjectFactory = window.oipfObjectFactory;
+        object = oipfobjectFactory.createRemoteControlFunctionObject;
+    }catch(e){
+        object = undefined;
+    }
+
+    describe("7.15.1 The application/oipfMDTF embedded object", function() {
+        /* todo - add check spec that made by mime type <object type="application/oipfMDTF" /> */
+
+        describe("7.15.1.1 Properties", function() {
+            it("onFLUTEListenerResult", function() { expect(object.onFLUTEListenerResult).toBeDefined(); });
+        });
+
+        describe("7.15.1.2 Methods", function() {
+            it("addFLUTEListener", function() { expect(object.addFLUTEListener).toBeDefined(); });
+            it("addFLUTEListenerTags", function() { expect(object.addFLUTEListenerTags).toBeDefined(); });
+            it("getFLUTEListeners", function() { expect(object.getFLUTEListeners).toBeDefined(); });
+            it("getTags", function() { expect(object.getTags).toBeDefined(); });
+            it("removeFLUTEListener", function() { expect(object.removeFLUTEListener).toBeDefined(); });
+        });
+
+        describe("7.15.1.3 Events", function() {
+            it("onFLUTEListenerResult", function() { expect(object.onFLUTEListenerResult).toBeDefined(); });
+        });
+    });
+
+    describe("7.15.2 The application/oipfStatusView embedded object", function() {
+       describe("7.15.2.1.1 Methods", function() {
+            it("getMinimumItemWidth", function() { expect(object.getMinimumItemWidth).toBeDefined(); });
+            it("getMinimumItemHeight", function() { expect(object.getMinimumItemHeight).toBeDefined(); });
+        });
+    });
+
+    describe("7.15.3 The application/oipfCapabilities embedded object", function() {
+       describe("7.15.3.1 Properties", function() {
+            it("xmlCapabilities", function() { expect(object.getMinimumItemWidth).toBeDefined(); });
+            it("extraSDVideoDecodes", function() { expect(object.getMinimumItemHeight).toBeDefined(); });
+            it("extraHDVideoDecodes", function() { expect(object.getMinimumItemHeight).toBeDefined(); });
+        });
+       describe("7.15.3.2 Methods", function() {
+            it("hasCapability", function() { expect(object.hasCapability).toBeDefined(); });
+        });
+
+    });
+
+    describe("7.15.4 The Navigator class", function() {
+    });
+
+    describe("7.15.5 Debug print API", function() {
+        it("debug", function() { expect(object.debug).toBeDefined(); });
+    });
+});

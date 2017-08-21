@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<script>
+			var player, source_elem;
+			
+			function control(c){
+				if(c == 'create'){
+					var pos = document.getElementById("node");
+					player = document.createElement('video');
+					pos.appendChild(player);
+					
+					// test1
+			    source_elem = document.createElement("source");
+          source_elem.setAttribute("src", "http://10.0.12.33/media/dizzy1.mp4");
+          source_elem.addEventListener("error", videoErrorListener2, false);
+          player.appendChild(source_elem);
+          
+          // test2 
+					//player.src = "http://10.0.12.33/media/dizzy1.mp4";
+			
+					player.setAttribute('id', 'player');
+					player.setAttribute('controls', true);
+					player.setAttribute('width', 320);
+					player.setAttribute('height', 240);
+					player.setAttribute('preload', 'auto');
+					player.style.display = "block";
+					player.addEventListener("error", videoErrorListener, false);
+					player.play();
+				/*
+					player.onerror = function() {
+						if(player.error == null)
+							window.debug("player.error == null");
+							//alert("player.error == null");
+						else
+						{
+							window.debug(player.error.code);
+							//player.load();
+						}
+							//alert(player.error.code);
+			       };
+			       */
+				}
+				if(c == 'play'){
+					player.play();
+				}
+				else if(c == 'pause'){
+					player.pause();
+				}
+			}
+			
+			function videoErrorListener(){
+		
+						if(player.error == null)
+							window.debug("player.error == null");
+							//alert("player.error == null");
+						else
+						{
+							window.debug(player.error.code);
+							//player.load();
+						}
+			   
+			}
+			
+			function videoErrorListener2(){
+		
+						if(player.error == null)
+							window.debug("player.error == null");
+							//alert("player.error == null");
+						else
+						{
+							window.debug(player.error.code);
+							//player.load();
+						}
+			   
+			}
+		</script>
+	</head>
+	<body bgcolor="white">
+		<button style="width:70px;" onclick="control('create')">create </button>
+		<button style="width:70px;" onclick="control('play')"> play </button> 
+		<button style="width:70px;" onclick="control('pause')"> pause </button>
+		<br>
+		<br>
+		<div id="node"> 
+		</div>
+	</body>
+</html>

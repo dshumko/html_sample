@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>QUnit Example</title>
+<!-- qunit --> 
+<link rel="stylesheet" href="./tc/css/qunit-1.14.0.css">
+<script src="./tc/js/qunit-1.14.0.js"></script>
+<!-- qrunner -->
+<script src="./tc/js/qrunner.js"></script>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<!-- controller -->
+	<script> 
+		var runner = null;
+  	/**
+  	 * How to use through new QRunner Instance 
+  	 */
+    var imported = document.createElement('script');
+    imported.src = './tc/module/sample/tc_oipfobjectfactory.js';
+    document.head.appendChild(imported);
+
+		document.onreadystatechange = function () {
+		    if (document.readyState == "complete") {
+					/* Set Case.1 */
+					runner = new tcOipfObjectFactory();
+					/* Set Case.2 */
+					//QRunnerFactory.push(new tcOipfObjectFactory());
+					 
+					/* Get Case.1 */
+					//var runner = QRunnerFactory.pop();
+					/* Get Case.2 */
+					//var runner = QRunnerFactory.get(0);
+
+					console.debug("ok, ready for testing");
+					/**
+					 * [view description]
+					 * @type {QView}
+					 */
+					var view = new QView();				
+					view.setRunner(runner);	
+					view.layout();
+		    }
+		}		
+	</script>
+
+	<button id="start" onclick="runner.start();">Start</button>
+	<button id="stop" onclick="runner.stop();">Stop</button>
+	<button id="pause" onclick="runner.pause();">Pause</button>
+</body>
+</html>

@@ -1,0 +1,195 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+License: none (public domain)
+ */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+/*
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+*/
+
+ol, ul {
+    list-style: none;
+    margin-left:-680px;
+}
+
+li{
+    padding: 0 0 0 80px;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Coverflow */
+.coverflow{
+    position:relative;
+    width:1000px;
+    overflow: hidden;
+    margin:0 auto;
+}
+.coverflow-wrapper{
+    position: relative;
+    width:1000px;
+    height:530px;
+    margin: 0px auto;
+    margin-top: -20px;
+}
+.coverflow-list{
+    -webkit-transition:all 200ms ease;
+    -moz-transition:all 200ms ease;
+    transition:all 200ms ease;
+    position:absolute;
+    top:0;left:0;
+    width:8000px;
+}
+@media only screen and (min-device-width : 1024px) {
+    .coverflow-list{-webkit-transform:translateZ(0);}
+}
+.coverflow-list.sliding{
+    -webkit-transition:all 0ms ease;
+    -moz-transition:all 0ms ease;
+    transition:all 0ms ease;
+}
+.coverflow-item{
+    -webkit-transition:all 200ms ease;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transition:all 200ms ease;
+    -moz-transform-origin: 50% 50%;
+    transition:all 200ms ease;
+    transform-origin: 50% 50%;
+    cursor:pointer;
+    position:relative;
+    float:left;
+    width:340px;
+    height:460px;
+    opacity:.5;
+}
+.coverflow-infos{
+    position:absolute!important;
+    left:-99999px;
+    top:-99999px;
+}
+
+.coverflow-label{
+    -webkit-transition:all 200ms ease;
+    -webkit-transform-origin: 0 0;
+    -moz-transition:all 200ms ease;
+    -moz-transform-origin: 50% 50%;
+    transition:all 200ms ease;
+    transform-origin: 50% 50%;
+    position:relative;
+    line-height:20px;
+    font-size:18px;
+    text-align:center;
+    top:130px;
+    margin-left:120px;
+    color: #000000;
+}
+
+.coverflow-item .item{
+    -webkit-transition:all 200ms ease;
+    -webkit-transform-origin: 0 0;
+    -moz-transition:all 200ms ease;
+    -moz-transform-origin: 50% 50%;
+    transition:all 200ms ease;
+    transform-origin: 50% 50%;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin:-70px 0 0 -70px;
+    width:320px;
+    height:320px;
+}
+
+/* Active */
+.coverflow-item.active{
+    width:420px;
+    height:460px;
+    opacity:1;
+}
+.coverflow-item.active .coverflow-label{
+    font-size:24px;
+    top:70px;
+}
+.coverflow-item.active .item{
+    margin:-110px 0 0 -110px;
+    width:400px;
+    height:400px;
+}
+.coverflow-nav-arrow{
+    margin:40px 0;
+    font-size:24px;
+    text-align:center;
+}
+.coverflow-nav-arrow li{display:inline}
+.coverflow-more,
+.coverflow-infos{
+    position: relative;
+    width:880px;
+    margin:0 auto;
+}
+.coverflow-slider{
+    width:400px;
+    margin:10px auto 0;
+}
+
+body {
+    font-family:Arial, 'sans serif';
+    padding:0;
+    position:relative;
+    margin: 0;
+    background: #ffffff;
+}
+
+#main-header {
+    background: #f5f5f5;
+    border-bottom: 1px solid #eee;
+    color: #444;
+    min-height: 44px;
+    padding: 50px 50px 13px 50px;
+    color: #3B73B9;
+}
+
+#main-header a {
+    font-family:Calibri, Arial, 'sans-serif';
+    text-decoration: none;
+    color: #3B73B9;
+    font-weight:bold;
+    padding-right:22px;
+    float:left;
+    margin: 0px 20px 0px 0px;
+}

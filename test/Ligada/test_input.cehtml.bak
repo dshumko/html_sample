@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <script type="text/javascript">
+					var appMan;
+   				var app;
+   				var keyset;
+   				var textInput;
+   				
+					window.onload = function () {
+					  appMan = document.getElementById("app-man");
+	  				app = appMan.getOwnerApplication(document);
+	  				
+	  				app.show();
+	  
+	    			keyset = app.privateData.keyset;
+	        	keyset.setValue(0x10);
+        	
+						textInput = document.getElementById("text-input");
+	    			textInput.focus();
+	    			textInput.addEventListener("keydown", checkEnterPressed, false);
+	    			textInput.addEventListener("keyup", checkEnterPressed2, false);
+					
+    			}
+    			
+    				    			function checkEnterPressed(e) {
+								window.debug(e.keyCode);
+								window.debug(textInput.value);
+						}
+						function checkEnterPressed2(e) {
+								window.debug(e.keyCode);
+								window.debug(textInput.value);
+						}
+    			
+        </script>
+    </head>
+    <body>
+        <div style="visibility: hidden;">
+            <object type="application/oipfApplicationManager" id="app-man" />
+        </div>
+        <div style="position: absolute; top: 10%; right: 10%; left: 10%; text-align: center;">
+            <input type="text" id="text-input" />
+        </div>
+    </body>
+</html>

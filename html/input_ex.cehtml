@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>test input box focus</title>
+        <script type="text/javascript">
+            var textInput;
+            window.onload = function () {
+                    document.addEventListener("keydown", onKeydown, false);
+                    var appMan = document.getElementById("app-man");
+                    var app = appMan.getOwnerApplication(document);
+                    app.show();
+
+                    var keyset = app.privateData.keyset;
+                    keyset.setValue(0x10);
+                    textInput = document.getElementById("text-input");
+                    textInput.focus();
+                }
+            var onKeydown = function(e) {
+                window.debug("e.keyCode : " + e.keyCode);
+                if ((e.VK_DOWN == e.keyCode) || (e.VK_UP == e.keyCode)) {
+                    textInput.blur();
+                    textInput.focus();
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div style="visibility: hidden;">
+            <object type="application/oipfApplicationManager" id="app-man" />
+        </div>
+        <div id="ui">
+            <img id="logo" src="http://www-static.operacdn.com/static-heap/92/929b806843717c64f1e520052ad46620273d31c5/logo-header-opera.png" alt="test logo" />
+        </div>
+        <div style="position: absolute; top: 10%; right: 10%; left: 10%; text-align: center;">
+            <input type="text" id="text-input" />
+        </div>
+    </body>
+</html>

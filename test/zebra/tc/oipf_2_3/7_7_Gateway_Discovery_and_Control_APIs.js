@@ -1,0 +1,36 @@
+describe("7.7 Gateway Discovery and Control APIs", function() {
+    var oipfobjectFactory;
+    var gatewayInfo;
+
+    try{
+        oipfobjectFactory = window.oipfObjectFactory;
+        gatewayInfo = oipfobjectFactory.createGatewayInfoObject();
+    }catch(e){
+        gatewayInfo = undefined;
+    }
+
+    describe("7.7.1 The application/oipfGatewayInfo embedded object", function() {
+        describe("7.7.1.1 Properties", function() {
+            it("isIGDiscovered", function() { expect(gatewayInfo.isIGDiscovered).toBeDefined(); });
+            it("isAGDiscovered", function() { expect(gatewayInfo.isAGDiscovered).toBeDefined(); });
+            it("isCSPGCIPlusDiscovered", function() { expect(gatewayInfo.isCSPGCIPlusDiscovered).toBeDefined(); });
+            it("isCSPGDTCPDiscovered", function() { expect(gatewayInfo.isCSPGDTCPDiscovered).toBeDefined(); });
+            it("igURL", function() { expect(gatewayInfo.igURL).toBeDefined(); });
+            it("agURL", function() { expect(gatewayInfo.agURL).toBeDefined(); });
+            it("cspgDTCPURL", function() { expect(gatewayInfo.cspgDTCPURL).toBeDefined(); });
+            it("interval", function() { expect(gatewayInfo.interval).toBeDefined(); });
+            it("onDiscoverIG", function() { expect(gatewayInfo.onDiscoverIG).toBeDefined(); });
+            it("onDiscoverAG", function() { expect(gatewayInfo.onDiscoverAG).toBeDefined(); });
+            it("onDiscoverCSPGDTCP", function() { expect(gatewayInfo.onDiscoverCSPGDTCP).toBeDefined(); });
+            it("isIGSupported", function() { expect(gatewayInfo.isIGSupported).toBeDefined(); });
+            it("isAGSupported", function() { expect(gatewayInfo.isAGSupported).toBeDefined(); });
+            it("isCSPGCIPlusSupported", function() { expect(gatewayInfo.isCSPGCIPlusSupported).toBeDefined(); });
+            it("isCSPGDTCPSupported", function() { expect(gatewayInfo.isCSPGDTCPSupported).toBeDefined(); });
+            it("onDiscoverCSPGCIPlus", function() { expect(gatewayInfo.onDiscoverCSPGCIPlus).toBeDefined(); });
+            it("CSPGCIPlusDRMType", function() { expect(gatewayInfo.CSPGCIPlusDRMType).toBeDefined(); });
+        });
+        describe("7.7.1.2 Methods", function() {
+            it("isIGSupportedMethod", function() { expect(gatewayInfo.isIGSupportedMethod).toBeDefined(); });
+        });
+    });
+});

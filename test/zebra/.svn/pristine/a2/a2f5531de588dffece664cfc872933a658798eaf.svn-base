@@ -1,0 +1,247 @@
+
+#container  {
+    background-color:#F0F0F0;
+    margin:20px 100px;
+    width:1060px;
+}
+
+#runner, #lister {
+    visibility:hidden;
+    display:none;
+}
+
+.zone1_board {
+    background-color: #4C5444;
+    font-size: 130%;
+    width:1060px;
+    height: 40px;
+    overflow:hidden;
+}
+
+.zone2_board {
+    background-color: #C2C6BE;
+    font-size: 150%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+
+.zone3_board {
+    background-color: #DDDDD7;
+    font-size: 120%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+
+.zone4_board {
+    background-color:#EAEBD3;
+    font-size: 90%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+.zone5_board {
+    background-color: #4C5444;
+    font-size: 100%;
+    width:1060px;
+    height: 20px;
+    overflow:hidden;
+}
+
+.tc_board {
+    background-color:#EAEBD3;
+    width: 500px;
+    font-size: 90%;
+    height:620px;
+    float:left;
+    overflow:hidden;
+}
+
+.zone2_p_width  {
+    width:1000px;
+}
+.zone2_p_width .zone2_c_width {
+    width:inherit;
+}
+.zone3_p_width {
+    width:30px;
+}
+.zone3_p_width .zone3_c_width {
+    width:inherit;
+}
+
+.zone4_p_width {
+    width:30px;
+}
+.zone4_p_width .zone4_c_width {
+    width:inherit;
+}
+
+.zone2_btn {
+    background-color: #C2C6BE;
+    font-size: 70%;
+    height: 35px;
+    float:left;
+    overflow: hidden;
+    text-overflow: clip;
+    /*transition: all 1s;*/
+}
+
+.zone3_btn {
+    background-color: #DDDDD7;
+    font-size: 80%;
+    height:25px;
+    float:left;
+    overflow: hidden;
+    text-overflow: clip;
+    /*transition: all 1s;*/
+}
+
+.zone4_btn {
+    background-color:#EAEBD3;
+    font-size: 90%;
+    height:20px;
+    float:left;
+    overflow: hidden;
+    text-overflow: clip;
+    /*transition: all 1s;*/
+}
+
+.width40 {
+    width: 30px;
+    opacity:0.3;
+}
+
+.width400 {
+    width: 310px;
+}
+
+.width840 {
+    width: 720px;
+}
+
+.width1200 {
+    width: 1000px;
+}
+
+.width500 {
+    width: 500px;
+}
+
+.help {
+    width: 400px;
+    height: 20px;
+    float:left;
+    color: white;
+    border: 3px;
+    font-size: 75%;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: clip;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.blank {
+    width:560px;
+    height: 20px;
+    float:left;
+}
+
+.page {
+    width: 100px;
+    height: 20px;
+    float:left;
+    color: white;
+    border: 3px;
+    font-size: 75%;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: clip;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.logo {
+    width: 90px;
+    height: 40px;
+    float:left;
+    background-image: url("../../res/zebra_logo1.png");
+    background-size: contain;
+}
+.title {
+    width: 470px;
+    height: 40px;
+    float:left;
+}
+.state_bar {
+    width: 500px;
+    height: 40px;
+    float:left;
+}
+.state {
+    width: 500px;
+    font-size: 60%;
+    float:left;
+    color: white;
+    height:10px;
+    vertical-align:bottom;
+    text-align: right;
+}
+
+.path {
+    width: 500px;
+    font-size: 60%;
+    float:left;
+    color: white;
+    height:10px;
+    vertical-align:bottom;
+    text-align: right;
+}
+
+
+
+
+.result_pass {
+    background-color: green;
+
+}
+
+.result_fail {
+    background-color: red;
+}
+
+.checked {
+    background-color:#BCA979;
+}
+
+.focused {
+    background-color: #CCB989;
+}
+
+.btn3_result {
+    width: 20px;
+    height:15px;
+    float: left;
+    color: white;
+    font-size: 60%;
+    border:1px;
+    border-radius:3px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn3_depth {
+    height:25px;
+    float: left;
+}
+
+.btn3_text {
+    float: left;
+}
+
+.btn3_text_bold {
+    font-weight: bold;
+    float: left;
+}

@@ -1,0 +1,139 @@
+describe("7.10 Scheduled Recording APIs", function() {
+    var oipfobjectFactory;
+    var recordingScheduler;
+    var scheduledRecordingCollection;
+    var scheduledRecording;
+    var recording;
+    var bookmarkCollection;
+    var bookmark;
+
+    try{
+        oipfobjectFactory = window.oipfObjectFactory;
+        recordingScheduler = oipfobjectFactory.createRecordingSchedulerObject();
+    }catch(e){
+        recordingScheduler = undefined;
+    }
+
+    describe("7.10.1 The application/oipfRecordingScheduler embedded object", function() {
+        describe("7.10.1.1 Methods", function() {
+            it("record", function() { expect(recordingScheduler.record).toBeDefined(); });
+            it("recordAt", function() { expect(recordingScheduler.recordAt).toBeDefined(); });
+            it("getScheduledRecordings", function() { expect(recordingScheduler.getScheduledRecordings).toBeDefined(); });
+            it("getChannelConfig", function() { expect(recordingScheduler.getChannelConfig).toBeDefined(); });
+            it("remove", function() { expect(recordingScheduler.remove).toBeDefined(); });
+            it("createProgrammeObject", function() { expect(recordingScheduler.createProgrammeObject).toBeDefined(); });
+        });
+    });
+    describe("7.10.2 The ScheduledRecording class", function() {
+        beforeEach(function() {
+            scheduledRecordingCollection = recordingScheduler.getScheduledRecordings;
+            scheduledRecording = scheduledRecordingCollection[0];
+        });
+        describe("7.10.2.1 Constants", function() {
+            it("RECORDING_SCHEDULED", function() { expect(scheduledRecording.RECORDING_SCHEDULED).toBeDefined(); });
+            it("RECORDING_REC_STARTED", function() { expect(scheduledRecording.RECORDING_REC_STARTED).toBeDefined(); });
+            it("RECORDING_REC_COMPLETED", function() { expect(scheduledRecording.RECORDING_REC_COMPLETED).toBeDefined(); });
+            it("RECORDING_REC_PARTIALLY_COMPLETED", function() { expect(scheduledRecording.RECORDING_REC_PARTIALLY_COMPLETED).toBeDefined(); });
+            it("RECORDING_ERROR", function() { expect(scheduledRecording.RECORDING_ERROR).toBeDefined(); });
+            it("ERROR_REC_RESOURCE_LIMITATION", function() { expect(scheduledRecording.ERROR_REC_RESOURCE_LIMITATION).toBeDefined(); });
+            it("ERROR_INSUFFICIENT_STORAGE", function() { expect(scheduledRecording.ERROR_INSUFFICIENT_STORAGE).toBeDefined(); });
+            it("ERROR_REC_UNKNOWN", function() { expect(scheduledRecording.ERROR_REC_UNKNOWN).toBeDefined(); });
+            it("ID_TVA_CRID", function() { expect(scheduledRecording.ID_TVA_CRID).toBeDefined(); });
+            it("ID_DVB_EVENT", function() { expect(scheduledRecording.ID_DVB_EVENT).toBeDefined(); });
+            it("ID_TVA_GROUP_CRID", function() { expect(scheduledRecording.ID_TVA_GROUP_CRID).toBeDefined(); });
+        });
+        describe("7.10.2.2 Properties", function() {
+            it("state", function() { expect(scheduledRecording.state).toBeDefined(); });
+            it("error", function() { expect(scheduledRecording.error).toBeDefined(); });
+            it("scheduleID", function() { expect(scheduledRecording.scheduleID).toBeDefined(); });
+            it("customID", function() { expect(scheduledRecording.customID).toBeDefined(); });
+            it("startPadding", function() { expect(scheduledRecording.startPadding).toBeDefined(); });
+            it("endPadding", function() { expect(scheduledRecording.endPadding).toBeDefined(); });
+            it("repeatDays", function() { expect(scheduledRecording.repeatDays).toBeDefined(); });
+            it("name", function() { expect(scheduledRecording.name).toBeDefined(); });
+            it("longName", function() { expect(scheduledRecording.longName).toBeDefined(); });
+            it("description", function() { expect(scheduledRecording.description).toBeDefined(); });
+            it("longDescription", function() { expect(scheduledRecording.longDescription).toBeDefined(); });
+            it("startTime", function() { expect(scheduledRecording.startTime).toBeDefined(); });
+            it("duration", function() { expect(scheduledRecording.duration).toBeDefined(); });
+            it("channel", function() { expect(scheduledRecording.channel).toBeDefined(); });
+            it("isManual", function() { expect(scheduledRecording.isManual).toBeDefined(); });
+            it("programmeID", function() { expect(scheduledRecording.programmeID).toBeDefined(); });
+            it("programmeIDType", function() { expect(scheduledRecording.programmeIDType).toBeDefined(); });
+            it("episode", function() { expect(scheduledRecording.episode).toBeDefined(); });
+            it("totalEpisodes", function() { expect(scheduledRecording.totalEpisodes).toBeDefined(); });
+            it("parentalRatings", function() { expect(scheduledRecording.parentalRatings).toBeDefined(); });
+            it("customMetadata", function() { expect(scheduledRecording.customMetadata).toBeDefined(); });
+        });
+    });
+    describe("7.10.3 The ScheduledRecordingCollection class", function() {
+        beforeEach(function() {
+            scheduledRecordingCollection = recordingScheduler.getScheduledRecordings;
+        });
+        it("ScheduledRecordingCollection", function() { expect(scheduledRecordingCollection).toBeDefined(); });
+    });
+    describe("7.10.4 Extension to application/oipfRecordingScheduler for control of recordings", function() {
+        describe("7.10.4.1 Properties", function() {
+            it("recordings", function() { expect(recordingScheduler.recordings).toBeDefined(); });
+            it("discInfo", function() { expect(recordingScheduler.discInfo).toBeDefined(); });
+            it("onPVREvent", function() { expect(recordingScheduler.onPVREvent).toBeDefined(); });
+        });
+        describe("7.10.4.2 Methods", function() {
+            it("getRecording", function() { expect(recordingScheduler.getRecording).toBeDefined(); });
+            it("stop", function() { expect(recordingScheduler.stop).toBeDefined(); });
+            it("refresh", function() { expect(recordingScheduler.refresh).toBeDefined(); });
+            it("update", function() { expect(recordingScheduler.update).toBeDefined(); });
+        });
+    });
+    describe("7.10.5 The Recording class", function() {
+        beforeEach(function() {
+            recording = recordingScheduler.getRecording("id");
+        });
+        describe("7.10.5.1 Properties", function() {
+            it("uri", function() { expect(recording.uri).toBeDefined(); });
+            it("id", function() { expect(recording.id).toBeDefined(); });
+            it("doNotDelete", function() { expect(recording.doNotDelete).toBeDefined(); });
+            it("saveDays", function() { expect(recording.saveDays).toBeDefined(); });
+            it("saveEpisodes", function() { expect(recording.saveEpisodes).toBeDefined(); });
+            it("blocked", function() { expect(recording.blocked).toBeDefined(); });
+            it("showType", function() { expect(recording.showType).toBeDefined(); });
+            it("subtitles", function() { expect(recording.subtitles).toBeDefined(); });
+            it("subtitleLanguages", function() { expect(recording.subtitleLanguages).toBeDefined(); });
+            it("isHD", function() { expect(recording.isHD).toBeDefined(); });
+            it("is3D", function() { expect(recording.is3D).toBeDefined(); });
+            it("audioType", function() { expect(recording.audioType).toBeDefined(); });
+            it("isMultilingual", function() { expect(recording.isMultilingual).toBeDefined(); });
+            it("audioLanguages", function() { expect(recording.audioLanguages).toBeDefined(); });
+            it("genres", function() { expect(recording.genres).toBeDefined(); });
+            it("recordingStartTime", function() { expect(recording.recordingStartTime).toBeDefined(); });
+            it("recordingDuration", function() { expect(recording.recordingDuration).toBeDefined(); });
+            it("bookmarks", function() { expect(recording.bookmarks).toBeDefined(); });
+            it("locked", function() { expect(recording.locked).toBeDefined(); });
+        });
+    });
+    describe("7.10.6 The RecordingCollection class", function() {
+    });
+    describe("7.10.7 The PVREvent class", function() {
+    });
+    describe("7.10.8 The Bookmark class", function() {
+        beforeEach(function() {
+            recording = recordingScheduler.getRecording("id");
+            bookmarkCollection = recording.bookmarks;
+            bookmark = bookmarkCollection[0];
+        });
+        describe("7.10.8.1 Properties", function() {
+            it("time", function() { expect(bookmark.time).toBeDefined(); });
+            it("name", function() { expect(bookmark.name).toBeDefined(); });
+        });
+    });
+    describe("7.10.9 The BookmarkCollection class", function() {
+        beforeEach(function() {
+            recording = recordingScheduler.getRecording("id");
+            bookmarkCollection = recording.bookmarks;
+        });
+        describe("7.10.9.1 Methods", function() {
+            it("addBookmark", function() { expect(bookmarkCollection.addBookmark).toBeDefined(); });
+            it("removeBookmark", function() { expect(bookmarkCollection.removeBookmark).toBeDefined(); });
+        });
+    });
+});

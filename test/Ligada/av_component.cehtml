@@ -1,0 +1,541 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+     <title></title>
+
+     <script type="text/javascript">
+var testAPI;
+var player;
+var timeout;
+var testEnded = false;
+
+function createPlayer(r) {
+
+    player = document.createElement("object");
+    player.setAttribute("type", "video/mp4");
+    player.setAttribute("id", "video");
+    player.style.width = 1280 + 'px';
+    player.style.height = 720 + 'px';
+    player.setAttribute("data", r);
+    document.getElementById('container').appendChild(player);
+
+}
+
+function tearDown() {
+    clearTimeout(timeout);
+    try { player.onPlayStateChange = null; } catch (_) {}
+
+    try {
+        player.removeEventListener('SelectedComponentChange',
+                checkSelectedVideoComponents, false);
+    } catch (_) {}
+
+    try {
+        player.removeEventListener('SelectedComponentChange',
+                checkSelectedAudioComponents, false);
+    } catch (ex) {}
+
+    try { player.stop(); } catch (ex) {}
+}
+
+function hbbtvOnLoad() {
+
+    try {
+        document.getElementById('oipfItemAppMan').getOwnerApplication(document).show();
+    } catch (ex) {
+        window.debug("##### WEBLOG : HbbTV application failed to initialise. Exception details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    window.debug("##### WEBLOG : A/V Control object initialised");
+
+    try {
+        createPlayer("http://10.0.12.35/media/dual_video_avc_and_audio_streams_ac3.mp4");
+    } catch (ex) {
+       window.debug("##### WEBLOG : Creation of the A/V Control object failed. Exception Details: " +
+            ex.message);
+        return;
+    }
+
+    try {
+        player.addEventListener("PlayStateChange",
+            playStateChangeHandler, false);
+    } catch (ex) {
+       window.debug("##### WEBLOG : A/V Control play state event handler registration failed." +
+            " Exception Details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+   window.debug("##### WEBLOG : A/V Control object created");
+
+    try {
+        player.play(1);
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while A/V Control object was instructed to start " +
+            "playing. Exception Details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    timeout = setTimeout(onPlayStateChangeFail, 30000);
+
+    window.debug("##### WEBLOG : A/V Control object has been instructed to start playing");
+}
+
+function playStateChangeHandler () {
+    if (player.playState === 1 && !testEnded) {
+        try {
+            player.onPlayStateChange = null;
+        } catch (ex) {
+            window.debug("##### WEBLOG : Error while removing 'PlayStateChange' event handler. " +
+                "Exception details: " + ex.message);
+            tearDown();
+            return;
+        }
+    } else if (player.playState === 6) {
+        window.debug("##### WEBLOG : The A/V Control object reported that an error occurred " +
+            "during media playback. Error code: " + player.error);
+        tearDown();
+        return;
+    } else {
+        return;
+    }
+
+    clearTimeout(timeout);
+    testEnded = true;
+
+   window.debug("##### WEBLOG : The A/V Control object reports its state as 1 (playing)");
+
+   window.debug("##### WEBLOG : This call checks that the video is playing.");
+    
+    
+    
+   checkAnalyseAudioExtended();
+}
+
+function onPlayStateChangeFail() {
+    if (!testEnded) {
+       window.debug("##### WEBLOG :The A/V Control object failed to transition to state 1 " +
+            "(playing) within 30 seconds");
+        tearDown();
+        return;
+    }
+}
+
+function checkAnalyseAudioExtended() {
+   window.debug("##### WEBLOG : This call checks that the correct audio is being presented.");
+   checkVideoComponents();
+}
+
+function checkVideoComponents() {
+    var activeVideoComponentsCollection;
+    var allVideoComponents;
+    var activeComponent;
+    var inactiveComponent;
+    var i;
+
+    if (player.COMPONENT_TYPE_VIDEO !== 0) {
+
+         window.debug("##### WEBLOG : Error while checking " +
+            "property player.COMPONENT_TYPE_VIDEO. Expected 0, got " +
+            player.COMPONENT_TYPE_VIDEO);
+        tearDown();
+        return;
+    }
+
+    try {
+        activeVideoComponentsCollection = player.getCurrentActiveComponents(
+            player.COMPONENT_TYPE_VIDEO);
+    } catch (ex) {
+         window.debug("##### WEBLOG : Error while calling " +
+            "getCurrentActiveComponents(COMPONENT_TYPE_VIDEO): " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    if (activeVideoComponentsCollection === null ||
+        activeVideoComponentsCollection === undefined) {
+         window.debug("##### WEBLOG : " +
+            activeVideoComponentsCollection + " value returned from " +
+            "getCurrentActiveComponents. Expected an " +
+            "AVComponentCollection containing a single AVVideoComponent.");
+        tearDown();
+        return;
+    }
+
+    if (activeVideoComponentsCollection.length !== 1) {
+        window.debug("##### WEBLOG : The AVComponentCollection does not have a length of 1. Length: " +
+            activeVideoComponentsCollection.length);
+        tearDown();
+        return;
+    }
+
+    try {
+        allVideoComponents = player.getComponents(
+            player.COMPONENT_TYPE_VIDEO);
+    } catch (ex) {
+         window.debug("##### WEBLOG : Error while calling " +
+            "getComponents(COMPONENT_TYPE_VIDEO): " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (allVideoComponents === null || allVideoComponents === undefined) {
+          window.debug("##### WEBLOG :  " +
+            allVideoComponents + " value returned from getComponents " +
+            "call. Expected an AVComponentCollection containing " +
+            "AVVideoComponents components.");
+        tearDown();
+        return;
+    }
+
+    if (allVideoComponents.length !== 2) {
+
+        window.debug("##### WEBLOG : The AVComponentCollection does not have a length of 2. Length: " +
+            allVideoComponents.length);
+        tearDown();
+        return;
+    }
+
+    for (i = 0; i <= allVideoComponents.length - 1; i++) {
+        if (allVideoComponents[i].pid === null ||
+            allVideoComponents[i].pid === undefined) {
+
+            window.debug("##### WEBLOG : The AVVideoComponent at index " + i + " has an invalid " +
+                "'pid'. Expected an integer, got: " +
+                allVideoComponents[i].pid);
+            tearDown();
+            return;
+        }
+    }
+
+   window.debug("##### WEBLOG : The AVComponentCollection has the expected properties");
+
+    try {
+        activeComponent = activeVideoComponentsCollection[0];
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while retrieving active component. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    try {
+        if (allVideoComponents[0].pid === allVideoComponents[1].pid) {
+            window.debug("##### WEBLOG : Error in AVComponentCollection. Both " +
+                "AVVideoComponents have identical 'pid' values");
+            tearDown();
+            return;
+        }
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while retrieving component. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    try {
+        if (allVideoComponents[0].pid !== activeComponent.pid) {
+            inactiveComponent = allVideoComponents[0];
+        }
+        else if (allVideoComponents[1].pid !== activeComponent.pid) {
+            inactiveComponent = allVideoComponents[1];
+        }
+    } catch (ex) {
+       window.debug("##### WEBLOG : Error while retrieving an AVVideoComponent. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    try {
+        player.addEventListener("SelectedComponentChange",
+            checkSelectedVideoComponents, false);
+    } catch (ex) {
+       window.debug("##### WEBLOG : Error while adding handler for 'SelectedComponentChange' " +
+            "events. Exception details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    window.debug("##### WEBLOG : SelectedComponentChange' event handler successfully added");
+
+    timeout = setTimeout(
+        function() {
+           window.debug("##### WEBLOG : A 'SelectedComponentChange' event with a 'componentType' " +
+                "of COMPONENT_TYPE_VIDEO  was not sent within 30 " +
+                "seconds. Timeout expired.");
+            tearDown();
+            return;
+        },
+        30000);
+
+    try {
+        player.selectComponent(inactiveComponent);
+    } catch (ex) {
+       window.debug("##### WEBLOG : Error while calling selectComponent() method when attempting" +
+            " to select the inactive AVVideoComponent. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    testAPI.reportMessage("Called selectComponent()");
+}
+
+function checkSelectedVideoComponents(e) {
+    if (e === null || e === undefined) {
+       window.debug("##### WEBLOG : Error while dispatching 'SelectedComponentChange': Invalid " +
+            "object received. Got value: " + e);
+        tearDown();
+        return;
+    }
+
+    if (e.componentType !== player.COMPONENT_TYPE_VIDEO) {
+       window.debug("##### WEBLOG : 'SelectedComponentChange' event detected" +
+            " for 'componentType': '" + e.componentType + "'." +
+            "Expected component type = " + player.COMPONENT_TYPE_VIDEO);
+        tearDown();
+        return;
+    }
+
+    clearTimeout(timeout);
+
+    try {
+        player.removeEventListener("SelectedComponentChange",
+            checkSelectedVideoComponents, false);
+    } catch (ex) {
+       window.debug("##### WEBLOG : Error while removing 'SelectedComponentChange' event handler." +
+            "Exception details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    window.debug("##### WEBLOG : A 'SelectedComponentChange' event with a 'componentType' of " +
+        "'COMPONENT_TYPE_VIDEO' was successfully received");
+
+    window.debug("##### WEBLOG : This call checks that the video being presented has changed. ");
+        checkAudioComponents();
+}
+
+function checkAudioComponents() {
+    var activeAudioComponentsCollection;
+    var allAudioComponents;
+    var activeComponent;
+    var inactiveComponent;
+
+    if (player.COMPONENT_TYPE_AUDIO !== 1) {
+
+        window.debug("##### WEBLOG : Error while checking " +
+            "property player.COMPONENT_TYPE_AUDIO. Expected value 1, got " +
+            player.COMPONENT_TYPE_AUDIO);
+        tearDown();
+        return;
+    }
+
+    try {
+        activeAudioComponentsCollection = player.getCurrentActiveComponents(
+            player.COMPONENT_TYPE_AUDIO);
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while calling " +
+            "getCurrentActiveComponents(COMPONENT_TYPE_AUDIO): " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    if (activeAudioComponentsCollection === null ||
+        activeAudioComponentsCollection === undefined) {
+window.debug("##### WEBLOG : " +
+            activeAudioComponentsCollection + " value returned from " +
+            "getCurrentActiveComponents(COMPONENT_TYPE_AUDIO). Expected an " +
+            "AVComponentCollection containing a single AVAudioComponent.");
+        tearDown();
+        return;
+    }
+
+    if (activeAudioComponentsCollection.length !== 1) {
+        window.debug("##### WEBLOG : The AVComponentCollection does not have a length of 1. " +
+            "Length: " + activeAudioComponentsCollection.length);
+        tearDown();
+        return;
+    }
+
+    try {
+        allAudioComponents = player.getComponents(
+            player.COMPONENT_TYPE_AUDIO);
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while calling getComponents(COMPONENT_TYPE_AUDIO): " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    if (allAudioComponents === null || allAudioComponents === undefined) {
+       window.debug("##### WEBLOG : " +
+            allAudioComponents + " value returned from " +
+            "getComponents(COMPONENT_TYPE_AUDIO). Expected an " +
+            "AVComponentCollection containing two AVAudioComponents ");
+        tearDown();
+        return;
+    }
+
+    if (allAudioComponents.length !== 2) {
+      window.debug("##### WEBLOG : The AVComponentCollection does not have a length of 2. " +
+            "Length: " + allAudioComponents.length);
+        tearDown();
+        return;
+    }
+
+    for (i = 0; i <= allAudioComponents.length - 1; i++) {
+        if (allAudioComponents[i].pid === null ||
+            allAudioComponents[i].pid === undefined) {
+
+            window.debug("##### WEBLOG : The AVAudioComponent at index " + i + " has an invalid " +
+                "'pid' value. Expected an integer, got: " +
+                allAudioComponents[i].pid);
+            tearDown();
+            return;
+        }
+    }
+
+   window.debug("##### WEBLOG : The AVComponentCollection has the expected properties");
+
+    try {
+        activeComponent = activeAudioComponentsCollection[0];
+    } catch (ex) {
+       window.debug("##### WEBLOG : Error while retrieving the active AVAudioComponent. Exception " +
+            "details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    try {
+        if (allAudioComponents[0].pid === allAudioComponents[1].pid) {
+            window.debug("##### WEBLOG : Error in AVComponentCollection collection. Both " +
+                "AVAudioComponents have identical 'pid' values");
+            tearDown();
+            return;
+        }
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while accessing an AVAudioComponent. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    try {
+        if (allAudioComponents[0].pid !== activeComponent.pid) {
+            inactiveComponent = allAudioComponents[0];
+        }
+        else if (allAudioComponents[1].pid !== activeComponent.pid) {
+            inactiveComponent = allAudioComponents[1];
+        }
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while accessing an AVAudioComponent. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+
+    try {
+        player.addEventListener("SelectedComponentChange",
+            checkSelectedAudioComponents, false);
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while adding a handler for 'SelectedComponentChange' " +
+            "events. Exception details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    window.debug("##### WEBLOG : 'SelectedComponentChange' event handler successfully added");
+
+    timeout = setTimeout(
+        function() {
+            window.debug("##### WEBLOG : A 'SelectedComponentChange' event with a 'componentType' " +
+                "of COMPONENT_TYPE_AUDIO was not sent within 30 seconds. " +
+                "Timeout expired.");
+            tearDown();
+            return;
+        },
+        30000);
+
+    try {
+        player.selectComponent(inactiveComponent);
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while calling selectComponent() with the inactive "  +
+            "AVAudioComponent. Exception details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    window.debug("##### WEBLOG : Called selectComponent()");
+}
+
+function checkSelectedAudioComponents(e) {
+    if (e === null || e === undefined) {
+        window.debug("##### WEBLOG : Error while dispatching 'SelectedComponentChange': invalid " +
+            "event object received. Got value: " + e);
+        tearDown();
+        return;
+    }
+
+    if (e.componentType !== player.COMPONENT_TYPE_AUDIO) {
+        window.debug("##### WEBLOG : 'SelectedComponentChange' event detected" +
+            " for 'componentType': '" + e.componentType +
+            ". Expected a 'componentType' of " + player.COMPONENT_TYPE_AUDIO);
+        tearDown();
+        return;
+    }
+
+    clearTimeout(timeout);
+
+    try {
+        player.removeEventListener("SelectedComponentChange",
+            checkSelectedAudioComponents, false);
+    } catch (ex) {
+        window.debug("##### WEBLOG : Error while removing 'SelectedComponentChange' event " +
+            "handler. Exception details: " + ex.message);
+        tearDown();
+        return;
+    }
+
+   window.debug("##### WEBLOG : A 'SelectedComponentChange' event with a 'componentType' of " +
+        "'COMPONENT_TYPE_AUDIO' was successfully received");
+
+   window.debug("##### WEBLOG : This call checks that the audio being presented has changed.",
+        "Confirm that the audio is playing and has changed.",
+        function(){
+            tearDown();
+            testAPI.endTest();
+        }
+    );
+}
+</script>
+    </head>
+    <body>
+         <button style="width:150px;"onclick="hbbtvOnLoad()"> av_component </button>
+        <div style="visibility: hidden;">
+            <object type="application/oipfApplicationManager" id="oipfItemAppMan" />
+        </div>
+        <div class="av-control-container" id="container"></div>
+        <div id="ui">
+            <div id="header">
+                <div id="logo-container">
+                    <div id="logo-container-middle" class="middle">
+          
+                    </div>
+                </div>
+                <div id="test-id-container">
+                    <div id="test-id" class="middle">org.hbbtv_AVC01101</div>
+                </div>
+            </div>
+            <div id="test-title">Terminal correctly switches AVComponents using selectComponent(AVComponent) method of A/V control object</div>
+            <div id="debugging"></div>
+        </div>
+         
+    </body>
+</html>

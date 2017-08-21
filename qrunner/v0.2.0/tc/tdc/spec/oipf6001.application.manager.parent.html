@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Manager Parent</title>
+</head>
+<body>
+<p class="console"></p>
+<script type="text/javascript">
+    window.name = 'parent';
+    var childUrl = 'http://192.168.0.2:9876/spec/oipf0013.application.manager.child.html',
+    appMgr = window.oipfObjectFactory.createApplicationManagerObject(),
+    self = appMgr.getOwnerApplication(window.document);
+    self.show();
+    self.activateInput(true);
+
+    appMgr.onApplicationLoaded = function(appl){
+        if(self !== appl){
+            appl.activateInput(false);
+            appl.show();
+            alert("send message from parent");
+            appl.window.postMessage('CHILD REQUEST', childUrl);
+        }
+    };
+
+    var child = self.createApplication(childUrl,true);
+    window.addEventListener('message', function(event){
+        alert("receive  message from child" + event.data);
+        document.getElementsByClassName('console')[0].innerHTML = event.data;
+    }, false);
+</script>
+</body>
+</html>

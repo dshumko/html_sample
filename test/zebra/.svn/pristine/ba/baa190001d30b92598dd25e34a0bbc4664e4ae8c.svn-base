@@ -1,0 +1,96 @@
+
+var tmp_path;
+function getList(type, path){
+    // tmp
+    tmp_path = path;
+    var ref  = "./runner.html?action=list&type=" + type + "&tc=" + path;
+    var ifr = document.getElementById("lister");
+    ifr.contentWindow.location.replace(ref);
+};
+
+function startTest(type, path){
+    var ifr = document.getElementById("runner");
+    var ref = "./runner.html?action=runner&type=" + type + "&tc=" + path;
+    ifr.contentWindow.location.replace(ref);
+}
+var current_level = 0;
+function received(data){
+    LOG("[MAIN] " + data.type + " / "+ data.action + " > "+ data.path );
+    if("list" == data.action){
+        var path = data.path;
+        if (path == "") path = tmp_path;
+
+        for (var i = 0; i < data.testcases.length; i++) {
+            update(data.testcases[i], path, 1, data.log);
+        }
+        ZebraUI.sendEvent("END_LIST", path);
+    }
+    else if("suite start" == data.action){
+        current_level += 1;
+        _data = data.data;
+        LOG("[MAIN] TC ID - " + _data.id + " / " + _data.result);
+        if( "failed" == _data.result) LOG("[MAIN] Fail LOG - " + _data.log);
+        ZebraUI.update(data.path + "_" + _data.id, _data.description, _data.type, _data.result, current_level, _data.log);
+    }
+    else if("suite end" == data.action){
+        current_level -= 1;
+    }
+    else if("spec start" == data.action){
+        current_level += 1;
+    }
+    else if("spec result" == data.action){
+        var _data = data.data;
+        LOG("[MAIN] TC ID - " + _data.id + " / " + _data.result);
+        if( "failed" == _data.result) LOG("[MAIN] Fail LOG - " + _data.log);
+        ZebraUI.update(data.path + "_" + _data.id, _data.description, _data.type, _data.result, current_level, _data.log);
+        current_level -= 1;
+    }
+    else if("test start" == data.action){
+    }
+    else if("test end" == data.action){
+        var obj = {type: data.type, path: data.path,};
+        ZebraUI.sendEvent("END_START", data.path);
+    }
+    else
+        LOG("*** runner message error !!!***");
+}
+
+function update(items, path, level, log)
+{
+    ZebraUI.update(path + "_" + items.id, items.description, items.type, "", level, log);
+    for(var i = 0; i<items.items.length; i++)
+    {
+        update(items.items[i], path, level + 1, log);
+    }
+}
+
+function onGetList(type, path)
+{
+    LOG("[MAIN] getList path - " + path);
+    getList(type, path);
+};
+
+function onStart(type, path)
+{
+    LOG("[MAIN] startTest path - " + path);
+    startTest(type, path);
+};
+
+
+window.onload = function() {
+
+    ZebraUI.init(dataArr);
+
+    window.addEventListener("message", function(e) {
+        var key = e.message ? "message" : "data";
+        var data = e[key];
+
+        if(typeof(e.data)=='object')
+            received(e.data);
+    },false);
+
+    ZebraUI.addCallback("list", onGetList);
+    ZebraUI.addCallback("start", onStart);
+
+    ZebraUI.draw();
+};

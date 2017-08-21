@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AVComponent Test</title>
+</head>
+<body onload="load();">
+<script type="text/javascript">
+    var avControlObj;
+    var load = function() {
+        avControlObj = document.createElement('object');
+        avControlObj.type = "video/mpeg";
+        avControlObj.setAttribute('type', 'video/mpeg');
+        //style
+
+        avControlObj.style.position = "absolute";
+        avControlObj.style.left = "0px";
+        avControlObj.style.top = "0px";
+        avControlObj.style.width = "480px";
+        avControlObj.style.height = "270px";
+        avControlObj.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 480px; height: 270px;");
+        //data
+
+        avControlObj.data = "./ts_multi_codec.ts";
+        avControlObj.setAttribute('data', './ts_multi_codec.ts');
+        //append
+        document.getElementById('avControlObj_wrapper').appendChild(avControlObj);
+        //listener
+        avControlObj.onPlayStateChange = playStateListener;
+        //focus
+        avControlObj.focus();
+
+        avControlObj.play(1);
+    }
+
+    function playStateListener(){
+        if (avControlObj.playState==1)
+        {
+            window.debug("(WEBLOG) state => playing");
+            var audioComponents = new Array();
+            audioComponents.length = 0;
+            audioComponents = avControlObj.getComponents(avControlObj.COMPONENT_TYPE_AUDIO);
+            window.debug("(WEBLOG) audioComponents.length=" + audioComponents.length);
+            for(var i=0; i<audioComponents.length; i++)
+            {
+                window.debug("(WEBLOG) component[" + i + "] encoding = " + audioComponents.item(i).encoding);
+            }
+        }
+    }
+</script>
+    <div id="avControlObj_wrapper"></div>
+</body>
+</html>

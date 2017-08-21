@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="thermal_test.css">
+</head>
+<body onload="init()" onkeydown="keydown(event)" style="margin:0px;">
+<video id="video1" style="width:100%; height:100%; position:absolute; top:0px; left:0px;" loop>
+</video>
+<script>
+    var current_focus = 0;
+
+    function init()
+    {
+        $("body").append('<div id="d1" style="width:100px; height:40px; position:absolute; top:100px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d2" style="width:100px; height:40px; position:absolute; top:150px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d3" style="width:100px; height:40px; position:absolute; top:200px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d4" style="width:100px; height:40px; position:absolute; top:250px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d5" style="width:100px; height:40px; position:absolute; top:300px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d6" style="width:100px; height:40px; position:absolute; top:350px; left:1000px; background-color: red;"></div>');
+
+        var video = document.getElementById("video1");
+        if ( video )
+        {
+            video.src = "http://10.0.14.169/streams/4k/4k_vp9.webm";
+            video.play();
+        }
+
+        $("#d1").hide();
+        $("#d2").hide();
+        $("#d3").hide();
+        $("#d4").hide();
+        $("#d5").hide();
+        $("#d6").hide();
+    }
+
+    function keydown(event)
+    {
+        switch(event.keyCode)
+        {
+            case 40://down
+                if(++current_focus > 6) current_focus = 1;
+                moveFocus(current_focus);
+                break;
+            case 38://up
+                if(--current_focus < 1) current_focus = 6;
+                moveFocus(current_focus);
+                break;
+            default: break;
+        }
+        console.log(event.keyCode);
+    }
+
+    function moveFocus(index)
+    {
+        for(var i=1; i<7; i++)
+        {
+            var s = "#d"+i;
+            if(index==i) $(s).show();
+            else $(s).hide();
+        }
+    }
+
+</script>
+<div class="starwars-demo">
+    <img src="//cssanimation.rocks/demo/starwars/images/star.svg" alt="Star" class="star">
+    <img src="//cssanimation.rocks/demo/starwars/images/wars.svg" alt="Wars" class="wars">
+    <h2 class="byline" id="byline">The Force Awakens</h2>
+</div>
+<ul class="wrapper">
+    <div class="sun">
+        <div class="star"></div>
+    </div>
+    <div class="mercury">
+        <div class="planet">
+            <div class="shadow"></div>
+        </div>
+    </div>
+    <div class="venus">
+        <div class="planet">
+            <div class="shadow"></div>
+        </div>
+    </div>
+    <div class="earth">
+        <div class="planet"><div class="shadow"></div></div>
+    </div>
+    <div class="mars">
+        <div class="planet"><div class="shadow"></div></div>
+    </div>
+    <div class="jupiter">
+        <div class="planet"><div class="shadow"></div></div>
+    </div>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<script type="text/javascript" src="js/ad_insertion.js"></script>
+</head>
+
+<body style=""><button style="width:150px;" onclick="step_1()"> 1. make player1  </button> - preload:auto/display:none 
+<button style="width:150px;" onclick="step_1_1()"> 2. player load() </button> - load()
+
+<button style="width:70px;" onclick="control('player1','play')"> play </button> 
+<button style="width:70px;" onclick="control('player1','pause')"> pause</button> 
+<button style="width:70px;" onclick="control('player1','show')"> show</button> 
+<button style="width:70px;" onclick="control('player1','hide')"> hide</button> 
+<button style="width:70px;" onclick="control('player1','remove')"> remove</button> 
+<br>
+
+
+<button style="width:150px;" onclick="step_2()"> 3. make player2  </button> - preload:none/display:block 
+<button style="width:150px;" onclick="step_2_1()"> 4. player2 play() </button> - play() 
+<button style="width:70px;" onclick="control('player2','play')"> play </button> 
+<button style="width:70px;" onclick="control('player2','pause')"> pause</button> 
+<button style="width:70px;" onclick="control('player2','show')"> show</button> 
+<button style="width:70px;" onclick="control('player2','hide')"> hide</button> 
+<button style="width:70px;" onclick="control('player2','remove')"> remove</button> 
+<br>
+
+<button style="width:150px;" onclick="step_3()"> 5. player1 display </button> - player1 display:block <br>
+<button style="width:150px;" onclick="step_4()"> 6. player2 pause()  </button> - player2 pause()  <br>
+<button style="width:150px;" onclick="step_5()"> 7. player1 play()  </button> - player 1 play() <br>
+<button style="width:150px;" onclick="step_6()"> 8. player2 hide </button> - player2 display:none <br> <br>
+
+<button style="width:150px;" onclick="step_7()"> ready </button> step 1 ~ 4 
+<button style="width:150px;" onclick="step_8()"> switch </button> step 5 ~ 8 <br> <br>
+
+<button style="width:150px;" onclick="step_9()"> scenario </button> player2 ~ 5s ~ switch ~ player1 <br> <br>
+<button style="width:150px;" onclick="step_10()"> remove </button> player 1,2 remove <br> <br>
+
+<button style="width:150px;" onclick="step_11()"> load </button> player 2  - src change <br> <br>
+
+<div id="node"> 
+	<video id="player1" controls="true" width="320" height="240" preload="auto" src="http://html5demos.com/assets/dizzy.mp4" style="display: none;"></video>
+	<video id="player2" controls="true" width="320" height="240" preload="none" src="http://10.0.12.33/media/video_sample.mp4" style="display: none;"></video>
+</div>
+
+
+</body></html>

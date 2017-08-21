@@ -1,0 +1,353 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+
+  <script type="text/javascript">
+//<![CDATA[
+var testHarness = true; //To run without test harness, change this var to 'false', and comment out line 8 (testsuite.js)
+
+if (testHarness){
+
+}
+
+function hbbtvOnLoad(){
+	var reportedStepFour=false;
+	var initialId = 0;
+	var nextId = 0;
+	var componentChangeTimeout;
+	var initialCodec;
+
+	
+	// App Init
+	try{
+		var appMgr = document.getElementById('appMgr').getOwnerApplication(document);
+		appMgr.show();
+		window.debug("+++(WEBLOG) Test App Initialised");
+	} catch(e) {
+		window.debug("+++(WEBLOG) Test App initialisation failed: " + e);
+		return;
+	}
+	
+	//AVControlConfigure
+	try{
+		var avControlObj = document.createElement('object');
+		
+		//both methods of setting attributes are used for maximum interoperability
+		//type
+		
+		avControlObj.type = "video/mp4";
+		avControlObj.setAttribute('type', 'video/mp4');
+		//style
+		
+		avControlObj.style.position = "absolute";
+		avControlObj.style.left = "0px";
+		avControlObj.style.top = "0px";
+		avControlObj.style.width = "480px";
+		avControlObj.style.height = "270px";
+		avControlObj.setAttribute("style", "position: absolute; left: 0px; top: 0px; width: 480px; height: 270px;");
+		//data
+		
+		avControlObj.data = "http://10.0.12.35/media/mp4_multi_codec.mp4";
+		avControlObj.setAttribute('data','http://10.0.12.35/media/mp4_multi_codec.mp4');
+		//append
+		document.getElementById('avControlObj_wrapper').appendChild(avControlObj);
+		//listener
+		avControlObj.onPlayStateChange = playStateListener;
+		//focus
+		avControlObj.focus();
+		
+		window.debug("+++(WEBLOG) avControlObj configured successfully");
+	}catch(e){
+		window.debug("+++(WEBLOG) Error configuring avControlObj: " + e);
+		return;
+	}
+	
+	//AVControlPlay
+	try{
+		var playStateTimeout = setTimeout(playFail,30000); 
+		avControlObj.play(1);
+		window.debug("+++(WEBLOG) avControlObj.play() successful");
+		window.debug("+++(WEBLOG) Waiting for PlayStateChanged event");
+	}catch(e){
+		window.debug("+++(WEBLOG) Error calling avControlObj.play(): " + e);
+		clearTimeout(playStateTimeout);
+		return;
+	}
+	
+	//PlayState fails to return
+	function playFail(){
+		reportedStepFour = true;
+		
+		if (avControlObj.playState==1){
+			window.debug("+++(WEBLOG) 30s Timeout. No onPlayStateChange event received, but avControlObj.playState IS equal to 1. It is recommended that you test for correct firing of onPlayStateChanged events");
+			reportPlayState(avControlObj.playState);
+			stageTwo();
+		}else{
+			window.debug("+++(WEBLOG) 30s Timeout. No onPlayStateChange event received, and avControlObj.playState equals " + avControlObj.playState);
+			avControlObj.stop();
+		}
+		return;
+	}
+
+	//Handler for playStateChanged events - if playing, then trigger analysis.
+	function playStateListener(){
+		if ((avControlObj.playState==1)&&(!reportedStepFour)){
+			clearTimeout(playStateTimeout);
+			reportedStepFour = true;
+			window.debug("+++(WEBLOG) playStateChanged avControlObj.playstate reports 1 (playing)");
+			window.debug("+++(WEBLOG) Waiting 10 seconds to ensure playback has started...")
+			setTimeout(stageTwo,10000);
+			return;
+		}
+		reportPlayState(avControlObj.playState);
+	}
+
+
+	
+	function stageTwo(){
+		//call getComponents
+		var audioComponents = new Array();
+		audioComponents.length = 0;
+		try {
+			audioComponents = avControlObj.getComponents(avControlObj.COMPONENT_TYPE_AUDIO);
+			window.debug("+++(WEBLOG) Calling avControlObj.getComponents(avControlObj.COMPONENT_TYPE_AUDIO) did not raise an exception");
+		} catch(e) {
+			window.debug("+++(WEBLOG) Calling avControlObj.getComponents(avControlObj.COMPONENT_TYPE_AUDIO) failed: " + e);
+			avControlObj.stop();
+			return;
+		}
+		
+		//see how many came back
+		if (audioComponents.length==2){
+			window.debug("+++(WEBLOG) avControlObj.getComponents( avControlObj.COMPONENT_TYPE_AUDIO ) correctly returned 2 components");
+		} else {
+			window.debug("+++(WEBLOG) avControlObj.getComponents( avControlObj.COMPONENT_TYPE_AUDIO ) returned "+audioComponents.length+" components. Expected 2.");
+			if (audioComponents.length==0){ 
+				avControlObj.stop();
+				return; 
+			}
+		}
+	
+		//get values
+		try {
+			var audioComponentData = new Array();
+			for (var i=0; i<audioComponents.length; i++) {
+				audioComponentData[i] = audioComponents.item(i).encoding;
+				reportComponent("Stream " + i + ", encoding:","'" + audioComponentData[i] + "'");
+			}
+			window.debug("+++(WEBLOG) Acquired codecs from AV Component Object");
+		} catch(e) {
+			window.debug("+++(WEBLOG) Failed to acquire codecs from AV Component Object: " + e);
+			avControlObj.stop();
+			return;
+		}
+		
+        //get current component
+		var activeComponents = new Array();
+		activeComponents.length = 0;
+		try {
+			activeComponents = avControlObj.getCurrentActiveComponents(avControlObj.COMPONENT_TYPE_AUDIO);
+			window.debug("+++(WEBLOG) Calling avControlObj.getCurrentActiveComponents( avControlObj.COMPONENT_TYPE_AUDIO ) did not raise an exception");
+		} catch(e) {
+			window.debug("+++(WEBLOG) Calling avControlObj.getComponents( avControlObj.COMPONENT_TYPE_AUDIO ) failed: " + e);
+			avControlObj.stop();
+			return;
+		}
+            
+		//see how many came back
+		if (activeComponents.length==1){
+			window.debug("+++(WEBLOG) avControlObj.getCurrentActiveComponents( avControlObj.COMPONENT_TYPE_AUDIO ) correctly returned 1 components");
+		} else {
+			window.debug("+++(WEBLOG) avControlObj.getComponents( avControlObj.COMPONENT_TYPE_AUDIO ) returned "+activeComponents.length+" components. Expected 1.");
+			if (activeComponents.length==0){ 
+				avControlObj.stop();
+				return; 
+			}
+		}
+        
+        //get value
+		try {
+			initialCodec = activeComponents.item(0).encoding;
+			window.debug("+++(WEBLOG) Initial codec:","'" + initialCodec + "'");
+
+			window.debug("+++(WEBLOG) Acquired initial codec from getCurrentActiveComponents");
+		} catch(e) {
+			window.debug("+++(WEBLOG) Failed to acquire initial codec from getCurrentActiveComponents: " + e);
+			avControlObj.stop();
+			return;
+		}
+        
+        //check value matches one from getComponents
+		try{
+			for (var i=0; i<audioComponentData.length; i++) {
+				window.debug("+++(WEBLOG) encoding -> " + audioComponentData[i]);
+				if (initialCodec==audioComponentData[i]){
+					initialId = i;
+					nextId = 1-i;
+				}
+			}        
+			if (((initialId==0)&&(nextId==1))||((initialId==1)&&(nextId==0))){
+				window.debug("+++(WEBLOG) Initial codec correctly matches a codec returned by getComponents");
+			} else {
+				window.debug("+++(WEBLOG) Initial codec does not match any codec returned by getComponents");
+				avControlObj.stop();
+				return;
+			}
+		} catch(e) {
+			window.debug("+++(WEBLOG) Error matching initial codec to codecs returned by getComponents: " + e);
+		}
+        
+        //check value correctly matches component ID
+        if (initialCodec=="E-AC3"){
+			window.debug("+++(WEBLOG) Initial codec correctly identified as E-AC3");
+		} else if (initialCodec=="HEAAC"){
+            window.debug("+++(WEBLOG) Initial codec identified as "+initialCodec+". This is the second codec specified by the media file.");
+        } else {
+            window.debug("+++(WEBLOG) Initial codec identified as "+initialCodec+"; Expected E-AC3 or HEAAC. It is recommended that you test for the correct selection of default component");
+        	avControlObj.stop();
+            return;
+		}
+        
+        //select the other component
+        try{
+            avControlObj.onSelectedComponentChanged = componentChangeListener;
+            componentChangeTimeout = setTimeout(componentChangeFail,30000);
+			avControlObj.selectComponent(audioComponents[nextId]);
+            window.debug("+++(WEBLOG) Calling avControlObj.selectComponent( audioComponents["+nextId+"] ) did not raise an exception"); 
+        } catch(e) {
+            window.debug("+++(WEBLOG) Calling avControlObj.selectComponent( audioComponents["+nextId+"] ) failed: " + e);
+            avControlObj.stop();
+            return;
+        }
+        
+		return;
+	}
+    function componentChangeFail(){
+		window.debug("+++(WEBLOG) 30s Timeout. No onSelectedComponentChanged event received");
+		avControlObj.stop();
+		return;
+    }
+    
+    function componentChangeListener(type) {
+    	window.debug("+++(WEBLOG) componentChangeListener !!!! type->" + type);
+        if ((type==avControlObj.COMPONENT_TYPE_AUDIO)||(type=='undefined'))
+        {
+			clearTimeout(componentChangeTimeout);
+			window.debug("+++(WEBLOG) onSelectedComponentChanged event received.");
+			
+			//cancel listener
+			avControlObj.onSelectedComponentChanged = null;
+			
+			window.debug("+++(WEBLOG) Waiting 10 seconds to ensure playback has started...");
+			setTimeout(stageThree,10000);
+			return;
+		}
+		
+    }
+	
+    function stageThree() {
+        //get current component
+		var newActiveComponents = new Array();
+		newActiveComponents.length = 0;
+		try {
+			newActiveComponents = avControlObj.getCurrentActiveComponents(avControlObj.COMPONENT_TYPE_AUDIO);
+			window.debug("+++(WEBLOG) Calling avControlObj.getCurrentActiveComponents( avControlObj.COMPONENT_TYPE_AUDIO ) did not raise an exception");
+		} catch(e) {
+			window.debug("+++(WEBLOG) Calling avControlObj.getComponents( avControlObj.COMPONENT_TYPE_AUDIO ) failed: " + e);
+			avControlObj.stop();
+			return;
+		}
+            
+		//see how many came back
+		if (newActiveComponents.length==1){
+			window.debug("+++(WEBLOG) avControlObj.getCurrentActiveComponents( avControlObj.COMPONENT_TYPE_AUDIO ) correctly returned 1 components");
+		} else {
+			window.debug("+++(WEBLOG) avControlObj.getComponents( avControlObj.COMPONENT_TYPE_AUDIO ) returned "+newActiveComponents.length+" components. Expected 1.");
+			avControlObj.stop();
+			return; 
+		}
+        
+        //get value
+		try {
+			var selectedCodec = newActiveComponents.item(0).encoding;
+			window.debug("+++(WEBLOG) New selected codec:","'" + selectedCodec + "'");
+
+			window.debug("+++(WEBLOG) Acquired new selected codec from getCurrentActiveComponents");
+		} catch(e) {
+			window.debug("+++(WEBLOG) Failed to acquire new selected codec from getCurrentActiveComponents: " + e);
+			avControlObj.stop();
+			return;
+		}
+        
+        //check value
+        if (((initialCodec=="HEAAC")&&(selectedCodec=="E-AC3"))||
+            ((initialCodec=="E-AC3")&&(selectedCodec=="HEAAC"))){
+			window.debug("+++(WEBLOG) New selected codec correctly identified as " + selectedCodec);
+		} else {
+            if (initialCodec=="E-AC3") {
+                var expectedCodec = "HEAAC";
+            } else if (initialCodec=="HEAAC") {
+                var expectedCodec = "E-AC3";
+            } else {
+                var expectedCodec = "ERROR";
+            }
+            window.debug("+++(WEBLOG) Selected codec reported as '" + selectedCodec + "'. Expected '" + expectedCodec + "'.");
+			avControlObj.stop();
+			return;
+        }
+        
+        //check it sounds OK
+        if (nextId==0) {
+            finalStep();
+        } else if(nextId==1){
+            finalStep();
+        }
+        
+        return;
+    }
+	
+	function finalStep() {
+		if(testHarness){
+			testApi.endTest();
+		}
+		avControlObj.stop();
+		return;
+	}
+
+}
+
+
+function reportPlayState(playState){
+	var playStateDebugDiv = document.getElementById("playStateDebug");
+	playStateDebugDiv.childNodes[0].nodeValue = playState;
+}
+function reportComponent(k,v){
+	var componentDebugDiv = document.getElementById("componentDebug");
+	if((k!=null)&&(v!=null)){
+		componentDebugDiv.appendChild(document.createTextNode(k + " " + v));
+		componentDebugDiv.appendChild(document.createElement('br'));
+	}
+}
+
+//]]>
+    </script>
+    </head>
+    <body>
+    <button style="width:150px;"onclick="hbbtvOnLoad()"> av_component </button>
+	<div id="safe_area">
+		<div id="step_wrapper">
+			<div class="banner">TEST STEPS</div>
+			<div id="steps"></div>
+		</div>
+		<div id="avControlObj_wrapper"></div>
+		<div id="status_wrapper">
+			<div class="banner">STATUS</div>
+			<div id="status"><div style="float:left;position:inline;">avControlObj.playState=</div><div style="position:inline;" id="playStateDebug">0</div><br/><div style="float:left;position:inline;">Components:</div><br/><div style="position:inline;" id="componentDebug"> </div></div>
+		</div>
+	</div>
+	    <div style="visibility: hidden; width: 0; height: 0;">
+            <object id="appMgr" type="application/oipfApplicationManager"></object>
+            <object id="appCfg" type="application/oipfConfiguration"></object>
+        </div>	
+    </body>
+</html>

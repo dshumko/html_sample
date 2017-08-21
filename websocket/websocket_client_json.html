@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        var websocket;
+        var ip = "";
+        $(document).ready(function(){
+            window.WebSocket = window.WebSocket || window.MozWebSocket;
+            var websocket;
+            var ip = "";
+            $("#connect_btn").click(function(e) {
+                e.preventDefault();
+                var connect_ip = "ws://" +  $("#ip_input").val();
+                websocket = new WebSocket(connect_ip);
+
+                websocket.onopen = function () {
+                    $("#connect_btn").hide();
+                    $("#ip_input").attr("disabled",true);
+                    $('h1').css('color', 'green');
+                };
+
+                websocket.onerror = function () {
+                    $('h1').css('color', 'red');
+                };
+
+                websocket.onmessage = function (message) {
+                    $('div').append($('<p>', { text: message.data }));
+
+                    var obj = JSON.parse(message.data);
+                    {
+                        switch(obj.module)
+                        {
+                            case "network":
+                                console.log("network");
+                                break;
+                            case "dmr":
+                                console.log("dmr");
+                                break;
+                            default: break;
+                        }
+                    }
+                };
+            });
+
+            $("#send_btn").click(function(e) {
+                e.preventDefault();
+                websocket.send($("#send_input").val());
+                $("#send_input").val('');
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>WebSockets test</h1>
+<form>
+    <input id="ip_input" type="text" />
+    <button id="connect_btn">Connect</button>
+    ex) 192.168.0.3:4434 ( IP:Port )
+    <br>
+    <input id="send_input" type="text" />
+    <button id="send_btn">Send</button>
+</form>
+<div></div>
+</body>
+</html>

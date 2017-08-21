@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<script>
+			var player, source_elem;
+			function control(c){
+				if(c == 'play'){
+					var pos = document.getElementById("node");
+					player = document.createElement('video');
+					pos.appendChild(player);
+		
+					source_elem = document.createElement("source");
+					source_elem.setAttribute("src", "error.mp4");
+					//source_elem.setAttribute("src", "http://10.0.12.35/media/MCCAS-DRM-FAIL/stream.mpd");
+					//source_elem.addEventListener("error", videoErrorListener_child, false);
+					player.appendChild(source_elem);
+          
+					player.setAttribute('id', 'player');
+					player.setAttribute('controls', true);
+					player.setAttribute('width', 320);
+					player.setAttribute('height', 240);
+					player.setAttribute('preload', 'auto');
+					player.style.display = "block";
+					//player.addEventListener("error", videoErrorListener, false);
+					player.addEventListener("error", videoErrorListener, true);
+					player.play();
+				}
+			}
+			function videoErrorListener(){
+						if(player.error == null)
+							window.debug("player.error == null");
+						else
+						{
+							window.debug("error code:" + player.error.code);
+						}
+			}
+			function videoErrorListener_child(){
+						if(player.error == null)
+							window.debug("player.error == null");
+						else
+						{
+							window.debug("(child)error code:" + player.error.code);
+						}
+			}
+		</script>
+	</head>
+	<body bgcolor="white">
+		<button style="width:70px;" onclick="control('play')">play</button>
+		<br>
+		<br>
+		<div id="node"> 
+		</div>
+	</body>
+</html>

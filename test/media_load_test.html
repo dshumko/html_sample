@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<script>
+			var video;
+			var count = 0;
+
+			function control(c){
+				if(c == 'play'){
+					if( video ) video.play();
+				}
+				if(c == 'load'){
+					if( video )
+					{
+						//video.addEventListener("canplay", onCanPlayEvent, false); 
+						video.load();
+					}
+				}
+			}
+			
+			function onCanPlayEvent() {
+				 window.console.log("call canplay -> " + count++);
+			}
+			
+			window.onload = function () {
+				video = document.getElementById("html5video");
+			}
+			
+		</script>
+	</head>
+	<body bgcolor="white">
+		<div>
+            <video loop id="html5video" oncanplay="onCanPlayEvent()">
+                <source src="http://www.w3schools.com/html/mov_bbb.mp4">
+            </video>
+    </div>
+		<button style="width:70px;" onclick="control('load')"> load </button>
+	  <button style="width:70px;" onclick="control('play')"> play </button>
+		<div id="node"> 
+		</div>
+	</body>
+</html>

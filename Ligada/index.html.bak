@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<meta name="author" content="Jesper Gustin" />
+	<title></title>
+	
+	<script type="text/javascript">
+
+		var testapi = null,
+			video = null,
+			app = null;
+
+		window.onload = function() {
+
+			// Init test api 
+			window.debug('###### (WEBLOG) 1 Test started');
+
+			try {
+				app = document.getElementById('appmgr').getOwnerApplication(document);
+				app.show();
+				window.debug('###### (WEBLOG) 1 pplication was started and shown successfully');
+			} catch (err) {
+				window.debug('###### (WEBLOG) 1 Application was not started and shown successfully');
+			}
+			
+			/*
+			* Start the B-I application
+			*/
+			testapi.waitForCommunicationCompleted(function() {
+				try {
+					app.createApplication('http://hbbtv2.test/_TESTSUITE/TESTS/org.hbbtv_00000340/xmlait.aitx', false);
+				} catch (err) {
+					window.debug('###### (WEBLOG) 2 B-I application not started');
+				}
+			}, null);
+			
+		}
+//]]>
+	</script>
+
+</head>
+<body style="background: #fff; padding: 40px 130px">
+
+	<div id="result">NOT TESTED</div>
+	<object id="appmgr" type="application/oipfApplicationManager" width="1" height="1"></object>
+
+</body>
+</html>

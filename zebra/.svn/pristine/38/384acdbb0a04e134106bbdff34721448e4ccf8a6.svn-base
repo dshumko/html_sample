@@ -1,0 +1,123 @@
+describe("7.4 Content download APIs", function() {
+    var oipfobjectFactory;
+    var downloadTrigger;
+    var downloadManager;
+    var downloadCollection;
+    var download;
+    var dRMControlInfoCollection;
+    var dRMControlInformation;
+
+    oipfobjectFactory = window.oipfObjectFactory;
+
+    try{
+        downloadTrigger = oipfobjectFactory.createDownloadTriggerObject();
+    } catch(e) {
+        downloadTrigger = undefined;
+    }
+
+    try{
+        downloadManager = oipfobjectFactory.createDownloadManagerObject();
+    } catch(e){
+        downloadManager = undefined;
+    }
+
+    describe("7.4.1 The application/oipfDownloadTrigger embedded object", function() {
+        describe("7.4.1.1 Methods", function() {
+            it("registerDownload", function() { expect(downloadTrigger.registerDownload).toBeDefined(); });
+            it("registerDownloadURL", function() { expect(downloadTrigger.registerDownloadURL).toBeDefined(); });
+            it("checkDownloadPossible", function() { expect(downloadTrigger.checkDownloadPossible).toBeDefined(); });
+        });
+    });
+    describe("7.4.2 Extensions to application/oipfDownloadTrigger", function() {
+        it("registerDownloadFromCRID", function() { expect(downloadTrigger.registerDownloadFromCRID).toBeDefined(); });
+    });
+    describe("7.4.3 The application/oipfDownloadManager embedded object", function() {
+        describe("7.4.3.2 Properties", function() {
+            it("onDownloadStateChange", function() { expect(downloadManager.onDownloadStateChange).toBeDefined(); });
+            it("discInfo", function() { expect(downloadManager.discInfo).toBeDefined(); });
+            it("hasReserved", function() { expect(downloadManager.hasReserved).toBeDefined(); });
+            it("allocated", function() { expect(downloadManager.allocated).toBeDefined(); });
+        });
+        describe("7.4.3.3 Methods", function() {
+            it("pause", function() { expect(downloadManager.pause).toBeDefined(); });
+            it("resume", function() { expect(downloadManager.resume).toBeDefined(); });
+            it("remove", function() { expect(downloadManager.remove).toBeDefined(); });
+            it("getDownloads", function() { expect(downloadManager.getDownloads).toBeDefined(); });
+            it("createFilteredList", function() { expect(downloadManager.createFilteredList).toBeDefined(); });
+            it("updateRegisteredDownload", function() { expect(downloadManager.updateRegisteredDownload).toBeDefined(); });
+            it("reserve", function() { expect(downloadManager.reserve).toBeDefined(); });
+        });
+        describe("7.4.3.5 Constants", function() {
+            it("RESERVE_OK", function() { expect(downloadManager.RESERVE_OK).toBeDefined(); });
+            it("RESERVE_NEVER", function() { expect(downloadManager.RESERVE_NEVER).toBeDefined(); });
+            it("RESERVE_USER_INTERVENTION_REQD", function() { expect(downloadManager.RESERVE_USER_INTERVENTION_REQD).toBeDefined(); });
+            it("RESERVE_USER_DECLINED", function() { expect(downloadManager.RESERVE_USER_DECLINED).toBeDefined(); });
+            it("RESERVE_TOO_LARGE", function() { expect(downloadManager.RESERVE_TOO_LARGE).toBeDefined(); });
+            it("RESERVE_SMALLER_THAN_USED", function() { expect(downloadManager.RESERVE_SMALLER_THAN_USED).toBeDefined(); });
+            it("RESERVE_UNKNOWN", function() { expect(downloadManager.RESERVE_UNKNOWN).toBeDefined(); });
+        });
+    });
+    describe("7.4.4 The Download class", function() {
+        beforeEach(function() {
+            downloadCollection = downloadManager.getDownloads("id");
+            download = downloadCollection[0];
+        });
+        describe("7.4.4.1 Properties", function() {
+            it("totalSize", function() { expect(download.totalSize).toBeDefined(); });
+            it("state", function() { expect(download.state).toBeDefined(); });
+            it("reason", function() { expect(download.reason).toBeDefined(); });
+            it("amountDownloaded", function() { expect(download.amountDownloaded).toBeDefined(); });
+            it("currentBitrate", function() { expect(download.currentBitrate).toBeDefined(); });
+            it("name", function() { expect(download.name).toBeDefined(); });
+            it("id", function() { expect(download.id).toBeDefined(); });
+            it("uri", function() { expect(download.uri).toBeDefined(); });
+            it("contentURL", function() { expect(download.contentURL).toBeDefined(); });
+            it("description", function() { expect(download.description).toBeDefined(); });
+            it("parentalRatings", function() { expect(download.parentalRatings).toBeDefined(); });
+            it("drmControl", function() { expect(download.drmControl).toBeDefined(); });
+            it("startTime", function() { expect(download.startTime).toBeDefined(); });
+            it("timeElapsed", function() { expect(download.timeElapsed).toBeDefined(); });
+            it("timeRemaining", function() { expect(download.timeRemaining).toBeDefined(); });
+            it("transferType", function() { expect(download.transferType).toBeDefined(); });
+            it("originSite", function() { expect(download.originSite).toBeDefined(); });
+            it("originSiteName", function() { expect(download.originSiteName).toBeDefined(); });
+            it("contentID", function() { expect(download.contentID).toBeDefined(); });
+            it("iconURL", function() { expect(download.iconURL).toBeDefined(); });
+            it("metadata", function() { expect(download.metadata).toBeDefined(); });
+            it("priority", function() { expect(download.priority).toBeDefined(); });
+            it("suspendedByTerminal", function() { expect(download.suspendedByTerminal).toBeDefined(); });
+        });
+    });
+    describe("7.4.5 The DownloadCollection class", function() {
+        beforeEach(function() {
+            downloadCollection = downloadManager.getDownloads("id");
+        });
+        it("DownloadCollection", function() { expect(downloadCollection).toBeDefined(); });
+    });
+    describe("7.4.6 The DRMControlInformation class", function() {
+        beforeEach(function() {
+            downloadCollection = downloadManager.getDownloads("id");
+            download = downloadCollection[0];
+            dRMControlInfoCollection = download.drmControl;
+            dRMControlInformation = dRMControlInfoCollection[0];
+        });
+        describe("7.4.6.1 Properties", function() {
+            it("drmType", function() { expect(dRMControlInformation.drmType).toBeDefined(); });
+            it("rightsIssuerURL", function() { expect(dRMControlInformation.rightsIssuerURL).toBeDefined(); });
+            it("silentRightsURL", function() { expect(dRMControlInformation.silentRightsURL).toBeDefined(); });
+            it("drmContentID", function() { expect(dRMControlInformation.drmContentID).toBeDefined(); });
+            it("previewRightsURL", function() { expect(dRMControlInformation.previewRightsURL).toBeDefined(); });
+            it("drmPrivateData", function() { expect(dRMControlInformation.drmPrivateData).toBeDefined(); });
+            it("doNotRecord", function() { expect(dRMControlInformation.doNotRecord).toBeDefined(); });
+            it("doNotTimeShift", function() { expect(dRMControlInformation.doNotTimeShift).toBeDefined(); });
+        });
+    });
+    describe("7.4.7 The DRMControlInfoCollection class", function() {
+        beforeEach(function() {
+            downloadCollection = downloadManager.getDownloads("id");
+            download = downloadCollection[0];
+            dRMControlInfoCollection = download.drmControl;
+        });
+        it("DRMControlInfoCollection", function() { expect(dRMControlInfoCollection).toBeDefined(); });
+    });
+});

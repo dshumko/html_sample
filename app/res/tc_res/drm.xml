@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PlayReadyInitiator
+xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">
+<LicenseServerUriOverride>
+<LA_URL>https://drm.example.com/rightsmanager.asmx</LA_URL>
+</LicenseServerUriOverride>
+</PlayReadyInitiator>

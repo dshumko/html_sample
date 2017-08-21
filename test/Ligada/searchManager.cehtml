@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <script type="text/javascript">
+				var oipfSearchMan;
+				var search;
+				var channel;
+				
+				var ONID = 99;
+				var TSID = 1;
+				var SID = 12;
+				
+				function hbbtvOnLoad() {
+					//document.getElementById("oipfItemAppMan").getOwnerApplication(document).show();
+		
+	    		oipfSearchMan = document.getElementById("oipfSearchMan");
+	    		search = oipfSearchMan.createSearch(1);
+	    		var channelConfig = oipfSearchMan.getChannelConfig();
+    		
+    		
+	    		var channelList = channelConfig.channelList;
+	    		channel = channelConfig.channelList.getChannelByTriplet(ONID, TSID, SID);
+					searchTimeout = setTimeout(onSearchTimeout, 60000);
+					var START_TIME = null;
+	    		search.findProgrammesFromStream(channel, START_TIME);
+	    		oipfSearchMan.addEventListener("MetadataSearch", onMetadataSearch, false);
+	    		search.result.getResults(0, 100);
+    		}
+    		
+    		function onMetadataSearch(e) {
+	    			oipfSearchMan.removeEventListener("MetadataSearch", onMetadataSearch,
+	                                          false);
+	                                          
+	          if (e.state !== 0) {
+	          
+	          }
+	          
+	          checkResults();
+	    		}
+	    		
+	    		function onSearchTimeout() {
+	    			oipfSearchMan.removeEventListener("MetadataSearch", onMetadataSearch,
+	                                          false);
+		        var msg;
+				    if (resultDeficit) {
+				        msg = "Search returned less results than expected. Expected: " +
+				              EXPECTED_PROGRAMME_ID_LIST.length +
+				              ", actual: " + search.result.length;
+				    } else {
+				        msg = "'MetadataSearch' event was not dispatched after 60 seconds";
+				    }
+	    
+	    		}
+	    		
+	    		function checkResults() {
+	    			
+	    		}
+	    		
+    
+        </script>
+    </head>
+    <body onload="hbbtvOnLoad();">
+        <div style="visibility: hidden;">
+          <object
+            type="application/oipfApplicationManager"
+            id="oipfItemAppMan" />
+          <object
+            type="application/oipfSearchManager"
+            id="oipfSearchMan" />
+    		</div>
+        <div style="position: absolute; top: 10%; right: 10%; left: 10%; text-align: center;">
+            <input type="text" id="text-input" />
+        </div>
+    </body>
+</html>

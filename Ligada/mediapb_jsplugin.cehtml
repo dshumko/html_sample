@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+	 <title></title>
+	 
+	 <script> 
+	 var gPlayer;
+		var gMediaResource_0 = 'http://10.0.12.35/media/Avatar.mp4';
+		var gMimeType_0 = 'video/mp4';
+
+	 function myFunction()
+	 {
+		 	gPlayer = document.createElement("object");
+			gPlayer.setAttribute("type", gMimeType_0);
+	    gPlayer.setAttribute("id", "video");
+	    gPlayer.style.width = 720;
+	    gPlayer.style.height = 640;
+			gPlayer.setAttribute("data", gMediaResource_0);
+			document.getElementById('playerdiv').appendChild(gPlayer);
+			
+			gPlayer.onPlayStateChange = checkPlayState;
+			gPlayer.play(0);
+	 }
+	
+		function checkPlayState()
+		{
+			window.debug(gPlayer.playState);
+		}
+		
+		function media_pause()
+		{
+			gPlayer.play();
+		}
+		
+	 </script>
+    </head>
+	<body id="body">	
+        
+    <div id="description"><span id="desc"></span></div>
+		<div style="display:none; visibility:hidden;">
+			<object type="application/oipfApplicationManager" id="oipfItemAppMan"></object>
+			<object type="application/oipfConfiguration" id="oipfItemConfig"></object>
+		</div>
+        <div id="debugging"></div>
+		<div id="playerdiv"></div>
+		
+		<button onclick="myFunction()" type="button">media pause</button><br> 
+		<button onclick="media_pause()" type="button">media play</button><br> 
+		
+	</body>
+</html>

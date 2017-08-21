@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<style>
+			#p1 {
+				position: absolute;
+				left: 50px;
+			}
+			#p2 {
+				position: absolute;
+				left: 400px;
+			}
+			#p3 {
+				position: absolute;
+				left: 750px;
+			}
+			#ps1, #ps2, #ps3 {
+				position: absolute;
+				left: 50px;
+			}
+			#pre1, #pre2 {
+				position: absolute;
+				left: 50px;
+			}
+		</style>
+		<script>
+        var p1 = null, p2 = null, p3 = null;
+        var current_player = 'p1';
+        var timer;
+        
+        function create_player(c) 
+        {
+        	var player = document.createElement('video');
+			player.setAttribute('id', c);
+			player.setAttribute('controls', true);
+			if( ~c.indexOf('ps') )
+			{
+				player.setAttribute('width', 640);
+				player.setAttribute('height', 480);
+			}
+			else
+			{
+				player.setAttribute('width', 320);
+				player.setAttribute('height', 240);
+			}
+			player.setAttribute('preload', 'auto');
+			player.style.display = "block";
+			return player;
+        }
+        
+        function create(c){
+        	var pos = document.getElementById("node");
+        	switch(c){
+        		case 'p1':
+        			if( p1 != null ) return;
+        		    p1 = create_player(c);
+        		    p1.src = "http://10.0.12.35/media/1.mp4";
+        		    pos.appendChild(p1);
+        		    break;
+        		case 'p2': 
+        			if( p2 != null ) return;
+        		    p2 = create_player(c);
+        		    p2.src = "http://10.0.12.35/media/2.mp4";
+        		    pos.appendChild(p2);
+        		    break;
+        		case 'p3':
+        			if( p3 != null ) return;
+        		    p3 = create_player(c);
+        		    p3.src = "http://10.0.12.35/media/3.mp4";
+        		    pos.appendChild(p3);
+        		    break;
+        		case 'all': 
+        			if( p1 != null && p2 != null && p3 != null ) return;
+        		    p1 = create_player('ps1');
+        		    p1.src = "http://10.0.12.35/media/1.mp4";
+        		    pos.appendChild(p1);
+        		    p2 = create_player('ps2');
+        		    p2.src = "http://10.0.12.35/media/2.mp4";
+        		    pos.appendChild(p2);
+        		    p3 = create_player('ps3');
+        		    p3.src = "http://10.0.12.35/media/3.mp4";
+        		    pos.appendChild(p3);
+        		    break;
+        	}
+        }
+        function play(c){
+        	switch(c){
+        		case 'p1': p1.play(); break;
+        		case 'p2': p2.play(); break;
+        		case 'p3': p3.play(); break;
+        	}
+        }
+        function pause(c){
+        	switch(c){
+        		case 'p1': p1.pause(); break;
+        		case 'p2': p2.pause(); break;
+        		case 'p3': p3.pause(); break;
+        	}        	
+        }
+        function stop(c){
+        	switch(c){
+        		case 'p1': p1.load(); break;
+        		case 'p2': p2.load(); break;
+        		case 'p3': p3.load(); break;
+        		case 'all': 
+        			player_pause(p1); p1.load();
+        			player_pause(p2); p2.load();
+        			player_pause(p3); p3.load();
+        			break;
+        	}       	
+        }
+        function switch_display(player){
+        	if( player.style.display == "block" )
+        	{
+        		player.style.display = "none";
+        	}
+        	else if(player.style.display == "none")
+        	{
+        		player.style.display = "block";
+        	}
+        }
+        function display(c){
+        	switch(c){
+        		case 'p1':
+        			switch_display(p1);
+        			break;
+        		case 'p2': 
+        			switch_display(p2);
+        			break;
+        		case 'p3': 
+        			switch_display(p3);
+        			break;
+        	}        	
+        }
+        function player_pause_play(pause_player, play_player)
+        {
+        	if( play_player == null || pause_player == null ) return;
+        	
+       		play_player.style.display = "block";
+		    pause_player.pause();
+		    play_player.play();
+		    pause_player.style.display = "none";
+        }
+        function media_switch(){
+        	switch(current_player){
+        		case 'p1':
+        			if( p2 != null )
+        			{
+						player_pause_play(p1, p2);
+        				current_player = 'p2';
+        			}else
+        			{
+        				player_pause_play(p1, p3);
+        				current_player = 'p3';
+        			}
+        			break;
+        		case 'p2': 
+        		    if( p3 != null )
+        			{
+        				player_pause_play(p2, p3);
+        				current_player = 'p3';
+        			}else
+        			{
+        				player_pause_play(p2, p1);
+        				current_player = 'p1';
+        			}
+        			break;
+        		case 'p3': 
+        			if( p1 != null )
+        			{
+						player_pause_play(p3, p1);
+        				current_player = 'p1';
+        			}else
+        			{
+        				player_pause_play(p3, p2);
+        				current_player = 'p2';
+        			}
+        			break;
+        	}
+        }
+        function player_pause(player){
+        	player.style.display = "none";
+        	player.pause();
+        }
+        function player_play(player){
+        	player.style.display = "block";
+        	player.play();
+        	current_player = 'p1';
+        }
+        function scenario_create(){
+        	scenario_stop();
+        	create('all');
+        	player_pause(p2);
+        	player_pause(p3);
+        	player_play(p1);
+        }    
+        function scenario_play(){
+    		timer = setInterval(function(){ 
+				media_switch();
+        	}, 10000);
+        }    
+        function scenario_stop(){
+        	if( timer ) clearInterval(timer);
+        }      
+        function scenario_init(){
+        	if( timer ) clearInterval(timer);
+        	stop('all');
+        }      
+        var player5 = undefined;
+        var player6 = undefined;
+        function preload(){
+        	var pos = document.getElementById("node");
+        	player5 = document.createElement('video');
+        	pos.appendChild(player5);
+			player5.setAttribute('id', 'pre1');
+			player5.setAttribute('width', 640);
+			player5.setAttribute('height', 480);
+			player5.src = "http://172.17.25.134/media/1.mp4";
+			player5.play();
+        }  
+        function new_play(){
+        	player5.pause();
+        	var pos = document.getElementById("node");
+        	player6 = document.createElement('video');
+        	pos.appendChild(player6);
+			player6.setAttribute('id', 'pre2');
+			player6.setAttribute('width', 640);
+			player6.setAttribute('height', 480);
+			player6.src = "http://172.17.25.134/media/2.mp4";
+			player6.play();
+        }
+        
+		</script>
+	</head>
+	<body bgcolor="white">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button style="width:70px;" onclick="create('p1')"> player1 </button>
+		<button style="width:70px;" onclick="play('p1')"> play </button> 
+		<button style="width:70px;" onclick="pause('p1')"> pause </button>
+		<button style="width:70px;" onclick="stop('p1')"> stop </button>
+		<button style="width:70px;" onclick="display('p1')"> display </button>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button style="width:70px;" onclick="create('p2')"> player2 </button>
+		<button style="width:70px;" onclick="play('p2')"> play </button> 
+		<button style="width:70px;" onclick="pause('p2')"> pause </button>
+		<button style="width:70px;" onclick="stop('p2')"> stop </button>
+		<button style="width:70px;" onclick="display('p2')"> display </button>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button style="width:70px;" onclick="create('p3')"> player3 </button>
+		<button style="width:70px;" onclick="play('p3')"> play </button> 
+		<button style="width:70px;" onclick="pause('p3')"> pause </button>
+		<button style="width:70px;" onclick="stop('p3')"> stop </button>
+		<button style="width:70px;" onclick="display('p3')"> display </button>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button style="width:100px;height:30px;" onclick="media_switch()"> media switch </button>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---------------------------------------------
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button style="width:90px;height:40px;" onclick="scenario_create()"> 1. scenario create </button>
+		<button style="width:90px;height:40px;" onclick="scenario_play()"> 2. scenario play </button>
+		<button style="width:90px;height:40px;" onclick="scenario_stop()"> 3. scenario stop </button>
+		<button style="width:90px;height:40px;" onclick="scenario_init()"> 4. scenario init </button>
+		<br>
+		<br>
+		<button style="width:90px;height:40px;" onclick="preload()"> Preload test </button>
+		<button style="width:90px;height:40px;" onclick="new_play()"> new play </button>
+		<div id="node"> 
+		</div>
+	</body>
+</html>

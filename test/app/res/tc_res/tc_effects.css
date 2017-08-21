@@ -1,0 +1,426 @@
+
+.tc_transition {
+    width: 100px;
+    height: 100px;
+    background: red;
+    transition: width 2s;
+    -webkit-transition: width 2s;
+}
+
+.tc_transition_change {
+    width: 300px;
+}
+
+
+.tc_transition_delay {
+	width:100px;
+	height:100px;
+	background:blue;
+	transition-property:width;
+	transition-duration:2s;
+	transition-delay:2s;
+	-webkit-transition-property:width; 
+	-webkit-transition-duration:2s;
+	-webkit-transition-delay:2s;
+}
+
+.tc_transition_delay_change {
+    width: 300px;
+}
+
+
+.tc_transition_duration {
+	width:100px;
+	height:100px;
+	background:yellow;
+	transition-property:width;
+	transition-duration:2s;
+	-webkit-transition-property:width;
+	-webkit-transition-duration:2s;
+}
+
+.tc_transition_duration_change {
+	width:300px;
+}
+
+
+.tc_transition_property {
+	width:100px;
+	height:100px;
+	background:green;
+	transition-property: width;
+	transition-duration: 2s;
+	-webkit-transition-property: width;
+	-webkit-transition-duration: 2s;
+}
+
+.tc_transition_property_change {
+	width:300px;
+}
+
+
+.tc_transition_timing_function {
+	width:100px;
+	height:100px;
+	background:red;
+	transition:width 2s;
+	transition-timing-function:linear;
+	-webkit-transition:width 2s;
+	-webkit-transition-timing-function:linear;
+}
+
+.tc_transition_timing_function_change {
+	width:300px;
+}
+
+
+.tc_timing_function_linear {
+	width:100px;
+	height:50px;
+	background:red;
+	color:white;
+	font-weight:bold;
+	transition:width 2s;
+	transition-timing-function: linear;
+	-webkit-transition:width 2s;
+	-webkit-transition-timing-function: linear;
+}
+
+.tc_timing_function_linear_change {
+	width : 300px;
+}
+
+
+.tc_timing_function_ease {
+	width:100px;
+	height:50px;
+	background:blue;
+	color:white;
+	font-weight:bold;
+	transition:width 2s;
+	transition-timing-function: ease;
+	-webkit-transition:width 2s;
+	-webkit-transition-timing-function: ease;
+}
+
+.tc_timing_function_ease_change {
+	width : 300px;
+}
+
+
+.tc_timing_function_ease_in {
+	width:100px;
+	height:50px;
+	background:yellow;
+	color:white;
+	font-weight:bold;
+	transition:width 2s;
+	transition-timing-function: ease-in;
+	-webkit-transition:width 2s;
+	-webkit-transition-timing-function: ease-in;
+}
+
+.tc_timing_function_ease_in_change {
+	width : 300px;
+}
+
+
+.tc_timing_function_ease_out {
+	width:100px;
+	height:50px;
+	background:green;
+	color:white;
+	font-weight:bold;
+	transition:width 2s;
+	transition-timing-function: ease-out;
+	-webkit-transition:width 2s;
+	-webkit-transition-timing-function: ease-out;
+}
+
+.tc_timing_function_ease_out_change {
+	width : 300px;
+}
+
+
+.tc_timing_function_ease_in_out {
+	width:100px;
+	height:50px;
+	background:red;
+	color:white;
+	font-weight:bold;
+	transition:width 2s;
+	transition-timing-function: ease-in-out;
+	-webkit-transition:width 2s;
+	-webkit-transition-timing-function: ease-in-out;
+}
+
+.tc_timing_function_ease_in_out_change {
+	width : 300px;
+}
+
+
+
+.tc_keyframes_from_to
+{
+	width:100px;
+	height:100px;
+	background:red;
+	position:relative;
+	animation:tc_keyframes_from_to_mymove 2s;
+	-webkit-animation:tc_keyframes_from_to_mymove 2s; /* Safari and Chrome */
+}
+
+@keyframes tc_keyframes_from_to_mymove
+{
+	from {top:0px;}
+	to {top:150px;}
+}
+
+@-webkit-keyframes tc_keyframes_from_to_mymove /* Safari and Chrome */
+{
+	from {top:0px;}
+	to {top:150px;}
+}
+
+
+
+.tc_keyframes_percentage
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    -webkit-animation: tc_keyframes_percentage_myfirst 2s; /* Chrome, Safari, Opera */
+    animation: tc_keyframes_percentage_myfirst 2s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes tc_keyframes_percentage_myfirst {
+    0%   {background: red;}
+    25%  {background: yellow;}
+    50%  {background: blue;}
+    100% {background: green;}
+}
+
+/* Standard syntax */
+@keyframes tc_keyframes_percentage_myfirst {
+    0%   {background: red;}
+    25%  {background: yellow;}
+    50%  {background: blue;}
+    100% {background: green;}
+}
+
+
+.tc_animation
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    -webkit-animation: tc_animation_myfirst 2s linear 2s alternate; /* Chrome, Safari, Opera */
+    animation: tc_animation_myfirst 2s linear 2s alternate;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes tc_animation_myfirst {
+    0%   {background:red; left:0px; top:0px;}
+    25%  {background:yellow; left:150px; top:0px;}
+    50%  {background:blue; left:150px; top:150px;}
+    75%  {background:green; left:0px; top:150px;}
+    100% {background:red; left:0px; top:0px;}
+}
+
+/* Standard syntax */
+@keyframes tc_animation_myfirst {
+    0%   {background:red; left:0px; top:0px;}
+    25%  {background:yellow; left:150px; top:0px;}
+    50%  {background:blue; left:150px; top:150px;}
+    75%  {background:green; left:0px; top:150px;}
+    100% {background:red; left:0px; top:0px;}
+}
+
+
+
+.tc_animation_delay
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: tc_animation_delay_mymove 2s;
+    animation-delay: -2s;
+    /*Safari and Chrome*/
+    -webkit-animation: tc_animation_delay_mymove 2s;
+    -webkit-animation-delay: -2s;
+}
+
+@keyframes tc_animation_delay_mymove {
+    from {left: 0px;}
+    to {left: 150px;}
+}
+
+/*Safari and Chrome*/
+@-webkit-keyframes tc_animation_delay_mymove {
+    from {left: 0px;}
+    to {left: 150px;}
+}
+
+
+
+.tc_animation_direction 
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: tc_animation_direction_myfirst 2s;
+    animation-direction: alternate;
+    /* Safari and Chrome */
+    -webkit-animation: tc_animation_direction_myfirst 2s;
+    -webkit-animation-direction: alternate;
+}
+
+@keyframes tc_animation_direction_myfirst {
+    0%   {background:red; left:0px; top:0px;}
+    25%  {background:yellow; left:150px; top:0px;}
+    50%  {background:blue; left:150px; top:150px;}
+    75%  {background:green; left:0px; top:150px;}
+    100% {background:red; left:0px; top:0px;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes tc_animation_direction_myfirst {
+    0%   {background:red; left:0px; top:0px;}
+    25%  {background:yellow; left:150px; top:0px;}
+    50%  {background:blue; left:150px; top:150px;}
+    75%  {background:green; left:0px; top:150px;}
+    100% {background:red; left:0px; top:0px;}
+}
+
+
+.tc_animation_duration
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: tc_animation_duration_mymove;
+    animation-duration: 2s;
+    /* Safari and Chrome */
+    -webkit-animation: tc_animation_duration_mymove;
+    -webkit-animation-duration: 2s;
+}
+
+@keyframes tc_animation_duration_mymove {
+    from {top: 0px;}
+    to {top: 150px;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes tc_animation_duration_mymove {
+    from {top: 0px;}
+    to {top: 150px;}
+}
+
+
+.tc_animation_fill_mode 
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: tc_animation_fill_mode_mymove 2s;
+    animation-iteration-count: 2;
+    animation-fill-mode: forwards;
+    /* Safari and Chrome */
+    -webkit-animation: tc_animation_fill_mode_mymove 2s;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-fill-mode: forwards;
+}
+
+@keyframes tc_animation_fill_mode_mymove {
+    from {top: 0px;}
+    to {top: 150px;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes tc_animation_fill_mode_mymove {
+    from {top: 0px;}
+    to {top: 150px;}
+}
+
+
+
+
+.tc_animation_iteration_count
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: tc_animation_iteration_count_mymove 1s;
+    animation-iteration-count: 3;
+    /* Safari and Chrome */
+    -webkit-animation: tc_animation_iteration_count_mymove 1s;
+    -webkit-animation-iteration-count: 3;
+}
+
+@keyframes tc_animation_iteration_count_mymove {
+    from {top: 0px;}
+    to {top: 200px;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes tc_animation_iteration_count_mymove {
+    from {top: 0px;}
+    to {top: 150px;}
+}
+
+
+.tc_animation_name 
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation-name: tc_animation_name_mymove;
+    animation-duration: 2s;
+    /* Safari and Chrome */
+    -webkit-animation-name: tc_animation_name_mymove;
+    -webkit-animation-duration: 2s;
+}
+
+@keyframes tc_animation_name_mymove {
+    from {left: 0px;}
+    to {left: 150px;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes tc_animation_name_mymove {
+    from {left: 0px;}
+    to {left: 200px;}
+}
+
+
+.tc_animation_play_state 
+{
+    width: 100px;
+    height: 100px;
+    background: red;
+    position: relative;
+    animation: tc_animation_play_state_mymove 2s;
+    animation-play-state: paused;
+    /* Safari and Chrome */
+    -webkit-animation: tc_animation_play_state_mymove 2s;
+    -webkit-animation-play-state: running;
+}
+
+@keyframes tc_animation_play_state_mymove {
+    from {left: 0px;}
+    to {left: 150px;}
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes tc_animation_play_state_mymove {
+    from {left: 0px;}
+    to {left: 150px;}
+}

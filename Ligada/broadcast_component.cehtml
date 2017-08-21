@@ -1,0 +1,256 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+     <title></title>
+
+     <script type="text/javascript">
+     	
+var broadcast = null;
+var timeout = null;
+var testAPI;
+
+function tearDown() {
+    try {
+        broadcast.removeEventListener('PlayStateChange',
+            checkPlaying, false);
+    } catch (_) {}
+
+    try {
+        broadcast.release();
+    } catch (_) {}
+
+    clearTimeout(timeout);
+}
+
+function hbbtvOnLoad() {
+
+    try {
+        document.getElementById(
+            "oipfItemAppMan").getOwnerApplication(document).show();
+    } catch (ex) {
+         window.debug("----> (WEBLOG) OIPF Application Manager was not initialised successfully. " +
+            "Exception details: " + ex.message);
+        return;
+    }
+
+    bindToBroadcast();
+}
+
+function bindToBroadcast() {
+
+    try {
+        broadcast = document.getElementById('video');
+    } catch (ex) {
+         window.debug("----> (WEBLOG) video/broadcast failed to initialise. Exception details: " +
+            ex.message);
+        return;
+    }
+
+    if (broadcast === null || broadcast === undefined) {
+         window.debug("----> (WEBLOG) Unable to get video/broadcast object. Value obtained: " +
+            broadcast);
+        return;
+    }
+
+     window.debug("----> (WEBLOG) video/broadcast object successfully initialised");
+
+    try {
+        broadcast.addEventListener("PlayStateChange", checkPlaying, false);
+    } catch (ex) {
+         window.debug("----> (WEBLOG) Error while adding handler for 'PlayStateChange' event. " +
+            "Exception details: " + ex.message);
+        return;
+    }
+
+     window.debug("----> (WEBLOG) 'PlayStateChange' event handler successfully added");
+
+    timeout = setTimeout(
+        function () {
+             window.debug("----> (WEBLOG) PlayStateChange didn't change to state 2 " +
+                "(PRESENTING) within 30 seconds. Timeout expired.");
+            tearDown();
+        },
+        30000);
+
+     window.debug("----> (WEBLOG) Waiting for up to 30 seconds for a " +
+        "PlayStateChange event");
+
+    try {
+        broadcast.bindToCurrentChannel();
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while calling bindToCurrentChannel() method on the " +
+            "video/broadcast object. Exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+}
+
+function checkPlaying(e) {
+
+    if (e === null || e === undefined) {
+         window.debug("----> (WEBLOG) Error while dispatching 'PlayStateChange': invalid event " +
+            "object received. Got value: " + e);
+        tearDown();
+        return;
+    }
+
+    if (e.state === 0 && e.error !== undefined) {
+         window.debug("----> (WEBLOG) A 'PlayStateChange' event was dispatched with its 'state' " +
+            "context equal to 0 and its 'error' context equal to " + e.error +
+            ". A permanent error has occurred.");
+        tearDown();
+        return;
+    }
+
+    if (e.state === 2) {
+        clearTimeout(timeout);
+
+        try {
+            broadcast.removeEventListener('PlayStateChange', checkPlaying,
+                false);
+        } catch (ex) {
+             window.debug("----> (WEBLOG) Error while removing handler for 'PlayStateChange' events. " +
+                "Exception details: " + ex.message);
+            tearDown();
+            return;
+        }
+
+         window.debug("----> (WEBLOG) A PlayStateChange event was dispatched with a 'state' context " +
+            "of 2 (presenting)");
+
+         window.debug("----> (WEBLOG) Waiting 10 seconds to allow the stream components to be parsed");
+        setTimeout(checkComponents, 10000);
+    }
+}
+
+function checkComponents() {
+
+    var components;
+    var i;
+
+    try {
+
+        components = broadcast.getComponents(
+            broadcast.COMPONENT_TYPE_VIDEO);
+
+    } catch (ex) {
+         window.debug("----> (WEBLOG) Error while calling " +
+            "getComponents: " + ex.message);
+        tearDown();
+        return;
+
+    }
+
+    if (components === null || components === undefined) {
+         window.debug("----> (WEBLOG) value returned from getComponents. " +
+            "Expected an AVComponentCollection containing 1 " +
+            "AVVideoComponent.");
+
+        tearDown();
+        return;
+    }
+
+    if (components.length !== 2) {
+         window.debug("----> (WEBLOG) he AVComponentCollection does not have a length of 2. Length: " +
+            components.length);
+
+        tearDown();
+        return;
+    }
+
+    if (components[0].componentTag === components[1].componentTag) {
+        window.debug("----> (WEBLOG) Error: AVComponents have identical values for componentTag. " +
+            "Expected a 'componentTag' of 1 and a 'componentTag' of 2, " +
+            "got: " + components[0].componentTag);
+
+        tearDown();
+        return;
+    }
+
+    for (i = 0; i < components.length; i++) {
+
+        if (components[i].type !== broadcast.COMPONENT_TYPE_VIDEO) {
+
+            window.debug("----> (WEBLOG) at index " + i + "has an invalid type. Expected type of " +
+                broadcast.COMPONENT_TYPE_VIDEO + ", got " +
+                components[i].type);
+
+            tearDown();
+            return;
+        }
+
+        if (components[i].componentTag !== 1 &&
+            components[i].componentTag !== 2) {
+
+             window.debug("----> (WEBLOG) Error: AVVideoComponent " +
+                " at index " + i + " has an invalid 'componentTag'. " +
+                "Expected 'componentTag' = 1 or 'componentTag' = 2, got " +
+                components[i].componentTag);
+
+            tearDown();
+            return;
+        }
+
+        if (components[i].componentTag === 1 &&
+            components[i].aspectRatio !== 1.78) { // 16:9
+
+             window.debug("----> (WEBLOG) Error: AVVideoComponent " +
+                " at index " + i + " and 'componentTag' = 1 has an invalid " +
+                "'aspectRatio'. Expected 'aspectRatio' of 1.78 to indicate " +
+                "16:9, got " + components[i].aspectRatio);
+            tearDown();
+            return;
+
+        }
+
+        if (components[i].componentTag === 2 &&
+            components[i].aspectRatio !== 1.33) { // 4:3
+
+             window.debug("----> (WEBLOG) Error: AVVideoComponent " +
+                " at index " + i + " and 'componentTag' = 2 has an invalid " +
+                "'aspectRatio'. Expected 'aspectRatio' of 1.33 to indicate " +
+                "4:3, got " + components[i].aspectRatio);
+            tearDown();
+            return;
+        }
+    }
+
+     window.debug("----> (WEBLOG) The AVVideoComponent has the expected properties");
+
+    tearDown();
+}
+
+/* -------------------End of WINDOW ONLOAD------------------------- */
+//]]>
+    </script>
+</head>
+<body>
+		<button style="width:150px;"onclick="hbbtvOnLoad()"> broadcast_component </button>
+    <div style="visibility: hidden;">
+        <object
+          type="application/oipfApplicationManager"
+          id="oipfItemAppMan" />
+    </div>
+    <object
+        id="video"
+        class="av-control-container"
+        type="video/broadcast"/>
+    <div id="ui">
+        <div id="header">
+            <div id="logo-container">
+                <div id="logo-container-middle" class="middle">
+                    <img
+                      id="logo"
+                      src="../../RES/CONTRIBUTORS/DTVL/dtvl-logo-256x28.png"
+                      alt="Digital TV Labs" />
+                </div>
+            </div>
+            <div id="test-id-container">
+                <div id="test-id" class="middle">org.hbbtv_AVC00090</div>
+            </div>
+        </div>
+        <div id="test-title">Terminal correctly calculates &#39;aspectRatio&#39; property of AVVideoComponents</div>
+        <div id="debugging"></div>
+    </div>
+</body>
+</html>

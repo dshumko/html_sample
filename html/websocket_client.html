@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+            var websocket = new WebSocket('ws://192.168.0.3:4434');//, // <---- 요기 수정
+                    //'dumb-increment-protocol');
+
+            websocket.onopen = function () {
+                $('h1').css('color', 'green');
+            };
+
+            websocket.onerror = function () {
+                $('h1').css('color', 'red');
+            };
+
+            websocket.onmessage = function (message) {
+                console.log(message.data);
+                $('div').append($('<p>', { text: message.data }));
+            };
+
+
+            $("#send").click(function(e) {
+                e.preventDefault();
+                websocket.send($('input').val());
+                $('input').val('');
+            });
+
+            $("#select").click(function(e) {
+                e.preventDefault();
+                websocket.send("{ \"command\" : \"sendMessageToBrowser\", \"class\" : \"comms\", \"sequence\" : 1470639548769, \"params\" : { \"message\" : \"{\\\"namespace\\\":\\\"com.orange.cast.media\\\",\\\"sender_id\\\":\\\"81b74a953dbad08a0b2cb9179051658f\\\",\\\"data\\\":{\\\"cmd_id\\\":1470639548769,\\\"type\\\":\\\"LOAD\\\",\\\"content_info\\\":{\\\"stream_type\\\":0,\\\"content_id\\\":\\\"http://img0.mxstatic.com/wallpapers/88e07c840d2188a6c14b4df5e6f2a6fe_large.jpeg\\\",\\\"mime_type\\\":\\\"image/\\\",\\\"stream_duration\\\":0,\\\"meta_data\\\":{\\\"media_type\\\":4}},\\\"autoplay\\\":true,\\\"src\\\":\\\"http://img0.mxstatic.com/wallpapers/88e07c840d2188a6c14b4df5e6f2a6fe_large.jpeg\\\",\\\"play_position\\\":0}}\" } }");
+            });
+
+            $("#play").click(function(e) {
+                e.preventDefault();
+                websocket.send("{ \"command\" : \"sendMessageToBrowser\", \"class\" : \"comms\", \"sequence\" : 1470640063908, \"params\" : { \"message\" : \"{\\\"namespace\\\":\\\"com.orange.cast.media\\\",\\\"sender_id\\\":\\\"81b74a953dbad08a0b2cb9179051658f\\\",\\\"data\\\":{\\\"cmd_id\\\":1470640063908,\\\"type\\\":\\\"PLAY\\\"}}\" } }");
+            });
+
+            $("#stop").click(function(e) {
+                websocket.send("{ \"command\" : \"sendMessageToBrowser\", \"class\" : \"comms\", \"sequence\" : 1470640085012, \"params\" : { \"message\" : \"{\\\"namespace\\\":\\\"com.orange.cast.media\\\",\\\"sender_id\\\":\\\"81b74a953dbad08a0b2cb9179051658f\\\",\\\"data\\\":{\\\"cmd_id\\\":1470640085011,\\\"type\\\":\\\"CLOSE\\\"}}\\\" } }");
+            });
+        });
+
+    </script>
+</head>
+<body>
+<h1>WebSockets test</h1>
+<form>
+    <input type="text" />
+    <button id="send">send</button>
+</form>
+<button id="select">select</button>
+<button id="play">play</button>
+<button id="stop">stop</button>
+<div></div>
+</body>
+</html>

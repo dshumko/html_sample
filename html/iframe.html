@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+<script type="text/javascript">
+    <iframe style="left: 0px; top: 0px; width: 1280px; height: 720px;" src="css3-transform-scale.html"/>
+    window.onload = function () {
+        console.log("onload called");
+    }
+    window.load = function () {
+        console.log("load called");
+    }
+    window.addEventListener("load", function () {
+        console.log("added 1 for load on window called");
+    }, false);
+    window.addEventListener("load", function () {
+        console.log("added 2 for load on window called");
+    }, false);
+</script>
+</body>
+</html>

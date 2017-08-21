@@ -1,0 +1,365 @@
+var lister, runner;
+
+window.jasmine = jasmineRequire.core(jasmineRequire);
+var env = jasmine.getEnv();
+var jasmineInterface = jasmineRequire.interface(jasmine, env);
+
+extend(window, jasmineInterface);
+
+function extend(destination, source) {
+    for (var property in source) destination[property] = source[property];
+    return destination;
+}
+
+var Lister = (function(type){
+    function Lister(type, path) {
+        this.m_items = [];
+        this.m_count = null;
+        this.m_type = type;
+        this.m_path = path;
+    }
+
+    function test_item(id, type, desc){
+        this.id = id;
+        this.type = type;
+        this.description = desc;
+        this.items = [];
+    }
+
+    Lister.prototype._search = function(item, id){
+        if(item.id == id){
+        return item;
+        }else if (item.items.length == 0 ){
+            return null;
+        }
+        else {
+            for(var i=0; i<item.items.length; i++){
+                    if (item.items[i].id == id) {
+                        return item.items[i];
+                    } else {
+                        var ret = this._search(item.items[i], id);
+                        if (ret != null) return ret;
+                    }
+            }
+            return null;
+        }
+
+        return null;
+    };
+
+    Lister.prototype._jasmineList = function(suite){
+        if(suite == null) return null;
+
+        var children = suite.children;
+        //LOG(suite.id + "(" + children.length + ")");
+
+        for(var i=0; i<children.length; i++)
+        {
+            var obj = children[i];
+            if(obj.id.indexOf("suite") != -1)
+            {
+                if (this.m_items.length == 0){
+                    this.m_count++;
+                    this.m_items.push(new test_item(obj.id, "suite", obj.description));
+                }
+                else{
+                    var m = this._search(this.m_items[0], obj.parentSuite.id);
+                    if(m != null){
+                        this.m_count++;
+                        m.items.push(new test_item(obj.id, "suite", obj.description));
+                    }
+                }
+                this._jasmineList(obj);
+            }
+            else if(obj.id.indexOf("spec") != -1)
+            {
+                var m = this._search(this.m_items[0], suite.id);
+                if (m != null) {
+                    this.m_count++;
+                    m.items.push(new test_item(obj.id, "spec", obj.description));
+                }
+            }
+        }
+        return null;
+    };
+
+    Lister.prototype.jasmineList = function(){
+        var tc = { 
+            action : "list", 
+            type : this.m_type, 
+            path : this.m_path, 
+
+            count : 0, 
+            testcases : null 
+        };
+
+        tc.testcases = this.m_items;
+        tc.count = this.m_count;
+
+        var top_suite = env.topSuite();
+        this._jasmineList(top_suite);
+        parent.postMessage(tc,"*");
+    };
+
+    Lister.prototype.qunitList = function(){
+        var qrunner_tests = QUnit.config.qrunner_tests;
+        LOG("[RUNNER] qrunner_tests.length : ", qrunner_tests.length);
+
+        var tc = { 
+            action : "list", 
+            type : this.m_type, 
+            path : this.m_path, 
+
+            count : 0, 
+            testcases : null 
+        };
+
+        var current_moduel = "";
+        var module_count = 0;
+        for(var cnt = 0; cnt < qrunner_tests.length; cnt++)
+        {
+            if ( current_moduel != qrunner_tests[cnt].module ){
+                this.m_items.push(new test_item('suite' + qrunner_tests[cnt].testNumber , "suite", qrunner_tests[cnt].module));
+                current_moduel = qrunner_tests[cnt].module;
+                module_count++;
+            }
+
+            this.m_items[module_count-1].items.push(new test_item(qrunner_tests[cnt].testNumber, "spec", qrunner_tests[cnt].testName));
+        }
+
+        tc.count = qrunner_tests.length;
+        tc.testcases = this.m_items;
+
+        parent.postMessage(tc,"*");
+    };
+
+    Lister.prototype.list= function(){
+        if(this.m_type == "jasmine")
+            this.jasmineList();
+        else if(this.m_type == "qunit")
+            this.qunitList();
+        else
+            LOG("[RUNNER] List Error!!");
+    };
+
+    return Lister;
+})();
+
+var Runner = (function(){
+    function Runner(type, file) {
+        this.m_type = type;
+        this.m_file = file;
+    }
+
+    function res_data(id, desc, result, log){
+        this.id = id;
+        this.description = desc;
+        this.result = result;
+        this.log = log;
+    }
+
+    function res(action, type, file, data){
+        this.action = action;
+        this.type = type;
+        this.path = file;
+        this.data = data;
+    }
+
+    Runner.prototype._sendMessage = function(action, data){
+        var p = new res(action, this.m_type, this.m_file, data);
+        //LOG(this.m_type + " " + action);
+        if(data != null){
+            //LOG(data.id + " > " + data.description);
+        }
+        parent.postMessage(p,"*");
+    };
+
+    Runner.prototype._findQunitTC = function(name) {
+        var qrunner_tests = QUnit.config.qrunner_tests;
+        for (var cnt = 0; cnt < qrunner_tests.length; cnt++) {
+            if (qrunner_tests[cnt].testName == name)
+                return qrunner_tests[cnt].testNumber;
+        }
+
+        return -1;
+    };
+
+    Runner.prototype._jasmine_init = function(){
+        var reporter = jasmineInterface.jsApiReporter;
+        var _this = this;
+        env.addReporter(reporter);
+
+        reporter.jasmineStarted = function(c){
+            _this._sendMessage("test start", null);
+        };
+        reporter.jasmineDone = function(){
+            _this._sendMessage("test end", null);
+        };
+        reporter.suiteStarted = function(result)
+        {
+            var data = res_data(result.id, result.description);
+            _this._sendMessage("suite start", data);
+        };
+        reporter.suiteDone = function(result)
+        {
+            var data = res_data(result.id, result.description);
+            _this._sendMessage("suite end", data);
+        };
+        reporter.specStarted = function(result)
+        {
+            var data = res_data(result.id, result.description);
+            _this._sendMessage("spec start", data);
+        };
+        reporter.specDone = function(result)
+        {
+            var log;
+            if ( result.failedExpectations.length > 0){
+                for (var i=0 ; i<result.failedExpectations.length ; i++) {
+                    var tc = result.failedExpectations[i];
+                    LOG("[RUNNER] matcherName - " + tc.matcherName);
+                    LOG("[RUNNER] message - " + tc.message);
+                    LOG("[RUNNER] stack - " + tc.stack);
+                    log = tc.message;
+                }
+            log}
+            var data = new res_data(result.id, result.description, result.status, log);
+            _this._sendMessage("spec result", data);
+        };
+    };
+
+    Runner.prototype._qunit_init = function(){
+        var _this = this;
+        QUnit.begin = function(){
+            _this._sendMessage("test start", null);
+        };
+
+        QUnit.done = function(){
+            _this._sendMessage("test end", null);
+        };
+
+        QUnit.log = function(details){
+            var id = _this._findQunitTC(details.name);
+            var output = "[FAILED] " + details.module + ": " + details.name + ": " + (details.message ? details.message + ", " : "");
+            if (details.actual) output += "expected: " + details.expected + ", actual: " + details.actual;
+            //LOG(id + ">> QUNIT-LOG : " + output);
+
+            _this.m_last_log = (details.message)? details.message + ", " : "";
+            _this.m_last_id = id;
+        };
+
+        QUnit.moduleStart = function(){
+            _this._sendMessage("suite start", null);
+        };
+
+        QUnit.moduleDone = function(){
+            _this._sendMessage("suite end", null);
+        };
+
+        QUnit.testStart = function(result){
+            _this._sendMessage("spec start", null);
+        };
+        QUnit.testDone = function(details){
+            //LOG("Finished [", details.module, "] [", details.name, "] ", "Failed/Passed/Total: ", details.failed, " / ", details.passed, "/", details.total);
+            var data;
+            var result = (details.passed == 1) ? "passed" : "failed";
+            var id = _this._findQunitTC(details.name);
+
+            if ( details.passed == 0 && id == _this.m_last_id )
+                data = new res_data(id, details.name, result, _this.m_last_log);
+            else
+                data = new res_data(id, details.name, result);
+
+            _this._sendMessage("spec result", data);
+        };
+    };
+
+    Runner.prototype.init = function(){
+        if ( this.m_type == "jasmine" )
+            this._jasmine_init();
+        else if ( this.m_type == "qunit" )
+            this._qunit_init();
+        else
+            LOG("[RUNNER] Runner Init Error!!");
+    };
+
+    Runner.prototype.start= function(){
+        if ( this.m_type == "jasmine" )
+            env.execute();
+        else if ( this.m_type == "qunit" )
+            QUnit.start();
+        else
+            LOG("[RUNNER] Runner start Error!!");
+    };
+
+    return Runner;
+})();
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+function parseURL(url) {
+    var a =  document.createElement('a');
+    a.href = url;
+    return {
+        source: url,
+        protocol: a.protocol.replace(':',''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        params: (function(){
+            var ret = {},
+                    seg = a.search.replace(/^\?/,'').split('&'),
+                    len = seg.length, i = 0, s;
+            for (;i<len;i++) {
+                if (!seg[i]) { continue; }
+                s = seg[i].split('=');
+                ret[s[0]] = s[1];
+            }
+            return ret;
+        })(),
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+        hash: a.hash.replace('#',''),
+        path: a.pathname.replace(/^([^\/])/,'/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+        segments: a.pathname.replace(/^\//,'').split('/')
+    };
+}
+
+function displayMessage (evt) {
+    LOG("[RUNNER] from index.html - " + evt.data + " from " + evt.origin);
+}
+
+function loadScript(file, cb)
+{
+    var source = document.createElement('script');
+    source.setAttribute("type","text/javascript");
+    source.setAttribute("src", "./tc/"+file);
+    document.head.appendChild(source);
+
+    source.onload = function(){
+        cb();
+    };
+}
+
+function init(){
+    LOG("[RUNNER] runner page init()");
+    window.addEventListener("message", displayMessage, false);
+    var url_parse = parseURL(document.URL);
+    var tc_path   = url_parse.params.tc;
+
+    LOG("[RUNNER] " + url_parse.params.type+ "<< RUNNER : " + url_parse.params.action + " / " + tc_path );
+
+    loadScript(tc_path, function(){
+            if( url_parse.params.action == "list"){
+                lister = new Lister(url_parse.params.type, url_parse.params.tc);
+                lister.list();
+            }
+            else if( url_parse.params.action == "runner"){
+                runner = new Runner(url_parse.params.type, url_parse.params.tc);
+                runner.init();
+                runner.start();
+            }
+            else 
+                LOG("[RUNNER] Error!!");
+    });
+}

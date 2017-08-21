@@ -1,0 +1,95 @@
+
+var tmp_path;
+function getList(type, path){
+    // tmp
+    tmp_path = path;
+    var ref  = "./runner.html?action=list&type=" + type + "&tc=" + path;
+    var ifr = document.getElementById("lister");
+    ifr.contentWindow.location.replace(ref);
+};
+
+function startTest(type, path){
+    var ifr = document.getElementById("runner");
+    var ref = "./runner.html?action=runner&type=" + type + "&tc=" + path;
+    ifr.contentWindow.location.replace(ref);
+}
+
+function result(data){
+    LOG(data.type);
+
+    if("result" == data.action){
+        LOG("TC Path - " + data.path);
+        LOG("TC ID - " + data.id);
+        LOG("TC Result - " + data.result);
+        ZebraUI.updateTC(data.path + "_" + data.id, data.description, data.type, data.result, 0);
+    }
+    else if("list" == data.action){
+        var path = data.path;
+        if (path == "") path = tmp_path;
+
+        for (var i = 0; i < data.testcases.length; i++) {
+            update(data.testcases[i], path, 1);
+        }
+    }
+    else if("start" == data.action){
+        LOG("############ TEST START ##########");
+        LOG("TC Path - " + data.path);
+        LOG("TC type - " + data.path);
+    }
+    else if("end" == data.action){
+        LOG("############ TEST END ##########");
+        LOG("TC Path - " + data.path);
+        LOG("TC type - " + data.path);
+        var obj = {
+            type: data.type,
+            path: data.path,
+            result: data.result
+        };
+        ZebraUI.sendEvent("TC_END", obj);
+    }
+    else
+        LOG("*** runner message error !!!***");
+}
+
+function update(items, path, level)
+{
+    ZebraUI.updateTC(path + "_" + items.id, items.description, items.type, "", level);
+    for(var i = 0; i<items.items.length; i++)
+    {
+        update(items.items[i], path, level+1);
+    }
+}
+
+function onClickBtn(type, path)
+{
+    LOG("getList path - " + path);
+    getList(type, path);
+};
+function onStart(type, path)
+{
+    LOG("startTest path - " + path);
+    startTest(type, path);
+};
+
+
+window.onload = function() {
+    ZebraUI.init();
+
+    window.addEventListener("message", function(e) {
+        var key = e.message ? "message" : "data";
+        var data = e[key];
+
+        if(typeof(e.data)=='object')
+            result(e.data);
+
+    },false);
+
+    for(var i = 0; i<dataArr.length; i++)
+    {
+        ZebraUI.addData(dataArr[i][0], dataArr[i][1], dataArr[i][2], dataArr[i][3]);
+    }
+
+    ZebraUI.addCallbackClickTCButton(onClickBtn);
+    ZebraUI.addCallbackStart(onStart);
+    ZebraUI.draw();
+};

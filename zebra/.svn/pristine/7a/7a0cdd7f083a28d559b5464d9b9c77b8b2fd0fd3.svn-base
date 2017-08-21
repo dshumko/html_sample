@@ -1,0 +1,33 @@
+describe("7.12 Metadata APIs", function() {
+    var oipfobjectFactory;
+    var searchManager;
+    var metadataSearch;
+    var query;
+    var searchResults;
+
+    beforeEach(function() {
+        oipfobjectFactory = window.oipfObjectFactory;
+        searchManager = oipfobjectFactory.createSearchManagerObject();
+    });
+
+    describe("7.12.2 The MetadataSearch class", function() {
+        beforeEach(function() {
+            metadataSearch;
+        });
+        describe("Hmx Properties", function() {
+            it("id", function() { expect(metadataSearch.id).toBeDefined(); });
+        });
+        describe("Hmx Methods", function() {
+            it("addConstraint", function() { expect(metadataSearch.addConstraint).toBeDefined(); });
+            it("createQuery", function() { expect(metadataSearch.createQuery).toBeDefined(); });
+        });
+    });
+    describe("7.12.4 The SearchResults class", function() {
+        beforeEach(function() {
+            searchResults;
+        });
+        describe("Hmx Methods", function() {
+            it("update", function() { expect(searchResults.update).toBeDefined(); });
+        });
+    });
+});

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body onload="init()" style="margin:0px;">
+<object id="vbVod"></object>
+<video id="html5Vod" width="640px" height="480px"></video>
+<script type="text/javascript">
+    var vbPlayer = null;
+    var html5Player = null;
+    var vbSource = "http://video-js.zencoder.com/oceans-clip.mp4";
+    function init() {
+        vbPlayer = document.getElementById("vbVod");
+        vbPlayer.setAttribute("id", "video");
+        vbPlayer.setAttribute("data", vbSource);
+        vbPlayer.setAttribute("type", "video/mpeg4");
+        vbPlayer.setAttribute("width", "640");
+        vbPlayer.setAttribute("height", "480");
+
+        vbPlayer.addEventListener("PlayStateChange", onPlayStateChange);
+        vbPlayer.addEventListener("PlayPositionChanged", onPlayPositionChanged);
+        vbPlayer.addEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+
+        vbPlayer.play(1);
+    }
+
+    var onPlayStateChange = function() {
+
+    }
+    var onPlayPositionChanged = function(position) {
+        if ( position > 5 )   // pre load hls metadata
+        {
+            if ( html5Player == null )
+            {
+                html5Player = document.getElementById("html5Vod");
+                html5Player.src = "http://184.72.239.149/vod/smil:BigBuckBunny.smil/playlist.m3u8";
+                html5Player.load();
+            }
+        }
+
+        if ( position > 15 )  // play hls
+        {
+            vbPlayer.play(0);
+            html5Player.play();
+        }
+    }
+    var onPlaySpeedChanged = function(speed) {
+
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<script>
+		try {
+
+		function LocalConfiguration() {
+			var operatorId="";
+			var preferredMenuLanguage="";
+			var standbyPowerMode="";
+			var standbySleepMode="";
+			var standbyBootMode="";
+			var standbyWifiPower="";
+			var automaticStandby="";
+			var autoDelete="";
+			var audioBleepEnabled="";
+			var subtitleFontType="";
+			var infoDisplayTimeout="";
+			var timeShiftEnabled="";
+			var favChListNumberingMode="";
+			var descrambleOnOff="";
+			var skipForwardTime="";
+			var instantReplayTime="";
+			var firstTimeBoot="";
+			var channelsetupPin="";
+			var guidancepolicy="";
+			var hdmiCecMode="";
+			var hdmiCecVolumeCtrlMode="";
+			var targetStorage="";
+			var hbbTvEnbled="";
+			var batupdatemode="";
+		}
+
+		function getTime() {
+			var now = new Date();                                                
+			var nowMills = now.getSeconds()*1000 + now.getMilliseconds();
+			return nowMills;
+		}
+
+		function doTest() {
+			var oipfObj = oipfObjectFactory.createHumaxConfigurationObject();
+			console.log(oipfObj);
+			var confObj = oipfObj.configuration;
+			console.log(confObj);
+			var obj = new LocalConfiguration();
+            for (i = 0; i < 10; i += 1) {
+				window.debug("loop: " + i);
+				obj.operatorId=confObj.operatorId;
+				obj.preferredMenuLanguage=confObj.preferredMenuLanguage;
+				obj.standbyPowerMode=confObj.standbyPowerMode;
+				obj.standbySleepMode=confObj.standbySleepMode;
+				obj.standbyBootMode=confObj.standbyBootMode;
+				obj.standbyWifiPower=confObj.standbyWifiPower;
+				obj.automaticStandby=confObj.automaticStandby;
+				obj.autoDelete=confObj.autoDelete;
+				obj.audioBleepEnabled=confObj.audioBleepEnabled;
+				obj.subtitleFontType=confObj.subtitleFontType;
+				obj.infoDisplayTimeout=confObj.infoDisplayTimeout;
+				obj.timeShiftEnabled=confObj.timeShiftEnabled;
+				obj.favChListNumberingMode=confObj.favChListNumberingMode;
+				obj.descrambleOnOff=confObj.descrambleOnOff;
+				obj.skipForwardTime=confObj.skipForwardTime;
+				obj.instantReplayTime=confObj.instantReplayTime;
+				obj.firstTimeBoot=confObj.firstTimeBoot;
+				obj.channelsetupPin=confObj.channelsetupPin;
+				obj.guidancepolicy=confObj.guidancepolicy;
+				obj.hdmiCecMode=confObj.hdmiCecMode;
+				obj.hdmiCecVolumeCtrlMode=confObj.hdmiCecVolumeCtrlMode;
+				obj.targetStorage=confObj.targetStorage;
+				obj.hbbTvEnbled=confObj.hbbTvEnbled;
+				obj.batupdatemode=confObj.batupdatemode;
+			}
+		}
+
+		document.onkeypress = function(event) { 
+			window.debug("key="+event.keyCode);
+			switch (event.keyCode || event.which) {
+				case 49:
+					var s = getTime();
+					window.debug(s.toString());
+					doTest();
+					var e = getTime();
+					window.debug(e.toString());
+					var diff = e - s;
+					window.debug("it takes [" + diff.toString() + " msecs]");
+					break;
+			}
+		};
+
+		} catch(e) {
+			alert(e);
+		}
+		</script>
+	</head>
+	<body style="background-color:#FFFFFF">
+	</body>
+</html>

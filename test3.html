@@ -1,0 +1,25 @@
+<!DOCTYPE html> 
+<html> 
+<body> 
+
+<button onclick="myFunction()" type="button">Get error state</button><br> 
+
+<video id="myVideo" width="320" height="176" controls autoplay>
+  <source src="http://10.0.12.35/media/wmdrm10.wmv" type="video/x-ms-wmv">
+  Your browser does not support HTML5 video.
+</video>
+
+<p>Video courtesy of <a href="http://www.bigbuckbunny.org/" target="_blank">Big Buck Bunny</a>.</p>
+
+<p><strong>Note:</strong> This property is only supported in Internet Explorer 9 and newer versions.</p>
+
+<script>
+var vid = document.getElementById("myVideo");
+
+function myFunction() { 
+    alert(vid.error.code);
+} 
+</script> 
+
+</body> 
+</html>

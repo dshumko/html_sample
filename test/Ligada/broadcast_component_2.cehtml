@@ -1,0 +1,466 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <script type="text/javascript">
+
+var broadcast = null;
+var timeout = null;
+var testAPI;
+
+function tearDown() {
+    try {
+        broadcast.removeEventListener('PlayStateChange',
+            checkPlaying, false);
+    } catch (_) {}
+
+    try {
+        broadcast.release();
+    } catch (_) {}
+
+    clearTimeout(timeout);
+}
+
+function hbbtvOnLoad() {
+    try {
+        document.getElementById(
+            "oipfItemAppMan").getOwnerApplication(document).show();
+    } catch (ex) {
+        window.debug("----> (WEBLOG) OIPF Application Manager was not initialised successfully. " +
+            "exception details: " + ex.message);
+        return;
+    }
+
+    bindToBroadcast();
+}
+
+function bindToBroadcast() {
+    try {
+        broadcast = document.getElementById('video');
+    } catch (ex) {
+        window.debug("----> (WEBLOG) video/broadcast failed to initialise. exception details: " +
+            ex.message);
+        return;
+    }
+
+    if (broadcast === null || broadcast === undefined) {
+        window.debug("----> (WEBLOG) Unable to get video/broadcast object. Value obtained: " +
+            broadcast);
+        return;
+    }
+
+    window.debug("----> (WEBLOG) video/broadcast object successfully initialised");
+
+    try {
+        broadcast.addEventListener("PlayStateChange", checkPlaying, false);
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while adding handler for 'PlayStateChange' event. " +
+            "exception details: " + ex.message);
+        return;
+    }
+
+   window.debug("----> (WEBLOG) 'PlayStateChange' event handler successfully added");
+
+    timeout = setTimeout(
+        function () {
+            window.debug("----> (WEBLOG) PlayStateChange didn't change to state 2 " +
+                "(PRESENTING) within 30 seconds. Timeout expired.");
+            tearDown();
+        },
+        30000);
+
+   window.debug("----> (WEBLOG) Waiting for up to 30 seconds for a " +
+        "PlayStateChange event");
+
+    try {
+        broadcast.bindToCurrentChannel();
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while calling bindToCurrentChannel() method on the " +
+            "video/broadcast object. exception details: " +
+            ex.message);
+        tearDown();
+        return;
+    }
+}
+
+function checkPlaying(e) {
+    if (e === null || e === undefined) {
+        window.debug("----> (WEBLOG) Error while dispatching 'PlayStateChange': invalid event " +
+            "object received. Got value: " + e);
+        tearDown();
+        return;
+    }
+
+    if (e.state === 0 && e.error !== undefined) {
+        window.debug("----> (WEBLOG) A 'PlayStateChange' event was dispatched with its 'state' " +
+            "context equal to 0 and its 'error' context equal to " + e.error +
+            ". A permanent error has occurred.");
+        tearDown();
+        return;
+    }
+
+    if (e.state === 2) {
+        clearTimeout(timeout);
+
+        try {
+            broadcast.removeEventListener('PlayStateChange', checkPlaying,
+                false);
+        } catch (ex) {
+            window.debug("----> (WEBLOG) Error while removing handler for 'PlayStateChange' events. " +
+                "Exception details: " + ex.message);
+            tearDown();
+            return;
+        }
+
+       window.debug("----> (WEBLOG) A PlayStateChange event was dispatched with a 'state' context " +
+            "of 2 (presenting)");
+
+       window.debug("----> (WEBLOG) Waiting 10 seconds to allow the stream components to be parsed");
+        setTimeout(checkVideoComponents, 10000);
+    }
+}
+
+function checkVideoComponents() {
+    var components;
+    var videoComponent;
+    var expectedComponentTag;
+    var videoContentDesc;
+
+    try {
+        components = broadcast.getCurrentActiveComponents(
+            broadcast.COMPONENT_TYPE_VIDEO);
+    } catch (ex) {
+        window.debug("----> (WEBLOG) getCurrentActiveComponents: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (components === null || components === undefined) {
+        window.debug("----> (WEBLOG) value returned from getCurrentActiveComponents. " +
+            "Expected an AVComponentCollection containing 1 " +
+            "AVVideoComponent.");
+        tearDown();
+        return;
+    }
+
+    if (components.length !== 1) {
+        window.debug("----> (WEBLOG) The AVComponentCollection does not have a length of 1. Length: " +
+            components.length);
+        tearDown();
+        return;
+    }
+
+    try {
+        videoComponent = components[0];
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while attempting to reference element 0 of the " +
+            "AVComponentCollection: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (videoComponent.type !== broadcast.COMPONENT_TYPE_VIDEO) {
+        window.debug("----> (WEBLOG) has an invalid type. Expected type of " +
+            broadcast.COMPONENT_TYPE_VIDEO + ", got " + videoComponent.type);
+        tearDown();
+        return;
+    }
+
+    switch (videoComponent.pid) {
+        case 101:
+            expectedComponentTag = 1;
+            videoContentDesc = "is the generic test harness video";
+            break;
+
+        case 105:
+            expectedComponentTag = 3;
+            videoContentDesc = "contains the text 'Digital TV Labs MPEG2 " +
+                               "Video'";
+            break;
+
+        default:
+            window.debug("----> (WEBLOG) The AVVideoComponent's 'pid' property does not equal 101 " +
+                "or 105. Received: " + videoComponent.pid);
+            tearDown();
+            return;
+    }
+
+    if (videoComponent.componentTag !== expectedComponentTag) {
+        window.debug("----> (WEBLOG) The AVVideoComponent's 'componentTag' property does not equal " +
+            expectedComponentTag + ". Received: " +
+            videoComponent.componentTag);
+        tearDown();
+        return;
+    }
+
+    if (videoComponent.encrypted !== false) {
+       window.debug("----> (WEBLOG) The AVVideoComponent's 'encrypted' property does not equal " +
+            "false. Received: " + videoComponent.encrypted);
+        tearDown();
+        return;
+    }
+
+    if (videoComponent.aspectRatio !== 1.78) { // 16:9
+        window.debug("----> (WEBLOG) The AVVideoComponent's 'aspectRatio' property does not equal " +
+            "1.78 (16:9). Received: " + videoComponent.aspectRatio);
+        tearDown();
+        return;
+    }
+
+    if (videoComponent.encoding !== 'MPEG2_SD_25') {
+        window.debug("----> (WEBLOG) The AVVideoComponent's 'encoding' property does not equal " +
+            "'MPEG2_SD_25'. Received: " + videoComponent.encoding);
+        tearDown();
+        return;
+    }
+
+   window.debug("----> (WEBLOG) The AVVideoComponent has the expected properties");
+
+    window.debug("----> (WEBLOG) This call checks that the correct video is being presented");
+        checkAudioComponent();
+}
+
+function checkAudioComponent() {
+    var components;
+    var audioComponent;
+    var expectedComponentTag;
+    var audioContentDesc;
+
+    try {
+        components = broadcast.getCurrentActiveComponents(
+            broadcast.COMPONENT_TYPE_AUDIO);
+    } catch (ex) {
+        window.debug("----> (WEBLOG) getCurrentActiveComponents: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (components === null || components === undefined) {
+        window.debug("----> (WEBLOG) value returned from getCurrentActiveComponents. " +
+            " Expected an AVComponentCollection containing 1 " +
+            "AVAudioComponent.");
+        tearDown();
+        return;
+    }
+
+    if (components.length !== 1) {
+        window.debug("----> (WEBLOG) The AVComponentCollection does not have a length of 1. " +
+            "Length: " + components.length);
+        tearDown();
+        return;
+    }
+
+    try {
+        audioComponent = components[0];
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while attempting to reference element 0 of the " +
+            "AVComponentCollection: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (audioComponent.type !== broadcast.COMPONENT_TYPE_AUDIO) {
+        window.debug("----> (WEBLOG) has an invalid type. Expected type of " +
+            broadcast.COMPONENT_TYPE_AUDIO + ", got " + audioComponent.type);
+        tearDown();
+        return;
+    }
+
+    switch (audioComponent.pid) {
+        case 102:
+            expectedComponentTag = 2;
+            audioContentDesc = "the generic test stream audio";
+            break;
+
+        case 106:
+            expectedComponentTag = 4;
+            audioContentDesc = "classical music";
+            break;
+
+        default:
+            window.debug("----> (WEBLOG) The AVAudioComponent's 'pid' property does not equal 102 " +
+                "or 106. Received: " + audioComponent.pid);
+            tearDown();
+            return;
+    }
+
+    if (audioComponent.componentTag !== expectedComponentTag) {
+        window.debug("----> (WEBLOG) The AVAudioComponent's 'componentTag' property does not " +
+            "equal " + expectedComponentTag + ". Received: " +
+            audioComponent.componentTag);
+        tearDown();
+        return;
+    }
+
+    if (audioComponent.encoding !== 'MPEG1_L2') {
+        window.debug("----> (WEBLOG) The AVAudioComponent's 'encoding' property does not equal " +
+            "'MPEG1_L2'. Received: " + audioComponent.encoding);
+        tearDown();
+        return;
+    }
+
+    if (audioComponent.encrypted !== false) {
+        window.debug("----> (WEBLOG) The AVAudioComponent's 'encrypted' property does not equal " +
+            "false. Received: " + audioComponent.encrypted);
+        tearDown();
+        return;
+    }
+
+    if (audioComponent.audioDescription !== false) {
+        window.debug("----> (WEBLOG) The AVAudioComponent's 'audioDescription' property does not " +
+            "equal false. Received: " + audioComponent.audioDescription);
+        tearDown();
+        return;
+    }
+
+    if (audioComponent.audioChannels !== 2) {
+        window.debug("----> (WEBLOG) The AVAudioComponent's 'audioChannels' property does not " +
+            "equal 2. Received: " + audioComponent.audioChannels);
+        tearDown();
+        return;
+    }
+
+    window.debug("----> (WEBLOG) The AVAudioComponent has the expected properties");
+
+   window.debug("----> (WEBLOG) This call checks that the correct audio is being presented");
+        checkSubtitleComponent();
+}
+
+function checkSubtitleComponent() {
+    var components;
+    var subtitleComponent;
+    var expectedComponentTag;
+    var subtitleContentDesc;
+    var subsLang;
+
+    try {
+        components = broadcast.getCurrentActiveComponents(
+            broadcast.COMPONENT_TYPE_SUBTITLE);
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while calling " +
+            "getCurrentActiveComponents: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (components === null || components === undefined) {
+        window.debug("----> (WEBLOG) value returned from getCurrentActiveComponents. " +
+            "Expected an AVComponentCollection containing 1 subtitle " +
+            "component.");
+        tearDown();
+        return;
+    }
+
+    if (components.length !== 1) {
+        window.debug("----> (WEBLOG) The AVComponentCollection does not have a length of 1. " +
+            "Length: " + components.length);
+        tearDown();
+        return;
+    }
+
+    try {
+        subtitleComponent = components[0];
+    } catch (ex) {
+        window.debug("----> (WEBLOG) Error while attempting to reference element 0 of the " +
+            "AVComponentCollection: " + ex.message);
+        tearDown();
+        return;
+    }
+
+    if (subtitleComponent.type !== broadcast.COMPONENT_TYPE_SUBTITLE) {
+       window.debug("----> (WEBLOG) Error: The AVSubtitleComponent " +
+            "has an invalid type. Expected type of " +
+            broadcast.COMPONENT_TYPE_SUBTITLE + ", got " +
+            subtitleComponent.type);
+        tearDown();
+        return;
+    }
+
+    switch (subtitleComponent.pid) {
+        case 107:
+            expectedComponentTag = 5;
+            subtitleContentDesc = "do not contain the text 'Digital TV labs'";
+            subsLang = 'spa';
+            break;
+
+        case 108:
+            expectedComponentTag = 6;
+            subtitleContentDesc = "contain the text 'Digital TV Labs'";
+            subsLang = 'eng';
+            break;
+
+        default:
+            window.debug("----> (WEBLOG) The AVSubtitleComponent's 'pid' property does not equal " +
+                "107 or 108. Received: " + subtitleComponent.pid);
+            tearDown();
+            return;
+    }
+
+    if (subtitleComponent.componentTag !== expectedComponentTag) {
+        window.debug("----> (WEBLOG) The AVSubtitleComponent's 'componentTag' property does not " +
+            "equal " + expectedComponentTag + ". Received: " +
+            subtitleComponent.componentTag);
+        tearDown();
+        return;
+    }
+
+    if (subtitleComponent.encrypted !== false) {
+       window.debug("----> (WEBLOG) The AVSubtitleComponent's 'encrypted' property does not equal " +
+            "false. Received: " + subtitleComponent.encrypted);
+        tearDown();
+        return;
+    }
+
+    if (subtitleComponent.language !== subsLang) {
+        window.debug("----> (WEBLOG) The AVSubtitleComponent's 'language' property does not equal " +
+            "'" + subsLang + ", received: " + subtitleComponent.language);
+        tearDown();
+        return;
+    }
+
+    if (subtitleComponent.hearingImpaired !== false) {
+        window.debug("----> (WEBLOG) The AVSubtitleComponent's 'hearingImpaired' property does not " +
+            "equal false. Received: " + subtitleComponent.hearingImpaired);
+        tearDown();
+        return;
+    }
+
+    window.debug("----> (WEBLOG) The AVSubtitleComponent has the expected properties");
+
+    window.debug("----> (WEBLOG) This call checks that the correct subtitle stream is being ");
+
+
+    tearDown();
+
+
+}
+
+  //]]>
+        </script>
+    </head>
+    <body>
+    	<button style="width:150px;"onclick="hbbtvOnLoad()"> AVC00145 </button>
+        <div style="visibility: hidden;">
+            <object
+              type="application/oipfApplicationManager"
+              id="oipfItemAppMan" />
+        </div>
+        <object id="video" class="av-control-container" type="video/broadcast"/>
+        <div id="ui">
+            <div id="header">
+                <div id="logo-container">
+                    <div id="logo-container-middle" class="middle">
+                        <img
+                          id="logo"
+                          src="../../RES/CONTRIBUTORS/DTVL/dtvl-logo-256x28.png"
+                          alt="Digital TV Labs" />
+                    </div>
+                </div>
+                <div id="test-id-container">
+                    <div id="test-id" class="middle">org.hbbtv_AVC00145</div>
+                </div>
+            </div>
+            <div id="test-title">Terminal correctly returns active AVComponents using getCurrentActiveComponents( componentType ) method of video/broadcast object.</div>
+            <div id="debugging" />
+        </div>
+    </body>
+</html>

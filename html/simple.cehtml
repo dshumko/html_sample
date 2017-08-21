@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <script type="text/javascript">
+            var gApp; // reference to the OIPF application manager
+            var gPlayer = null;
+            var gURL1 = "http://www.w3schools.com/html/mov_bbb.mp4";
+            var gURL2 = "https://media.w3.org/2010/05/sintel/trailer.mp4";
+            var gURL3 = "http://mediaelementjs.com/media/echo-hereweare.mp4";
+
+            var set_gURL1 = 0;
+            var set_gURL2 = 0;
+
+            var LOG = function(log)
+            {
+                //window.debug("(++WEBLOG++) " + log);
+                console.log("(++WEBLOG++) " + log);
+            }
+
+            var createPlayer = function() {
+                var width = 400;
+                var height = 400;
+
+                gPlayer = document.getElementById('videoPlayer');
+                gPlayer.setAttribute("width", width);
+                gPlayer.setAttribute("height", height);
+
+            }
+
+            var onPlayStateChange = function() {
+                LOG("state = " + gPlayer.playState + ", " + "current url = " + gPlayer.data);
+                switch(gPlayer.playState)
+                {
+                    case 0: break; // stopped
+                    case 1:
+                        {
+                            if((gURL1==gPlayer.data)&&(set_gURL1==0))
+                            {
+                                set_gURL1 = 1;
+                                LOG("queue(gURL2)");
+                                gPlayer.queue(gURL2);
+                            }
+                            else if((gURL2==gPlayer.data)&&(set_gURL2==0))
+                            {
+                                set_gURL2 = 1;
+                                LOG("queue(gURL3)");
+                                gPlayer.queue(gURL3);
+                            }
+                        }
+                        break; // playing
+                    case 2: break; // paused
+                    case 3: break; // connecting
+                    case 4: break; // buffering
+                    case 5: break; // finished
+                    case 6: break; // error // gPlayer.error
+                    default: break;
+                }
+            }
+
+            var initAppManager = function() {
+                gApp = document.getElementById('appMgr').getOwnerApplication(document).show();
+            }
+
+            var onload = function() {
+
+                initAppManager();
+                createPlayer();
+
+                gPlayer.onPlayStateChange = onPlayStateChange;
+                gPlayer.queue(gURL1);
+                //gPlayer.play(1);
+            }
+        </script>
+
+    </head>
+    <body onload="onload()">
+
+        <div id="videoPlayerContainer">
+            <object id="videoPlayer" type="video/mp4" style="width: 400px; height: 400px;" data="http://www.w3schools.com/html/mov_bbb.mp4"></object>
+        </div>
+        <div id="appContainer" style="visibility:hidden;background:#fff; width: 800px; height: 200px;">
+            <object id="appMgr" type="application/oipfApplicationManager" style="width: 1px; height: 1px;"></object>
+        </div>
+
+    </body>
+</html>

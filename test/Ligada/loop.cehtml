@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <script type="text/javascript">
+           
+var avControlObj; // Reference to A/V Control object
+
+var playDelay; // Timeout ID
+var playEventTimeout; // Timeout ID
+
+var playMethodReturnedTrue = false;
+var playingEventDispatched = false;
+var analysisComplete = false;
+
+/*-----------------------------Shared functions-------------------------------*/
+
+function testEnded() {
+    return playMethodReturnedTrue && playingEventDispatched && analysisComplete;
+}
+
+function tearDown() {
+    try { clearTimeout(playDelay); } catch (_) {}
+    try { clearTimeout(playEventTimeout); } catch (_) {}
+    try { avControlObj.onPlayStateChange = null; } catch (_) {}
+    try { avControlObj.stop(); } catch (_) {}
+}
+
+/*----------------------------Window load handler-----------------------------*/
+
+function hbbtvOnLoad() {
+    // Get owner application
+    try {
+        var appMan = document.getElementById("oipfItemAppMan");
+        var app = appMan.getOwnerApplication(document);
+    } catch (err) {
+        window.debug("@@@(WEBLOG) Exception while getting owner " +
+            "Application object. Error: " + err.message);
+        return;
+    }
+    if (app == null) {
+        window.debug("@@@(WEBLOG) Owner application object is " + app);
+        return;
+    }
+
+    // Show application
+    try {
+        app.show();
+    } catch (err) {
+        window.debug("@@@(WEBLOG) Exception while calling show() " +
+            "on owner Application object. Error: " + err.message);
+        return;
+    }
+    window.debug("@@@(WEBLOG) Application initialised successfully");
+
+    // Get reference to A/V Control object
+    avControlObj = document.getElementById('av-control-1');
+
+    window.debug("@@@(WEBLOG) This checks that the audio is played in " +
+        "its entirety and that it loops 3 times",
+        "Check that the audio is played in its entirety and that the " +
+        "audio is repeated 3 times in a loop", onAnalysisComplete);
+
+    // Wait 2 seconds before playing audio to allow harness enough time to
+    // start analysing the audio
+    playDelay = setTimeout(playAudio, 2000);
+}
+
+function playAudio() {
+    playEventTimeout = setTimeout(checkPlayingTimeout, 60000);
+
+    // Register a 'PlayStateChange' event listener
+    try {
+        avControlObj.onPlayStateChange = checkPlaying;
+    } catch (err) {
+        window.debug("@@@(WEBLOG) Exception while registering a " +
+            "'PlayStateChange' event listener with the A/V Control object. " +
+            "Error: " + err.message);
+        return;
+    }
+    window.debug("@@@(WEBLOG) A 'PlayStateChange' event listener " +
+        "was registered with the A/V Control object");
+
+    // Play audio
+    try {
+        var playSuccess = avControlObj.play(1);
+    } catch (err) {
+        window.debug("@@@(WEBLOG) Exception while calling play() " +
+            "on the A/V Control object with its 'speed' argument " +
+            "set to 1. Error: " + err.message);
+        tearDown();
+        return;
+    }
+
+    if (playSuccess !== true) {
+        window.debug("@@@(WEBLOG) Expected return value of play() " +
+            "with its 'speed' argument set to 1: true. Actual value: " + 
+            playSuccess);
+        tearDown();
+        return;
+    }
+    window.debug("@@@(WEBLOG) play() was called on the " +
+        "A/V Control object with its 'speed' argument set to 1. " +
+        "Return value: true");
+
+    playMethodReturnedTrue = true;
+
+    if (testEnded()) {
+       
+    }
+}
+
+function checkPlaying() {
+    if (playingEventDispatched) {
+        return;
+    }
+    if (avControlObj.playState === 6) { // error
+        window.debug("@@@(WEBLOG) The A/V Control object's " +
+            "'playState' property equals 6 (ERROR), 'error' property = " +
+            avControlObj.error);
+        tearDown();
+        return;
+    }
+    if (avControlObj.playState !== 1) { // playing
+        return;
+    }
+
+    clearTimeout(playEventTimeout);
+
+    // Remove 'PlayStateChange' event listener
+    try {
+        avControlObj.onPlayStateChange = null;
+    } catch (err) {
+        window.debug("@@@(WEBLOG) Exception while removing the " +
+            "'PlayStateChange' event listener from the " +
+            "A/V Control object. Error" + err.message);
+        tearDown();
+        return;
+    }
+   window.debug("@@@(WEBLOG) A 'PlayStateChange' event was " +
+        "dispatched. A/V Control object's 'playState' property equals " +
+        "1 (PLAYING)");
+
+    playingEventDispatched = true;
+
+    if (testEnded()) {
+        testAPI.endTest();
+    }
+}
+
+function checkPlayingTimeout() {
+    window.debug("@@@(WEBLOG) A 'PlayStateChange' event was not " +
+        "dispatched or A/V Control object's 'playState' property did not " +
+        "change to 1 (PLAYING) after 60 seconds");
+    tearDown();
+}
+
+function onAnalysisComplete() {
+    analysisComplete = true;
+
+    if (testEnded()) {
+       
+    }
+}
+
+            //]]>
+        </script>
+    </head>
+    <body>
+    		<button style="width:70px;" onclick="hbbtvOnLoad()">play</button>
+        <div style="visibility: hidden;">
+            <object
+              type="application/oipfApplicationManager"
+              id="oipfItemAppMan" />
+        </div>
+        <div class="av-control-container">
+            <object id="av-control-1" class="av-control"
+                    type="audio/mp4" data="http://10.0.12.35/media/3_sec_he_aac_mem_audio.mp4a">
+                <param name="cache" value="true" />
+                <param name="loop" value="3" />
+            </object>
+        </div>
+        <div id="ui">
+            <div id="header">
+                <div id="test-id-container">
+                    <div id="test-id" class="middle">tv.oipf_DAE-MEDIA_PLAYBACK-023</div>
+                </div>
+            </div>
+            <div id="test-title">HE-AAC memory audio loop parameter</div>
+            <div id="debugging" />
+        </div>
+    </body>
+</html>

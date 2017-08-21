@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        var websocket;
+        var ip = "";
+        $(document).ready(function(){
+            window.WebSocket = window.WebSocket || window.MozWebSocket;
+            var websocket;
+            var ip = "";
+            $("#connect_btn").click(function(e) {
+                e.preventDefault();
+                var connect_ip = "ws://" +  $("#ip_input").val();
+                websocket = new WebSocket(connect_ip);
+
+                websocket.onopen = function () {
+                    $("#connect_btn").hide();
+                    $("#ip_input").attr("disabled",true);
+                    $('h1').css('color', 'green');
+                };
+
+                websocket.onerror = function () {
+                    $('h1').css('color', 'red');
+                };
+
+                websocket.onmessage = function (message) {
+                    $('div').append($('<p>', { text: message.data }));
+                };
+            });
+
+            $("#send_btn").click(function(e) {
+                e.preventDefault();
+                websocket.send($("#send_input").val());
+                $("#send_input").val('');
+            });
+
+            $("#btn_scan").click(function(e) {
+                e.preventDefault();
+                var command = "{\"module\":\"network\",\"command\":\"scan\",\"params\":[]}";
+                websocket.send(command);
+            });
+
+            $("#btn_connect").click(function(e) {
+                e.preventDefault();
+                var command = "{\"module\":\"network\", \"command\":\"connect\", \"params\":[" +  $("#connect_index").val + ",\"" + $("#connect_password").val + "\"]}";
+                websocket.send(command);
+            });
+
+            $("#btn_setwps").click(function(e) {
+                e.preventDefault();
+                var command = "{\"module\":\"network\", \"command\":\"setwps\", \"params\":[]}";
+                websocket.send(command);
+            });
+
+            $("#btn_reset").click(function(e) {
+                e.preventDefault();
+                var command = "{\"module\":\"network\", \"command\":\"reset\", \"params\":[]}";
+                websocket.send(command);
+            });
+
+            $("#btn_getstate").click(function(e) {
+                e.preventDefault();
+                var command = "{\"module\":\"network\", \"command\":\"netstate\", \"params\":[]}";
+                websocket.send(command);
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>WebSockets test</h1>
+
+<form>
+    <input id="ip_input" type="text" />
+    <button id="connect_btn">Connect</button>
+    ex) 192.168.0.3:4434 ( IP:Port )
+    <br>
+    <input id="send_input" type="text" />
+    <button id="send_btn">Send</button>
+    <br>
+    <br>
+    network command
+    <br>
+    <button id="btn_scan">scan</button>
+    <input id="connect_index" type="text">index</input>
+    <input id="connect_password" type="text">psw</input>
+    <button id="btn_connect">connect</button>
+    <button id="btn_setwps">setwps</button>
+    <button id="btn_reset">reset</button>
+    <button id="btn_getstate">getState</button>
+</form>
+<div></div>
+</body>
+</html>

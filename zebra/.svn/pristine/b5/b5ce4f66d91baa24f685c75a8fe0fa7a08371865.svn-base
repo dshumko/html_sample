@@ -1,0 +1,165 @@
+describe("7.2 Application Management APIs", function() {
+    var oipfobjectFactory;
+    var applicationManager;
+    var applicationCollection;
+    var application;
+    var applicationPrivateData;
+    var keyset;
+    var widgetDescriptorCollection;
+    var widgetDescriptor;
+
+    try{
+        oipfobjectFactory = window.oipfObjectFactory;
+        applicationManager = oipfobjectFactory.createApplicationManagerObject();
+    }
+    catch(e){
+        applicationManager = undefined;
+    }
+
+    describe("7.2.1 The application/oipfApplicationManager embedded object", function() {
+        describe("7.2.1.1 Constants", function() {
+            it("WIDGET_INSTALLATION_STARTED", function() { expect(applicationManager.WIDGET_INSTALLATION_STARTED).toBeDefined(); });
+            it("WIDGET_INSTALLATION_COMPLETED", function() { expect(applicationManager.WIDGET_INSTALLATION_COMPLETED).toBeDefined(); });
+            it("WIDGET_INSTALLATION_FAILED", function() { expect(applicationManager.WIDGET_INSTALLATION_FAILED).toBeDefined(); });
+            it("WIDGET_UNINSTALLATION_STARTED", function() { expect(applicationManager.WIDGET_UNINSTALLATION_STARTED).toBeDefined(); });
+            it("WIDGET_UNINSTALLATION_COMPLETED", function() { expect(applicationManager.WIDGET_UNINSTALLATION_COMPLETED).toBeDefined(); });
+            it("WIDGET_UNINSTALLATION_FAILED", function() { expect(applicationManager.WIDGET_UNINSTALLATION_FAILED).toBeDefined(); });
+            it("WIDGET_ERROR_STORAGE_AREA_FULL", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+            it("WIDGET_ERROR_DOWNLOAD", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+            it("WIDGET_ERROR_INVALID_ZIP_ARCHIVE", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+            it("WIDGET_ERROR_INVALID_SIGNATURE", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+            it("WIDGET_ERROR_GENERIC", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+            it("WIDGET_ERROR_SIZE_EXCEEDED", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+            it("WIDGET_ERROR_PERMISSION_DENIED", function() { expect(applicationManager.WIDGET_ERROR_STORAGE_AREA_FULL).toBeDefined(); });
+        });
+        describe("7.2.1.2 Properties", function() {
+            it("onLowMemory", function() { expect(applicationManager.onLowMemory).toBeDefined(); });
+            it("onApplicationLoaded", function() { expect(applicationManager.onApplicationLoaded).toBeDefined(); });
+            it("onApplicationUnloaded", function() { expect(applicationManager.onApplicationUnloaded).toBeDefined(); });
+            it("onApplicationLoadError", function() { expect(applicationManager.onApplicationLoadError).toBeDefined(); });
+            it("onWidgetInstallation", function() { expect(applicationManager.onWidgetInstallation).toBeDefined(); });
+            it("onWidgetUninstallation", function() { expect(applicationManager.onWidgetUninstallation).toBeDefined(); });
+            it("widgets", function() { expect(applicationManager.widgets).toBeDefined(); });
+        });
+        describe("7.2.1.3 Methods", function() {
+            it("getApplicationVisualizationMode", function() { expect(applicationManager.getApplicationVisualizationMode).toBeDefined(); });
+            it("getOwnerApplication", function() { expect(applicationManager.getOwnerApplication).toBeDefined(); });
+            it("getChildApplications", function() { expect(applicationManager.getChildApplications).toBeDefined(); });
+            it("gc", function() { expect(applicationManager.gc).toBeDefined(); });
+            it("installWidget", function() { expect(applicationManager.installWidget).toBeDefined(); });
+            it("uninstallWidget", function() { expect(applicationManager.uninstallWidget).toBeDefined(); });
+        });
+    });
+    describe("7.2.2 The Application class", function() {
+        beforeEach(function() {
+            application = applicationManager.getOwnerApplication(window.document);
+        });
+        describe("7.2.2.1 Properties", function() {
+            it("visible", function() { expect(application.visible).toBeDefined(); });
+            it("active", function() { expect(application.active).toBeDefined(); });
+            it("permissions", function() { expect(application.permissions).toBeDefined(); });
+            it("isPrimaryReceiver", function() { expect(application.isPrimaryReceiver).toBeDefined(); });
+            it("window", function() { expect(undefined).toBeDefined(); }); // application.window crash
+            it("privateData", function() { expect(application.privateData).toBeDefined(); });
+            it("onApplicationActivated", function() { expect(application.onApplicationActivated).toBeDefined(); });
+            it("onApplicationDeactivated", function() { expect(application.onApplicationDeactivated).toBeDefined(); });
+            it("onApplicationShown", function() { expect(application.onApplicationShown).toBeDefined(); });
+            it("onApplicationHidden", function() { expect(application.onApplicationHidden).toBeDefined(); });
+            it("onApplicationPrimaryReceiver", function() { expect(application.onApplicationPrimaryReceiver).toBeDefined(); });
+            it("onApplicationNotPrimaryReceiver", function() { expect(application.onApplicationNotPrimaryReceiver).toBeDefined(); });
+            it("onApplicationTopmost", function() { expect(application.onApplicationTopmost).toBeDefined(); });
+            it("onApplicationNotTopmost", function() { expect(application.onApplicationNotTopmost).toBeDefined(); });
+            it("onApplicationDestroyRequest", function() { expect(application.onApplicationDestroyRequest).toBeDefined(); });
+            it("onApplicationHibernateRequest", function() { expect(application.onApplicationHibernateRequest).toBeDefined(); });
+            it("onKeyPress", function() { expect(application.onKeyPress).toBeDefined(); });
+            it("onKeyUp", function() { expect(application.onKeyUp).toBeDefined(); });
+            it("onKeyDown", function() { expect(application.onKeyDown).toBeDefined(); });
+        });
+        describe("7.2.2.2 Methods", function() {
+            it("show", function() { expect(application.show).toBeDefined(); });
+            it("hide", function() { expect(application.hide).toBeDefined(); });
+            it("activateInput", function() { expect(application.activateInput).toBeDefined(); });
+            it("deactivateInput", function() { expect(application.deactivateInput).toBeDefined(); });
+            it("createApplication", function() { expect(application.createApplication).toBeDefined(); });
+            it("destroyApplication", function() { expect(application.destroyApplication).toBeDefined(); });
+            it("startWidget", function() { expect(application.startWidget).toBeDefined(); });
+            it("stopWidget", function() { expect(application.stopWidget).toBeDefined(); });
+        });
+    });
+    describe("7.2.3 The ApplicationCollection class", function() {
+        beforeEach(function () {
+            application = applicationManager.getOwnerApplication(window.document);
+            applicationCollection = applicationManager.getChildApplications(application);
+        });
+        it("ApplicationCollection", function () { expect(applicationCollection).toBeDefined(); });
+    });
+    describe("7.2.4 The ApplicationPrivateData class", function() {
+        beforeEach(function () {
+            application = applicationManager.getOwnerApplication(window.document);
+            applicationPrivateData = application.privateData;
+        });
+        describe("7.2.4.1 Properties", function() {
+            it("keyset", function () { expect(applicationPrivateData.keyset).toBeDefined(); });
+            it("currentChannel", function () { expect(applicationPrivateData.currentChannel).toBeDefined(); });
+            it("wakeupApplication", function () { expect(applicationPrivateData.wakeupApplication).toBeDefined(); });
+            it("wakeupOITF", function () { expect(applicationPrivateData.wakeupOITF).toBeDefined(); });
+        });
+        describe("7.2.4.2 Methods", function() {
+            it("getFreeMem", function () { expect(applicationPrivateData.getFreeMem).toBeDefined(); });
+            it("prepareWakeupApplication", function () { expect(applicationPrivateData.prepareWakeupApplication).toBeDefined(); });
+            it("prepareWakeupOITF", function () { expect(applicationPrivateData.prepareWakeupOITF).toBeDefined(); });
+            it("clearWakeupToken", function () { expect(applicationPrivateData.clearWakeupToken).toBeDefined(); });
+        });
+    });
+    describe("7.2.5 The Keyset class", function() {
+        beforeEach(function () {
+            application = applicationManager.getOwnerApplication(window.document);
+            applicationPrivateData = application.privateData;
+            keyset = applicationPrivateData.keyset;
+        });
+        describe("7.2.5.1 Constants", function() {
+            it("RED", function () { expect(keyset.RED).toBeDefined(); });
+            it("GREEN", function () { expect(keyset.GREEN).toBeDefined(); });
+            it("YELLOW", function () { expect(keyset.YELLOW).toBeDefined(); });
+            it("BLUE", function () { expect(keyset.BLUE).toBeDefined(); });
+            it("NAVIGATION", function () { expect(keyset.NAVIGATION).toBeDefined(); });
+            it("VCR", function () { expect(keyset.VCR).toBeDefined(); });
+            it("SCROLL", function () { expect(keyset.SCROLL).toBeDefined(); });
+            it("INFO", function () { expect(keyset.INFO).toBeDefined(); });
+            it("NUMERIC", function () { expect(keyset.NUMERIC).toBeDefined(); });
+            it("ALPHA", function () { expect(keyset.ALPHA).toBeDefined(); });
+            it("OTHER", function () { expect(keyset.OTHER).toBeDefined(); });
+        });
+        describe("7.2.5.2 Properties", function() {
+            it("value", function () { expect(keyset.value).toBeDefined(); });
+            it("otherKeys", function () { expect(keyset.otherKeys).toBeDefined(); });
+            it("maximumValue", function () { expect(keyset.maximumValue).toBeDefined(); });
+            it("maximumOtherKeys", function () { expect(keyset.maximumOtherKeys).toBeDefined(); });
+            it("supportsPointer", function () { expect(keyset.supportsPointer).toBeDefined(); });
+        });
+        describe("7.2.5.3 Methods", function() {
+            it("setValue", function () { expect(keyset.setValue).toBeDefined(); });
+            it("getKeyIcon", function () { expect(keyset.getKeyIcon).toBeDefined(); });
+            it("getKeyLabel", function () { expect(keyset.getKeyLabel).toBeDefined(); });
+            it("clearWakeupToken", function () { expect(keyset.clearWakeupToken).toBeDefined(); });
+        });
+    });
+    describe("7.2.8 Widget APIs", function() {
+        beforeEach(function () {
+            widgetDescriptorCollection = applicationManager.widgets;
+            widgetDescriptor = widgetDescriptorCollection[0];
+        });
+        describe("7.2.8.1 The WidgetDescriptor class", function() {
+            describe("7.2.8.1.1 Properties", function() {
+                it("localURI", function () { expect(widgetDescriptor.localURI).toBeDefined(); });
+                it("downloadURI", function () { expect(widgetDescriptor.downloadURI).toBeDefined(); });
+                it("defaultIcon", function () { expect(widgetDescriptor.defaultIcon).toBeDefined(); });
+                it("customIcons", function () { expect(widgetDescriptor.customIcons).toBeDefined(); });
+                it("running", function () { expect(widgetDescriptor.running).toBeDefined(); });
+            });
+        });
+        describe("7.2.8.2 The WidgetDescriptorCollection class", function() {
+            it("widgetDescriptorCollection", function () { expect(widgetDescriptorCollection).toBeDefined(); });
+        });
+    });
+});

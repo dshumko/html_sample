@@ -1,0 +1,75 @@
+<html>
+<head>
+
+<script type="text/javascript" src="../../lib/jasmine-2.4.1/jasmine.js" ></script>
+<script type="text/javascript" src="./html.js" ></script>
+
+<script>
+var load = 0, loaded = 0;
+function parseURL(url) {
+    var a =  document.createElement('a');
+    a.href = url;
+    return {
+        source: url,
+        protocol: a.protocol.replace(':',''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        params: (function(){
+            var ret = {},
+                    seg = a.search.replace(/^\?/,'').split('&'),
+                    len = seg.length, i = 0, s;
+            for (;i<len;i++) {
+                if (!seg[i]) { continue; }
+                s = seg[i].split('=');
+                ret[s[0]] = s[1];
+            }
+            return ret;
+        })(),
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+        hash: a.hash.replace('#',''),
+        path: a.pathname.replace(/^([^\/])/,'/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+        segments: a.pathname.replace(/^\//,'').split('/')
+    };
+}
+
+function createScript(file)
+{
+    var source = document.createElement('script');
+    source.setAttribute("type","text/javascript");
+    source.setAttribute("src", file);
+    document.head.appendChild(source);
+
+    load++;
+    source.onload = function(){
+        loaded++;
+        if( load == loaded )
+            list();
+    };
+}
+
+function displayMessage (evt) {
+    // if (evt.origin !== "http://127.0.0.1")
+    console.log("from index.html - " + evt.data + " from " + evt.origin);
+}
+
+function init(){
+    window.addEventListener("message", displayMessage, false);
+    var url_parse = parseURL(document.URL);
+    var tc = url_parse.params.tc;
+    console.log("tc --" + tc);
+
+    //createScript(tc);
+    createScript("../../tc/sample/Player.js");
+    createScript("../../tc/sample/Song.js");
+    createScript("../../tc/sample/PlayerSpec.js");
+    createScript("../../tc/sample/SpecHelper.js");
+}
+
+</script>
+</head>
+
+<body onload="init()">
+</body>
+</html>

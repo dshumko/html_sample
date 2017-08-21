@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://10.0.12.33/dikim/sample.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<style>
+#player1 {
+	position: absolute;
+	left: 450px;
+}
+</style>
+<script>
+var player1, player2;
+var b_sw = false;
+
+function step_1(){
+	console.log("stop 1 ");
+	player1 = document.createElement('video');
+	player1.setAttribute('id', 'player1');
+	player1.setAttribute('controls', true);
+	player1.setAttribute('width', 320);
+	player1.setAttribute('height', 240);
+	player1.setAttribute('preload', 'auto');
+	player1.style.display = "none";
+	var pos = document.getElementById("node");
+		//document.body.appendChild(player1);
+	pos.appendChild(player1);
+	//player1.src = "http://html5demos.com/assets/dizzy.mp4";
+	player1.src = "http://10.0.12.33/media/dizzy.mp4";
+	//player1.load();
+}
+
+function step_2(){
+	console.log("stop 2 ");
+	player2 = document.createElement('video');
+	player2.setAttribute('id', 'player2');
+	player2.setAttribute('controls', true);
+	player2.setAttribute('width', 320);
+	player2.setAttribute('height', 240);
+	player2.setAttribute('preload', 'none');
+	player2.style.display = "block";
+	var pos = document.getElementById("node");
+	pos.appendChild(player2);
+	//document.body.appendChild(player2);
+	player2.src = "http://10.0.12.33/media/video_sample.mp4";
+}
+
+function step_1_1(){
+	console.log("stop 1_1 ");
+	//player1.load();
+}
+function step_2_1(){
+	console.log("stop 2_1 ");
+	player2.play();
+}
+
+
+
+function step_3(){
+	console.log("stop 3 ");
+	player1.style.display = "block";
+}
+
+function step_4(){
+	console.log("stop 4 ");
+	player2.pause();
+}
+
+function step_5(){
+	console.log("stop 5 ");
+	player1.play();
+}
+
+function step_6(){
+	console.log("stop 6 ");
+	player2.style.display = "none";
+}
+
+function step_7(){
+	console.log("stop 7 ");
+	step_1();
+	step_1_1();
+	step_2();
+	step_2_1();
+}
+
+function step_8(){
+	b_sw = true;
+	console.log("stop 8 ");
+	step_3();
+	step_4();
+	step_5();
+	step_6();
+}
+
+function step_9(){
+	b_sw = false;
+	step_7();
+	player2.addEventListener('timeupdate',function(e){
+			if(player2.currentTime > 5){
+			if(b_sw == false)
+			step_8();
+			}
+		});
+}
+
+function step_10(){
+	if(player1){
+		player1.pause();
+		player1.src = "";
+		player1.load();
+		player1.parentNode.removeChild(player1);
+		player1 = null;
+	}
+
+	if(player2){
+		player2.pause();
+		player2.src = "";
+		player2.load();
+		player2.parentNode.removeChild(player1);
+		player2 = null;
+
+	}
+}
+
+function control(player, c){
+	var p = document.getElementById(player)
+		console.log("--> " + player1 + "/" + c);
+
+	if(c == 'play'){
+		p.play();
+		console.log("play");
+	}
+	else if(c == 'load'){
+		p.load();
+		console.log("load");
+	}
+	else if(c == 'pause'){
+		p.pause();
+		console.log("pause");
+	}
+	else if(c == 'show'){
+		p.style.display = "block";
+		console.log("show");
+	}
+	else if(c == 'hide'){
+		p.style.display = "none";
+		console.log("hide");
+	}
+	else if(c == 'remove'){
+		p.pause();
+		p.src = "";
+		p.load();
+		p.parentNode.removeChild(player1);
+		p= null;
+	}
+}
+
+function step_11(){
+	player2.src = "http://html5demos.com/assets/dizzy.mp4";
+	player2.load();
+}
+
+	
+
+</script>
+</head>
+
+<body style=""><button style="width:150px;" onclick="step_1()"> 1. make player1  </button> - preload:auto/display:none 
+<button style="width:150px;" onclick="step_1_1()"> 2. player load() </button> - load()
+
+<button style="width:70px;" onclick="control(&#39;player1&#39;,&#39;play&#39;)"> play </button> 
+<button style="width:70px;" onclick="control(&#39;player1&#39;,&#39;pause&#39;)"> pause</button> 
+<button style="width:70px;" onclick="control(&#39;player1&#39;,&#39;show&#39;)"> show</button> 
+<button style="width:70px;" onclick="control(&#39;player1&#39;,&#39;hide&#39;)"> hide</button> 
+<button style="width:70px;" onclick="control(&#39;player1&#39;,&#39;remove&#39;)"> remove</button> 
+<br>
+
+
+<button style="width:150px;" onclick="step_2()"> 3. make player2  </button> - preload:none/display:block 
+<button style="width:150px;" onclick="step_2_1()"> 4. player2 play() </button> - play() 
+<button style="width:70px;" onclick="control(&#39;player2&#39;,&#39;play&#39;)"> play </button> 
+<button style="width:70px;" onclick="control(&#39;player2&#39;,&#39;pause&#39;)"> pause</button> 
+<button style="width:70px;" onclick="control(&#39;player2&#39;,&#39;show&#39;)"> show</button> 
+<button style="width:70px;" onclick="control(&#39;player2&#39;,&#39;hide&#39;)"> hide</button> 
+<button style="width:70px;" onclick="control(&#39;player2&#39;,&#39;remove&#39;)"> remove</button> 
+<br>
+
+<button style="width:150px;" onclick="step_3()"> 5. player1 display </button> - player1 display:block <br>
+<button style="width:150px;" onclick="step_4()"> 6. player2 pause()  </button> - player2 pause()  <br>
+<button style="width:150px;" onclick="step_5()"> 7. player1 play()  </button> - player 1 play() <br>
+<button style="width:150px;" onclick="step_6()"> 8. player2 hide </button> - player2 display:none <br> <br>
+
+<button style="width:150px;" onclick="step_7()"> ready </button> step 1 ~ 4 
+<button style="width:150px;" onclick="step_8()"> switch </button> step 5 ~ 8 <br> <br>
+
+<button style="width:150px;" onclick="step_9()"> scenario </button> player2 ~ 5s ~ switch ~ player1 <br> <br>
+<button style="width:150px;" onclick="step_10()"> remove </button> player 1,2 remove <br> <br>
+
+<button style="width:150px;" onclick="step_11()"> load </button> player 2  - src change <br> <br>
+
+<div id="node"> </div>
+
+</body></html>

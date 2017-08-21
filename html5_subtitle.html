@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function vid_load()
+        {
+            var play_count = 0;
+            var player = document.createElement('video');
+            player.setAttribute('id', 'video2');
+            player.setAttribute('controls', true);
+            player.setAttribute('width', 640);
+            player.setAttribute('height', 480);
+            player.setAttribute('preload', 'none');
+
+            document.body.appendChild(player);
+            player.src = "http://algamza.ipdisk.co.kr:80/publist/HDD1/tv/Little%20Forest%20Winter%20Spring%20(2015)%201080p/Little.Forest.Winter.Spring.2015.1080p.BRRip.x264-PSW.mp4";
+
+            // case1
+            player.load();
+            player.play();
+        }
+    </script>
+</head>
+<body onload="vid_load()">
+</body>
+</html>

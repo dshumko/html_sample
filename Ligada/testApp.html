@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<meta name="author" content="Jesper Gustin" />
+	<title></title>
+
+	<script type="text/javascript" src="../../RES/testsuite.js"></script>
+	<script type="text/javascript">
+//<![CDATA[
+		var testapi = null,
+			video = null,
+			newChannel = null,
+			intervalTestFails = 0,
+			intervalHandle = 0;
+
+		window.onload = function() {
+
+			// Init test api
+			testapi = new HbbTVTestAPI();
+			testapi.reportStepResult(2, true, 'B-I application was started successfully');
+
+			/*
+			* Fetch video element
+			*/
+			try {
+				video = document.getElementById('video');
+				testapi.reportStepResult(3, true, 'The video/broadcast object could be found');
+			} catch (err) {
+				testapi.reportStepResult(3, false, 'The video/broadcast object could not be found');
+			}
+
+			/*
+			* Make sure the application is B-I (and should be regarded untrusted)
+			* by calling getChannelConfig() on the video/broadcast object
+			*/
+			try {
+				var channelConf = video.getChannelConfig();
+				testapi.reportStepResult(4, false, 'Access to an API function with security "trusted" was not prohibited from B-I application');
+			} catch (err) {
+				if (err.name == 'SecurityError') {
+					testapi.reportStepResult(4, true, 'Access to an API function with security "trusted" was prohibited from B-I application');
+				} else {
+					testapi.reportStepResult(4, false, 'Access to an API function with security "trusted" was prohibited from B-I application but error: ' + err.name);
+				}
+			}
+
+			/*
+			* Add ChannelChangeSucceededEvent listener to the video/broadcast object
+			*/
+			try {
+				video.onChannelChangeSucceeded = function(e) {
+
+					/*
+					* Run final tests once every second to verify that the application has access
+					* to a trusted API function again for 30 seconds
+					*/
+					intervalHandle = setInterval(function() {
+						try {
+
+							var channelConf = video.getChannelConfig();
+							try {
+								document.getElementById('result').innerHTML = 'PASS';
+							} catch (err) {}
+							testapi.reportStepResult(8, true, 'Access to an API function with security "trusted" was granted from B-R application');
+							testapi.endTest();
+
+							/*
+							* Test has ended, stop timer
+							*/
+							clearInterval(intervalHandle);
+
+						} catch (err) {
+							/*
+							* Test again every second for 30 seconds
+							*/
+							if (intervalTestFails < 30) {
+								intervalTestFails++;
+							} else {
+
+								/*
+								* We tried for 30 seconds and it still failed
+								* FAIL the test
+								*/
+								try {
+									document.getElementById('result').innerHTML = 'FAIL';
+								} catch (err2) {}
+								if (err.name == 'SecurityError') {
+									testapi.reportStepResult(8, false, 'Access to an API function with security "trusted" was not granted from B-R application');
+								} else {
+									testapi.reportStepResult(8, false, 'Access to an API function with security "trusted" was not granted from B-R application - ERROR: ' + err.name);
+								}
+
+								/*
+								* Test has ended, stop timer
+								*/
+								clearInterval(intervalHandle);
+
+							}
+						}
+					}, 1000);
+
+				};
+				testapi.reportStepResult(5, true, 'Added the onChannelChangeSucceeded event listener successfully to the video/broadcast object');
+			} catch (err) {
+				testapi.reportStepResult(5, false, 'Could not add the onChannelChangeSucceeded event listener to the video/broadcast object');
+			}
+
+			/*
+			* Get playout set information (idType for the createChannel call)
+			*/
+			testapi.getPlayoutInformation(continueTest, null);
+
+		}
+
+		/*
+		* Continue the test once the playout set information has been received
+		*/
+		function continueTest(callbackObject, playoutInformationObject) {
+
+			/*
+			* Create channel object
+			*/
+			try {
+				newChannel = video.createChannelObject(playoutInformationObject['transponderDeliveryType'], 99, 1, 11);
+				if (newChannel != null) {
+					testapi.reportStepResult(6, true, 'Channel object was created successfully');
+				} else {
+					testapi.reportStepResult(6, false, 'Channel object was not created');
+				}
+			} catch (err) {
+				testapi.reportStepResult(6, false, 'Channel object was not created - ERROR: ' + err);
+			}
+
+			/*
+			* Become broadcast-related again
+			*/
+			try {
+				video.setChannel(newChannel);
+				testapi.reportStepResult(7, true, 'Call to setChannel() on the video/broadcast object was successful');
+			} catch (err) {
+				testapi.reportStepResult(7, false, 'Call to setChannel() on the video/broadcast object was not successful');
+			}
+
+		}
+//]]>
+	</script>
+
+</head>
+<body style="background: #fff; padding: 40px 130px">
+
+	<div id="result">TEST RUNNING</div>
+	<object id="video" type="video/broadcast" width="600" height="338"></object>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+describe("7.10 Scheduled Recording APIs", function() {
+    var oipfobjectFactory;
+    var recordingScheduler;
+    var scheduledRecordingCollection;
+    var scheduledRecording;
+    var recording;
+    var customPVREvent;
+
+    try{
+        oipfobjectFactory = window.oipfObjectFactory;
+        recordingScheduler = oipfobjectFactory.createRecordingSchedulerObject();
+    }catch(e){
+        recordingScheduler = undefined;
+    }
+
+    describe("7.10.1 The application/oipfRecordingScheduler embedded object", function() {
+        describe("Hmx Properties", function() {
+            it("onFileOpEvent", function() { expect(recordingScheduler.onFileOpEvent).toBeDefined(); });
+        });
+        describe("Hmx Methods", function() {
+            it("startSatRecord", function() { expect(recordingScheduler.startSatRecord).toBeDefined(); });
+            it("record", function() { expect(recordingScheduler.record).record(); });
+            it("recordAt", function() { expect(recordingScheduler.recordAt).toBeDefined(); });
+            it("recordCrid", function() { expect(recordingScheduler.recordCrid).toBeDefined(); });
+            it("recordConfirm", function() { expect(recordingScheduler.recordConfirm).toBeDefined(); });
+            it("update", function() { expect(recordingScheduler.update).toBeDefined(); });
+            it("copyRecording", function() { expect(recordingScheduler.copyRecording).toBeDefined(); });
+            it("moveRecording", function() { expect(recordingScheduler.moveRecording).toBeDefined(); });
+            it("removeRecording", function() { expect(recordingScheduler.removeRecording).toBeDefined(); });
+            it("stopFileOp", function() { expect(recordingScheduler.stopFileOp).toBeDefined(); });
+            it("setSeriesLock", function() { expect(recordingScheduler.setSeriesLock).toBeDefined(); });
+        });
+    });
+    describe("7.10.2 The ScheduledRecording class", function() {
+        beforeEach(function() {
+            scheduledRecordingCollection = recordingScheduler.getScheduledRecordings;
+            scheduledRecording = scheduledRecordingCollection[0];
+        });
+        describe("Hmx Properties", function() {
+            it("factoryType", function() { expect(scheduledRecording.factoryType).toBeDefined(); });
+            it("uid", function() { expect(scheduledRecording.uid).toBeDefined(); });
+            it("isScheduledAsSeries", function() { expect(scheduledRecording.isScheduledAsSeries).toBeDefined(); });
+            it("seriesID", function() { expect(scheduledRecording.seriesID).toBeDefined(); });
+            it("groupCRIDs", function() { expect(scheduledRecording.groupCRIDs).toBeDefined(); });
+            it("volume", function() { expect(scheduledRecording.volume).toBeDefined(); });
+            it("programmeCRID", function() { expect(scheduledRecording.programmeCRID).toBeDefined(); });
+            it("diseqcInput", function() { expect(scheduledRecording.diseqcInput).toBeDefined(); });
+            it("frequency", function() { expect(scheduledRecording.frequency).toBeDefined(); });
+            it("polarisation", function() { expect(scheduledRecording.polarisation).toBeDefined(); });
+            it("symbolRate", function() { expect(scheduledRecording.symbolRate).toBeDefined(); });
+            it("satType", function() { expect(scheduledRecording.satType).toBeDefined(); });
+        });
+    });
+    describe("7.10.5 The Recording class", function() {
+        beforeEach(function() {
+            recording = recordingScheduler.getRecording("id");
+        });
+        describe("Hmx Properties", function() {
+            it("discId", function() { expect(recording.discId).toBeDefined(); });
+            it("season", function() { expect(recording.season).toBeDefined(); });
+            it("willBeDeleted", function() { expect(recording.willBeDeleted).toBeDefined(); });
+            it("lastPlayPosition", function() { expect(recording.lastPlayPosition).toBeDefined(); });
+            it("thumbnail", function() { expect(recording.thumbnail).toBeDefined(); });
+            it("isManualLocked", function() { expect(recording.isManualLocked).toBeDefined(); });
+            it("isScrambled", function() { expect(recording.isScrambled).toBeDefined(); });
+            it("copyControl", function() { expect(recording.copyControl).toBeDefined(); });
+            it("subtitleTypes", function() { expect(recording.subtitleTypes).toBeDefined(); });
+            it("doNotDeleteSetTime", function() { expect(recording.doNotDeleteSetTime).toBeDefined(); });
+        });
+        describe("Hmx Methods", function() {
+            it("setName", function() { expect(recording.setName).toBeDefined(); });
+            it("getField", function() { expect(recording.getField).toBeDefined(); });
+        });
+    });
+    describe("7.10.7 The PVREvent class", function() {
+        beforeEach(function() {
+            customPVREvent;
+        });
+        describe("Hmx Properties", function() {
+            it("state", function() { expect(customPVREvent.state).toBeDefined(); });
+            it("error", function() { expect(customPVREvent.error).toBeDefined(); });
+            it("recording", function() { expect(customPVREvent.recording).toBeDefined(); });
+            it("scheduledRecordingConflicts", function() { expect(customPVREvent.scheduledRecordingConflicts).toBeDefined(); });
+            it("recordingConflicts", function() { expect(customPVREvent.recordingConflicts).toBeDefined(); });
+            it("scheduledRecordingAlternatives", function() { expect(customPVREvent.scheduledRecordingAlternatives).toBeDefined(); });
+            it("scheduledRecordingAltEvents", function() { expect(customPVREvent.scheduledRecordingAltEvents).toBeDefined(); });
+            it("conflictGroupInfo", function() { expect(customPVREvent.conflictGroupInfo).toBeDefined(); });
+        });
+        describe("Hmx Methods", function() {
+            it("valueOf", function() { expect(customPVREvent.valueOf).toBeDefined(); });
+            it("toString", function() { expect(customPVREvent.toString).toBeDefined(); });
+        });
+    });
+});

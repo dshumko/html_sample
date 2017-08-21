@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#send_btn").click(function(e) {
+                e.preventDefault();
+                var obj = JSON.parse($("#send_input").val());
+                {
+                    if ( obj.event )
+                        $('div').append($('<p>', { text: "module : " + obj.module + ", event : " + obj.event }));
+                    if ( obj.command )
+                        $('div').append($('<p>', { text: "module : " + obj.module + ", comand : " + obj.command }));
+                }
+                //websocket.send($("#send_input").val());
+                $("#send_input").val('');
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Json Test</h1>
+<form>
+    <input id="send_input" type="text" />
+    <button id="send_btn">Send</button>
+</form>
+<div></div>
+</body>
+</html>

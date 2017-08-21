@@ -1,0 +1,37 @@
+describe("3.9 HDial", function() {
+    var humaxobjectFactory;
+    var dialManager;
+    var dialServer;
+
+    beforeEach(function() {
+        humaxobjectFactory = window.humaxObjectFactory;
+        dialManager = humaxobjectFactory.createDialManagerObject();
+        dialServer = dialManager.server;
+    });
+
+    describe("3.9.1 HDial", function() { 
+        describe("3.9.1.1 Properties", function() {
+            it("server", function() { expect(dialManager.server).toBeDefined(); });
+            it("client", function() { expect(dialManager.client).toBeDefined(); });
+        });
+    });
+
+    describe("3.9.2 HDialServer", function() { 
+        describe("3.9.2.1 Properties", function() {
+            it("started", function() { expect(dialServer.started).toBeDefined(); });
+            it("friendlyName", function() { expect(dialServer.friendlyName).toBeDefined(); });
+            it("onReqLaunch", function() { expect(dialServer.onReqLaunch).toBeDefined(); });
+            it("onReqStop", function() { expect(dialServer.onReqStop).toBeDefined(); });
+            it("onDialStatusEvent", function() { expect(dialServer.onDialStatusEvent).toBeDefined(); });
+        });
+
+        describe("3.9.2.2 Methods", function() {
+            it("start", function() { expect(dialServer.start).toBeDefined(); });
+            it("stop", function() { expect(dialServer.stop).toBeDefined(); });
+            it("registApplication", function() { expect(dialServer.registApplication).toBeDefined(); });
+            it("unregistApplication", function() { expect(dialServer.unregistApplication).toBeDefined(); });
+            it("updateApplicationState", function() { expect(dialServer.updateApplicationState).toBeDefined(); });
+        });
+    });
+
+});

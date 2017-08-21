@@ -1,0 +1,1006 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+var QCase = (function () {
+    function QCase(index, name, testcase, precond, delay) {
+        this.m_index = 0;
+        this.m_testname = null;
+        this.m_delay = 10;
+        this.m_func = null;
+        this.m_pre_func = null;
+        this.m_result = false;
+        this.m_async = false;
+        this.m_testname = name;
+        this.m_func = testcase;
+        this.m_index = index;
+        if (null !== precond)
+            this.m_pre_func = precond;
+        if (undefined !== delay)
+            this.m_delay = delay;
+    }
+    QCase.prototype.getName = function () {
+        return this.m_testname;
+    };
+    QCase.prototype.getDelay = function () {
+        return this.m_delay;
+    };
+    QCase.prototype.getFunction = function () {
+        return this.m_func;
+    };
+    QCase.prototype.getPreFunction = function () {
+        return this.m_pre_func;
+    };
+    QCase.prototype.getResult = function () {
+        return this.m_result;
+    };
+    QCase.prototype.getIndex = function () {
+        return this.m_index;
+    };
+    QCase.prototype.setResult = function (result) {
+        this.m_result = result;
+    };
+    QCase.prototype.setAsync = function (async) {
+        this.m_async = async;
+    };
+    QCase.prototype.getAsync = function () {
+        return this.m_async;
+    };
+    return QCase;
+}());
+;
+var QModule = (function () {
+    function QModule(name) {
+        this.m_name = null;
+        this.m_cases = null;
+        this.m_name = name;
+        this.m_cases = new Array();
+    }
+    QModule.prototype.addCase = function (index, name, testcase, precond, delay) {
+        var _tc = new QCase(index, name, testcase, precond, delay);
+        this.m_cases.push(_tc);
+    };
+    QModule.prototype.getCaseCount = function () {
+        return this.m_cases.length;
+    };
+    QModule.prototype.getName = function () {
+        return this.m_name;
+    };
+    QModule.prototype.getCase = function (index) {
+        return this.m_cases[index];
+    };
+    return QModule;
+}());
+;
+var QTest = (function () {
+    function QTest() {
+        this.m_modules = null;
+        this.m_modules = new Array();
+    }
+    QTest.prototype.addModule = function (module_name) {
+        this.m_modules.push(new QModule(module_name));
+    };
+    QTest.prototype.addCase = function (name, testcase, precond, delay) {
+        this.m_modules[this.m_modules.length - 1].addCase(this.getTotalCaseCount(), name, testcase, precond, delay);
+    };
+    QTest.prototype.getModules = function () {
+        if (0 == this.m_modules.length) {
+            this.m_modules.push(new QModule("Temporary"));
+        }
+        return this.m_modules;
+    };
+    QTest.prototype.getTotalCaseCount = function () {
+        var case_count = 0;
+        for (var i = 0; i < this.m_modules.length; i++) {
+            case_count += this.m_modules[i].getCaseCount();
+        }
+        return case_count;
+    };
+    QTest.prototype.findCase = function (module, name) {
+        var modules = this.m_modules;
+        for (var i = 0; i < modules.length; i++) {
+            var case_count = modules[i].getCaseCount();
+            for (var j = 0; j < case_count; j++) {
+                var _case = modules[i].getCase(j);
+                if ((_case.getName() == name) && (modules[i].getName() == module)) {
+                    return _case;
+                }
+            }
+        }
+        return null;
+    };
+    return QTest;
+}());
+var QEventListener = (function () {
+    function QEventListener() {
+    }
+    QEventListener.prototype.onReady = function (test) {
+        console.log("onReady");
+    };
+    QEventListener.prototype.onResult = function (tc_index, result) {
+        console.log("== QView ===================================");
+        console.log("Index : ", tc_index, " | result : ", result);
+        console.log("============================================");
+    };
+    QEventListener.prototype.onStart = function () {
+        console.log("onStart()");
+    };
+    return QEventListener;
+}());
+var TC_TYPE;
+(function (TC_TYPE) {
+    TC_TYPE[TC_TYPE["qunit"] = 0] = "qunit";
+    TC_TYPE[TC_TYPE["jasmin"] = 1] = "jasmin";
+    TC_TYPE[TC_TYPE["mocha"] = 2] = "mocha";
+})(TC_TYPE || (TC_TYPE = {}));
+;
+var QBridge = (function () {
+    function QBridge() {
+        var _this = this;
+        this.qunitLog = function (details) {
+            var loc = details.module + ": " + details.name + ": ";
+            var output = "FAILED: " + loc + (details.message ? details.message + ", " : "");
+            if (details.actual) {
+                output += "expected: " + details.expected + ", actual: " + details.actual;
+            }
+            if (details.source) {
+                output += ", " + details.source;
+            }
+            var _case = _this.m_test.findCase(details.module, details.name);
+            if (_this.m_log_listener)
+                _this.m_log_listener(_case.getIndex(), details.message);
+        };
+        this.onTesting = function (details) {
+            var _case = _this.m_test.findCase(details.module, details.name);
+            if (_this.m_starting_listener)
+                _this.m_starting_listener(_case.getIndex());
+            console.log("unit testing start - " + _case.getIndex());
+        };
+        this.onResultAllOfCases = function (details) {
+            console.log("Total: ", details.total, " Failed: ", details.failed, " Passed: ", details.passed, " Runtime: ", details.runtime);
+            if (_this.m_end_listener)
+                _this.m_end_listener();
+        };
+        this.onResultOfCase = function (details) {
+            console.log("Finished [", details.module, "] [", details.name, "] ", "Failed/total: ", details.failed, " / ", details.total);
+            var _case = _this.m_test.findCase(details.module, details.name);
+            if (details.failed <= 0) {
+                _case.setResult(true);
+                console.log("Success to run !!! [", details.name, "]");
+            }
+            else {
+                _case.setResult(false);
+                console.log("Fail to run !!! [", details.name, "]");
+            }
+            if (null != _this.m_result_listener)
+                _this.m_result_listener(_case.getIndex(), _case.getResult());
+        };
+        this.__start__ = function (_case, index) {
+            if (null != index && index != _case.getIndex())
+                return;
+            if (_case.getAsync()) {
+                QUnit.asyncTest(_case.getName(), _case.getFunction());
+            }
+            else {
+                QUnit.asyncTest(_case.getName(), function () {
+                    setTimeout(function () {
+                        _case.getFunction()();
+                        QUnit.start();
+                    }, _case.getDelay());
+                    if (null !== _case.getPreFunction()) {
+                        _case.getPreFunction()();
+                    }
+                });
+            }
+        };
+        this.m_test = null;
+        this.m_paused = false;
+        this.m_ready_listener = null;
+        this.m_started_listener = null;
+        this.m_end_listener = null;
+        this.m_starting_listener = null;
+        this.m_result_listener = null;
+        this.m_log_listener = null;
+        console.debug("new QBridge");
+        this.m_test = new QTest();
+    }
+    QBridge.getInstance = function () {
+        if (null == this.m_instance) {
+            this.m_instance = new QBridge();
+        }
+        return this.m_instance;
+    };
+    QBridge.prototype.attach = function (type) {
+        if (null == type) {
+            type = TC_TYPE.qunit;
+            console.log("---> " + QUnit.config.qrunner_tests.length);
+        }
+        switch (type) {
+            case TC_TYPE.qunit:
+                return this.__attach_qunit__(QUnit);
+            default:
+                break;
+        }
+        return null;
+    };
+    QBridge.prototype.start = function (index) {
+        console.log("========== Begin of start() ===========");
+        if (true == this.m_paused) {
+            QUnit.start();
+            this.m_paused = !this.m_paused;
+            return;
+        }
+        this.__reset_qunit__();
+        var modules = this.m_test.getModules();
+        for (var i = 0; i < modules.length; i++) {
+            var module_name = modules[i].getName();
+            console.debug("Module : " + module_name);
+            QUnit.module(module_name);
+            var case_count = modules[i].getCaseCount();
+            for (var j = 0; j < case_count; j++) {
+                var _case = modules[i].getCase(j);
+                console.log("Added ", _case.getName());
+                this.__start__(_case, index);
+            }
+        }
+        QUnit.log(this.qunitLog);
+        QUnit.testStart(this.onTesting);
+        QUnit.testDone(this.onResultOfCase);
+        QUnit.done(this.onResultAllOfCases);
+        QUnit.start();
+        if (this.m_started_listener)
+            this.m_started_listener();
+        else
+            console.error("started cb is not registed.");
+        console.log("========== End of start() ===========");
+    };
+    QBridge.prototype.stop = function () {
+        QUnit.stop();
+        this.__reset_qunit__();
+    };
+    QBridge.prototype.pause = function () {
+        if (false == this.m_paused) {
+            QUnit.stop();
+            this.m_paused = true;
+        }
+    };
+    QBridge.prototype.getTest = function () {
+        return this.m_test;
+    };
+    QBridge.prototype.onReady = function (listener) {
+        this.m_ready_listener = listener;
+    };
+    QBridge.prototype.onStart = function (listener) {
+        this.m_started_listener = listener;
+    };
+    QBridge.prototype.onEnd = function (listener) {
+        this.m_end_listener = listener;
+    };
+    QBridge.prototype.onStarting = function (listener) {
+        this.m_starting_listener = listener;
+    };
+    QBridge.prototype.onResult = function (listener) {
+        this.m_result_listener = listener;
+    };
+    QBridge.prototype.onLog = function (listener) {
+        this.m_log_listener = listener;
+    };
+    QBridge.prototype.__attach_qunit__ = function (qunit) {
+        var qrunner_tests = qunit.config.qrunner_tests;
+        console.debug("qrunner_tests.length : ", qrunner_tests.length);
+        if (0 < qrunner_tests.length) {
+            var prev_module = "";
+            for (var i = 0; i < qrunner_tests.length; i++) {
+                var _test = qrunner_tests[i];
+                if (null != prev_module && prev_module != _test.module) {
+                    this.m_test.addModule(_test.module);
+                }
+                this.m_test.addCase(_test.testName, _test.callback, null);
+                if (_test.async) {
+                    var async_test = this.m_test.findCase(_test.module, _test.testName);
+                    async_test.setAsync(true);
+                }
+                prev_module = _test.module;
+            }
+        }
+        this.m_ready_listener(this.m_test);
+        return this.m_test;
+    };
+    QBridge.prototype.__reset_qunit__ = function () {
+        QUnit.init();
+        QUnit.config.testStart = [];
+        QUnit.config.testDone = [];
+        QUnit.config.done = [];
+        QUnit.config.log = [];
+        this.m_paused = false;
+    };
+    QBridge.m_instance = null;
+    return QBridge;
+}());
+var QControl = (function () {
+    function QControl() {
+        this.m_qbridge = null;
+        this.m_qbridge = QBridge.getInstance();
+    }
+    QControl.prototype.attach = function () {
+        var qtest = this.m_qbridge.attach();
+        if (0 == qtest.getTotalCaseCount() &&
+            0 == qtest.getModules().length) {
+            console.error("There is no unit to test");
+            return false;
+        }
+        return true;
+    };
+    QControl.prototype.start = function (index) {
+        this.m_qbridge.start(index);
+    };
+    QControl.prototype.stop = function () {
+        this.m_qbridge.stop();
+    };
+    QControl.prototype.pause = function () {
+        this.m_qbridge.pause();
+    };
+    return QControl;
+}());
+var QView = (function () {
+    function QView() {
+        var _this = this;
+        this._on_test_ready = function (test) {
+            console.log("QView :: onReady");
+            _this.m_tc_count = 0;
+            for (var i = 0; i < test.m_modules.length; i++) {
+                _this.table.addLabel(test.m_modules[i].m_name);
+                for (var j = 0; j < test.m_modules[i].m_cases.length; j++) {
+                    var tc = test.m_modules[i].m_cases[j];
+                    var num = tc.m_index + 1;
+                    _this.table.addItem(tc.m_index, num + ". " + tc.m_testname, false);
+                    _this.m_tc_count += 1;
+                }
+            }
+        };
+        this._on_test_start = function () {
+            console.log("QView :: onStart");
+            for (var i = 0; i < _this.m_tc_count; i++)
+                _this.table.updateItem(i, "white", "");
+            if (_this.m_on_status_event_cb)
+                _this.m_on_status_event_cb("start");
+        };
+        this._on_test_end = function () {
+            console.log("QView :: onEnd");
+            if (_this.m_on_status_event_cb)
+                _this.m_on_status_event_cb("end");
+        };
+        this._on_unit_start = function (index) {
+            console.log("QView :: onStart" + index);
+            _this.table.updateItem(index, "#EB7600", "...ING");
+        };
+        this._on_unit_result = function (index, result) {
+            console.log("QView :: onResult - " + index + ">>" + result);
+            if (result == true)
+                _this.table.updateItem(index, "#76b900", "PASS");
+            else
+                _this.table.updateItem(index, "#ee3324", "FAIL");
+        };
+        this._on_unit_log = function (index, message) {
+            console.log("QView :: onLog " + index);
+            _this.console.log(index + 1 + "/ " + message);
+        };
+        this.header = new QPanel("qrunner-header");
+        this.banner = new QPanel("qrunner-banner");
+        this.config = new QViewConfig();
+        this.table = new QTable("qrunner-tests-tables");
+        this.console = new QConsole("htext-test-error");
+        this.m_tc_count = 0;
+        this.m_title = null;
+        this.m_on_status_event_cb = null;
+        this.m_qbridge = QBridge.getInstance();
+        console.log("constructor qview");
+        this.m_qbridge.onReady(this._on_test_ready);
+        this.m_qbridge.onStart(this._on_test_start);
+        this.m_qbridge.onStarting(this._on_unit_start);
+        this.m_qbridge.onResult(this._on_unit_result);
+        this.m_qbridge.onEnd(this._on_test_end);
+        this.m_qbridge.onLog(this._on_unit_log);
+    }
+    QView.prototype.draw = function () {
+        console.log("qview draw");
+        var hui = document.getElementById("qrunner");
+        if (!hui) {
+            console.error("it's not test page or not find qrunner id");
+            return;
+        }
+        hui.innerHTML = "<div id='qrunner'></div>" + document.body.innerHTML;
+        if (this.config.use_qv_header == true) {
+            hui.appendChild(this.header.getElement());
+            var title = new QPanel("qrunner-header-title");
+            this.header.getElement().appendChild(title.getElement());
+            if (this.m_title) {
+                this.title = this.m_title;
+            }
+        }
+        if (this.config.use_qv_banner == true) {
+            hui.appendChild(this.banner.getElement());
+        }
+        if (this.config.use_qv_table == true) {
+            var tc_list = new QPanel("hdev-qunit-test");
+            hui.appendChild(tc_list.getElement());
+            tc_list.add("_table", this.table);
+        }
+        if (this.config.use_qv_log == true) {
+            hui.appendChild(this.console.getElement());
+        }
+        if (this.config.use_qv_header == true) {
+            this.header.add("start", new QButton("start-button", "START"));
+            this.header.add("stop", new QButton("stop-button", "STOP"));
+            this.header.add("pause", new QButton("pause-button", "PAUSE"));
+            this.header.add("home", new QButton("home-button", "HOME"));
+            this.header.add("back", new QButton("back-button", "BACK"));
+            this.header.add("loop", new QButton("loop-button", "Do Loop"));
+        }
+    };
+    QView.prototype.show = function () {
+        var hui = document.getElementById("qrunner");
+        if (hui)
+            hui.style.visibility = "visible";
+        else
+            console.error("it's not test page or not find qrunner id");
+    };
+    QView.prototype.hide = function () {
+        var hui = document.getElementById("qrunner");
+        if (hui)
+            hui.style.visibility = "hidden";
+        else
+            console.error("it's not test page or not find qrunner id");
+    };
+    Object.defineProperty(QView.prototype, "title", {
+        get: function () {
+            return this.m_title;
+        },
+        set: function (title) {
+            this.m_title = title;
+            var header_title = document.getElementById("qrunner-header-title");
+            if (header_title) {
+                header_title.innerHTML = "<a href='" + document.URL + "' id='banner_header'>" + title + "</a> ";
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(QView.prototype, "onTestStatusEvent", {
+        get: function () {
+            return this.m_on_status_event_cb;
+        },
+        set: function (cb) {
+            this.m_on_status_event_cb = cb;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return QView;
+}());
+var QComponent = (function () {
+    function QComponent() {
+        this.id = null;
+        this.name = null;
+        this.element = null;
+    }
+    QComponent.prototype.show = function () {
+        this.element.obj.style.visibility = "visible";
+    };
+    QComponent.prototype.hide = function () {
+        this.element.style.visibility = "hidden";
+    };
+    QComponent.prototype.getElement = function () {
+        return this.element;
+    };
+    return QComponent;
+}());
+var QButton = (function (_super) {
+    __extends(QButton, _super);
+    function QButton(id, name, callback) {
+        _super.call(this);
+        this.m_label = null;
+        this.m_click_cb = null;
+        this.name = "QButton";
+        var start = document.createElement("button");
+        start.className = "btn-start";
+        this.element = start;
+        if (name) {
+            this.element.innerHTML = name;
+            this.m_label = name;
+        }
+        if (callback) {
+            this.element.addEventListener("click", callback, false);
+            this.m_click_cb = callback;
+        }
+        if (id) {
+            this.element.id = id;
+        }
+    }
+    Object.defineProperty(QButton.prototype, "label", {
+        get: function () {
+            return this.m_label;
+        },
+        set: function (name) {
+            this.element.innerHTML = name;
+            this.element.id = name + "-button";
+            this.m_label = name;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(QButton.prototype, "onClick", {
+        get: function () {
+            return this.m_click_cb;
+        },
+        set: function (func) {
+            this.element.addEventListener("click", func, false);
+            this.m_click_cb = func;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return QButton;
+}(QComponent));
+var QCheckBox = (function (_super) {
+    __extends(QCheckBox, _super);
+    function QCheckBox(id, name, callback) {
+        var _this = this;
+        _super.call(this);
+        this.click_listener = function () {
+            if (_this.m_checked == false) {
+                _this.m_checked = true;
+                _this.m_label.className = "checked";
+            }
+            else {
+                _this.m_checked = false;
+                _this.m_label.className = "notchecked";
+            }
+            if (_this.m_listener)
+                _this.m_listener(_this.m_checked);
+            else
+                console.error("check box event listener is not regited");
+        };
+        this.m_checked = false;
+        this.m_listener = null;
+        this.m_label = null;
+        this.name = "QCheckBox";
+        this.element = document.createElement("input");
+        this.element.setAttribute("type", "checkbox");
+        this.element.setAttribute("label", "do loop");
+        this.element.addEventListener("click", this.click_listener, false);
+        if (id)
+            this.element.id = "loop-check";
+        this.m_label = document.createElement("label");
+        this.m_label.setAttribute("for", "loop-check");
+        this.m_label.className = "notchecked";
+        if (name)
+            this.m_label.innerHTML = name;
+        if (callback)
+            this.m_listener = callback;
+    }
+    Object.defineProperty(QCheckBox.prototype, "onCheck", {
+        get: function () {
+            return this.m_listener;
+        },
+        set: function (func) {
+            this.m_listener = func;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(QCheckBox.prototype, "label", {
+        get: function () {
+            return this.m_label;
+        },
+        set: function (name) {
+            this.m_label.innerHTML = name;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    QCheckBox.prototype.getElementLabel = function () {
+        return this.m_label;
+    };
+    return QCheckBox;
+}(QComponent));
+var QPanel = (function (_super) {
+    __extends(QPanel, _super);
+    function QPanel(id) {
+        _super.call(this);
+        this.m_title = null;
+        console.log("constructor qpanel - " + id);
+        this.element = document.createElement("div");
+        if (id) {
+            this.id = id;
+            this.element.id = id;
+        }
+    }
+    QPanel.prototype.add = function (name, com) {
+        this.defineProp(this, name, com);
+        var div = document.getElementById(this.id);
+        if (div) {
+            div.appendChild(com.getElement());
+            if (com.name == "QCheckBox")
+                div.appendChild(com.getElementLabel());
+        }
+        else {
+            console.error("qpanel id is null");
+        }
+    };
+    QPanel.prototype.remove = function (name) {
+        var com = this[name];
+        if (com) {
+            var div = document.getElementById(this.id);
+            if (div) {
+                div.removeChild(com.getElement());
+                if (com.name == "QCheckBox")
+                    div.appendChild(com.getElementLabel());
+            }
+        }
+    };
+    QPanel.prototype.defineProp = function (obj, key, value) {
+        var config = {
+            value: value,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        };
+        Object.defineProperty(obj, key, config);
+    };
+    return QPanel;
+}(QComponent));
+var QViewConfig = (function () {
+    function QViewConfig() {
+        this.use_qv_header = true;
+        this.use_qv_banner = true;
+        this.use_qv_table = true;
+        this.use_qv_log = true;
+        console.log("constructor qview config");
+    }
+    return QViewConfig;
+}());
+var QConsole = (function (_super) {
+    __extends(QConsole, _super);
+    function QConsole(id) {
+        _super.call(this);
+        this.m_rows = 10;
+        this.m_cols = 100;
+        console.log("constructor console -" + this.m_cols + "*" + this.m_rows);
+        this.element = document.createElement("textarea");
+        this.element.rows = this.m_rows;
+        this.element.cols = this.m_cols;
+        if (id) {
+            this.element.id = id;
+            this.id = id;
+        }
+    }
+    QConsole.prototype.log = function (msg) {
+        try {
+            var box = this.getElement();
+            if (box)
+                box.innerHTML += msg + "\n";
+            if (box.selectionStart == box.selectionEnd) {
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
+    };
+    QConsole.prototype.clear = function () {
+        try {
+            var box = this.getElement();
+            box.innerHTML = "";
+        }
+        catch (e) {
+            console.error(e);
+        }
+    };
+    Object.defineProperty(QConsole.prototype, "rows", {
+        get: function () {
+            return this.m_rows;
+        },
+        set: function (rows) {
+            this.m_rows = rows;
+            this.element.rows = rows;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(QConsole.prototype, "cols", {
+        get: function () {
+            return this.m_cols;
+        },
+        set: function (cols) {
+            this.m_cols = cols;
+            this.element.cols = cols;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return QConsole;
+}(QComponent));
+var QTable = (function (_super) {
+    __extends(QTable, _super);
+    function QTable(id) {
+        var _this = this;
+        _super.call(this);
+        this.selectedItem = function (id) {
+            if (_this.m_onselect)
+                _this.m_onselect(id);
+        };
+        this.rows = 25;
+        this.colums = 0;
+        this.m_count = 0;
+        this.m_items = new Array();
+        this.m_onselect = null;
+        console.log("constructor table");
+        this.name = "QTable";
+        this.element = document.createElement("table");
+        if (id) {
+            this.id = id;
+            this.element.id = id;
+        }
+    }
+    QTable.prototype.addLabel = function (title) {
+        var tr, td_case, td_result, td_divider;
+        var tables = document.getElementById("qrunner-tests-tables");
+        var totalRows, selTR;
+        var shouldExpend = false;
+        this.m_items.push({ id: -1, item: title, is_label: true, index: this.m_count });
+        if (this.rows > 0 && this.colums > 0) {
+            if (this.m_count >= this.rows * this.colums)
+                return;
+        }
+        if (tables) {
+            totalRows = tables.children.length;
+            if (totalRows >= this.rows) {
+                shouldExpend = true;
+            }
+            var tdNameHtml = "<a>" + title + "</a>";
+            var tr_module, td_module;
+            tr_module = document.createElement("tr");
+            td_module = document.createElement("td");
+            td_module.className = "td-title td-module";
+            td_module.innerHTML = tdNameHtml;
+            td_module.id = this.m_count + "-title";
+            td_result = document.createElement("td");
+            td_result.className = "td-result";
+            td_result.width = 100;
+            td_result.style.wordBreak = "break-all";
+            td_result.id = this.m_count + "-result";
+            td_divider = document.createElement("td");
+            td_divider.className = "td-divider";
+            td_divider.id = this.m_count + "-divider";
+            if (!shouldExpend) {
+                tr_module.appendChild(td_module);
+                tr_module.appendChild(td_result);
+                tr_module.appendChild(td_divider);
+                tables.appendChild(tr_module);
+            }
+            else {
+                selTR = tables.childNodes[this.m_count % this.rows];
+                selTR.appendChild(td_module);
+                selTR.appendChild(td_result);
+                selTR.appendChild(td_divider);
+            }
+            this.m_count++;
+        }
+        else
+            console.error("cann't find tables");
+    };
+    QTable.prototype.addItem = function (id, item, visible) {
+        var tr, td_case, td_result, td_divider;
+        var tables = document.getElementById("qrunner-tests-tables");
+        var totalRows, selTR;
+        var shouldExpend = false;
+        this.m_items.push({ id: id, item: item, is_label: false, index: this.m_count });
+        if (this.rows > 0 && this.colums > 0) {
+            if (this.m_count >= this.rows * this.colums) {
+                return;
+            }
+        }
+        if (tables) {
+            totalRows = tables.children.length;
+            if (totalRows >= this.rows) {
+                shouldExpend = true;
+            }
+            var tdNameHtml = "<a class='title-anchor' href=\"javascript:" + "QRunner.view.table.selectedItem(" + id + ")" + ";\">" + item + "</a>";
+            tr = document.createElement("tr");
+            td_case = document.createElement("td");
+            td_case.className = "td-title";
+            td_case.innerHTML = tdNameHtml;
+            td_case.id = this.m_count + "-title";
+            td_result = document.createElement("td");
+            td_result.className = "td-result";
+            td_result.id = this.m_count + "-result";
+            td_divider = document.createElement("td");
+            td_divider.className = "td-divider";
+            td_divider.id = this.m_count + "-divider";
+            if (!shouldExpend) {
+                tr.appendChild(td_case);
+                tr.appendChild(td_result);
+                tr.appendChild(td_divider);
+                tables.appendChild(tr);
+            }
+            else {
+                selTR = tables.childNodes[this.m_count % this.rows];
+                selTR.appendChild(td_case);
+                selTR.appendChild(td_result);
+                selTR.appendChild(td_divider);
+            }
+            this.m_count++;
+        }
+        else
+            console.error("cann't find tables");
+    };
+    QTable.prototype.removeItem = function (id) {
+        var redraw_index = -1;
+        var redraw_items = null;
+        for (var i = id; i < this.m_items.length; i++) {
+            if (this.m_items[i].id == id) {
+                console.log(i + "  removeItem = " + this.m_items[i].item);
+                redraw_items = this.m_items.splice(i + 1, this.m_items.length);
+                this.m_items = this.m_items.splice(0, i);
+                redraw_index = i;
+            }
+        }
+        if (redraw_index == -1) {
+            console.error("remove item is not null");
+        }
+        var curr_item_cnt = this.m_count;
+        for (var i = redraw_index; i < curr_item_cnt; i++) {
+            var td_result = document.getElementById(i + "-title");
+            var td_title = document.getElementById(i + "-result");
+            var td_divider = document.getElementById(i + "-divider");
+            td_title.parentNode.removeChild(td_title);
+            td_result.parentNode.removeChild(td_result);
+            td_divider.parentNode.removeChild(td_divider);
+            this.m_count--;
+        }
+        for (var i = 0; i < redraw_items.length; i++) {
+            if (redraw_items[i].is_label) {
+                this.addLabel(redraw_items[i].item);
+            }
+            else {
+                this.addItem(redraw_items[i].id, redraw_items[i].item, false);
+            }
+        }
+    };
+    QTable.prototype.findItem = function (id) {
+        for (var i = 0; i = this.m_items.length; i++) {
+            if (this.m_items[i].id = id) {
+                return this.m_items[i].item;
+            }
+        }
+        return null;
+    };
+    QTable.prototype.updateItem = function (id, color, str) {
+        var update_index = -1;
+        for (var i = 0; i < this.m_items.length; i++) {
+            if (this.m_items[i].id == id) {
+                update_index = i;
+            }
+        }
+        var td_result = document.getElementById(update_index + "-result");
+        if (td_result != null) {
+            td_result.className = "td-result td-ing";
+            td_result.innerHTML = str;
+            td_result.style.backgroundColor = color;
+        }
+    };
+    Object.defineProperty(QTable.prototype, "onSelectedItem", {
+        get: function () {
+            return this.m_onselect;
+        },
+        set: function (func) {
+            this.m_onselect = func;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return QTable;
+}(QComponent));
+var QRunner = (function () {
+    function QRunner() {
+        console.log("CONSTRUCTOR QRUNNER");
+    }
+    QRunner.start = function () {
+        QRunner.control.start();
+    };
+    QRunner.stop = function () {
+        QRunner.control.stop();
+    };
+    QRunner.pause = function () {
+        QRunner.control.pause();
+    };
+    QRunner.init = function () {
+        QRunner.view.onTestStatusEvent = QRunner.__test_status;
+        QRunner.view.draw();
+        try {
+            QRunner.view.header['start'].onClick = QRunner.__start;
+            QRunner.view.header['stop'].onClick = QRunner.__stop;
+            QRunner.view.header['pause'].onClick = QRunner.__pause;
+            QRunner.view.header['home'].onClick = QRunner.__home;
+            QRunner.view.header['back'].onClick = QRunner.__back;
+            QRunner.view.header['loop'].onClick = QRunner._loop;
+            QRunner.view.table.onSelectedItem = QRunner.__select;
+        }
+        catch (e) {
+            console.error(e);
+        }
+        QRunner.control.attach();
+    };
+    QRunner.deinit = function () {
+    };
+    QRunner.__start = function () {
+        console.log("start");
+        QRunner.control.start();
+    };
+    QRunner.__stop = function () {
+        console.log("stop");
+        QRunner.control.stop();
+    };
+    QRunner.__pause = function () {
+        console.log("pause");
+        QRunner.control.pause();
+    };
+    QRunner.__home = function () {
+        console.log("home");
+        window.open("index.html", "_self");
+    };
+    QRunner.__back = function () {
+        console.log("back");
+        window.history.back();
+    };
+    QRunner._loop = function () {
+        if (QRunner.do_loop == false) {
+            console.log("loop : on");
+            QRunner.do_loop = true;
+            QRunner.view.header['loop'].getElement().className = "checked";
+        }
+        else {
+            console.log("loop : off");
+            QRunner.do_loop = false;
+            QRunner.view.header['loop'].getElement().className = "btn-start";
+        }
+    };
+    QRunner.__loop = function (on) {
+        console.log("loop :: " + on);
+        QRunner.do_loop = on;
+    };
+    QRunner.__select = function (id) {
+        console.log("selected item - " + id);
+        QRunner.control.start(id);
+    };
+    QRunner.__test_status = function (status) {
+        if (status == "end") {
+            if (QRunner.do_loop == true)
+                QRunner.control.start();
+        }
+    };
+    QRunner.view = new QView();
+    QRunner.control = new QControl();
+    QRunner.do_loop = false;
+    return QRunner;
+}());
+window.addEventListener("load", function () {
+    QRunner.init();
+    try {
+        document.getElementById("start-button").focus();
+    }
+    catch (e) { }
+});
+document.onkeydown = function (event) {
+    switch (event.keyCode || event.which) {
+        case 461:
+            history.back();
+            break;
+        default:
+            break;
+    }
+};

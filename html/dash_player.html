@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var video = null;
+        var timer_arr = [];
+        function play() {
+            video = document.getElementById("video1");
+            video.src = "http://dashuktv-a.akamaihd.net/1242911124001/1242911124001_4927724143001_4927719820001.mpd";
+            video.load();
+            video.play();
+        }
+
+        function stop() {
+            video = document.getElementById("video1");
+            video.src = null;
+            video.load();
+        }
+
+        function addTimer() {
+            var timer_id = setInterval(dummyFunc, 27);
+            timer_arr.push(timer_id);
+            textCount(timer_arr.length);
+        }
+        function clearTimer() {
+            var length = timer_arr.length;
+            for(var i=0; i<length; i++)
+                clearInterval(timer_arr.pop());
+
+            textCount(timer_arr.length);
+        }
+
+        function dummyFunc() {
+            if ( video ) currentTime(video.currentTime);
+        }
+
+        function textCount(count) {
+            document.getElementById("myTextarea").value = "Timer Count : " + count;
+        }
+
+        function currentTime(time) {
+            document.getElementById("myTextarea2").value = "Time : " + time;
+        }
+
+    </script>
+</head>
+<body bgcolor="#FFFFFF">
+<button onclick="play()">play</button>
+<button onclick="stop()">stop</button>
+<button onclick="addTimer()">addTimer</button>
+<button onclick="clearTimer()">clearTimer</button>
+<textarea id="myTextarea">Timer Count : 0</textarea>
+<textarea id="myTextarea2">Time : 0</textarea>
+<br>
+<video id="video1" width="640" height="480" type="application/dash+xml">
+</video>
+
+</body>
+</html>

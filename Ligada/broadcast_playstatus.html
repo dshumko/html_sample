@@ -1,0 +1,303 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript">
+
+		var testapi = null,
+			video = null,
+			app = null,
+			gBroadcast = null,
+			gCurrentError,
+			gCurrentState,
+			gPlayStateChangedCalled = false,
+			gTimeout,
+			gCount = 0;
+
+		function VideoBcCreate(width, height) 
+		{
+      gBroadcast = document.createElement("object");
+			gBroadcast.setAttribute("type", "video/broadcast");
+			gBroadcast.setAttribute("id", "videoBc");
+      gBroadcast.style.width = width+'px';
+      gBroadcast.style.height = height+'px';
+      gBroadcast.setAttribute("width", width);
+      gBroadcast.setAttribute("height", height);
+			document.getElementById('BcVideo').appendChild(gBroadcast);
+		}
+		
+		function cleanUp()
+		{
+			try { gBroadcast.onPlayStateChange = null; } catch(err) {}
+			if( typeof gTimeout !== 'undefined' )
+			{
+				clearTimeout( gTimeout );
+			}
+		}
+		
+		function VideoBcPlayStateChanged(state, error)
+		{
+			gPlayStateChangedCalled = true;
+			if( gBroadcast !== null )
+			{
+				gCurrentError = error;
+				gCurrentState = state;
+			}
+			switch( gCount )
+			{
+				case 1:
+					CheckState();
+					break;
+			}
+		}
+		
+		function hbbtv_00001710(){
+
+			try 
+			{
+				app = document.getElementById('appmgr').getOwnerApplication(document);
+				app.show();
+			} catch (err) 
+			{
+				cleanUp();
+				return;
+			}
+			
+			try 
+			{
+				VideoBcCreate(640,480);
+				
+				if( document.getElementById('videoBc').playState === 0 )
+				{
+					window.debug('Video Broadcast Object was initialized successfully');
+				}
+				else
+				{
+					cleanUp();
+					return;
+				}
+				
+				
+			} catch (err) 
+			{
+				window.debug('Video Broadcast Object was initialized unsuccessfully. Error : ' + err);
+				cleanUp();
+				return;
+			}
+			
+			try
+			{
+			
+				gBroadcast.onPlayStateChange = VideoBcPlayStateChanged;
+				window.debug('Adding an event listener is successfull.' );
+			}
+			catch(err) 
+			{
+				window.debug('Adding an event listener throws an exception. Error : ' + err);
+				cleanUp();
+				return;
+			}
+			
+			try
+			{
+				gTimeout = setTimeout( OnPresentingNotCalled, 10000 );
+				gCount = 1;
+				document.getElementById('videoBc').bindToCurrentChannel();
+			}
+			catch( err )
+			{
+				window.debug('The call to the bindToCurrentChannel() method throws an exception. Error : ' + err);
+				cleanUp();
+				return;
+			}
+		};
+		
+		function hbbtv_00001720(){
+
+			try 
+			{
+				app = document.getElementById('appmgr').getOwnerApplication(document);
+				app.show();
+			} catch (err) 
+			{
+				cleanUp();
+				return;
+			}
+			
+			try 
+			{
+				VideoBcCreate(640,480);
+				
+				if( document.getElementById('videoBc').playState === 0 )
+				{
+					window.debug('Video Broadcast Object was initialized successfully');
+				}
+				else
+				{
+					cleanUp();
+					return;
+				}
+				
+			} catch (err) 
+			{
+				window.debug('Video Broadcast Object was initialized unsuccessfully. Error : ' + err);
+				cleanUp();
+				return;
+			}
+			
+			try
+			{
+			
+				gBroadcast.onPlayStateChange = VideoBcPlayStateChanged;
+				window.debug('Adding an event listener is successfull.' );
+			}
+			catch(err) 
+			{
+				window.debug('Adding an event listener throws an exception. Error : ' + err);
+				cleanUp();
+				return;
+			}
+			
+			try
+			{
+				document.getElementById('videoBc').release();
+				gTimeout = setTimeout( OnPresentingNotCalled, 10000 );
+				gCount = 1;
+			}
+			catch( err )
+			{
+				window.debug('The call to the bindToCurrentChannel() method throws an exception. Error : ' + err);
+				cleanUp();
+				return;
+			}
+		};
+		
+		
+		function hbbtv_00001730(){
+
+			try 
+			{
+				app = document.getElementById('appmgr').getOwnerApplication(document);
+				app.show();
+			} catch (err) 
+			{
+				cleanUp();
+				return;
+			}
+			
+			try 
+			{
+				VideoBcCreate(640,480);
+				
+				if( document.getElementById('videoBc').playState === 0 )
+				{
+					window.debug('Video Broadcast Object was initialized successfully');
+				}
+				else
+				{
+					cleanUp();
+					return;
+				}
+				
+				
+			} catch (err) 
+			{
+				window.debug('Video Broadcast Object was initialized unsuccessfully. Error : ' + err);
+				cleanUp();
+				return;
+			}
+			
+			try
+			{
+			
+				gBroadcast.onPlayStateChange = VideoBcPlayStateChanged;
+				window.debug('Adding an event listener is successfull.' );
+			}
+			catch(err) 
+			{
+				window.debug('Adding an event listener throws an exception. Error : ' + err);
+				cleanUp();
+				return;
+			}
+			
+			try
+			{
+						
+				document.getElementById('videoBc').stop();
+				gTimeout = setTimeout( OnPresentingNotCalled, 10000 );
+				gCount = 1;
+			}
+			catch( err )
+			{
+				window.debug('The call to the bindToCurrentChannel() method throws an exception. Error : ' + err);
+				cleanUp();
+				return;
+			}
+		};
+
+		
+		function CheckState()
+		{
+			clearTimeout(gTimeout);
+			window.debug('The bindToCurrentChannel() method was called successfully');
+			gCount = 2;
+			if( gCurrentError === undefined && gCurrentState === 1 )
+			{
+				window.debug('The error property is set to undefined and the state property is set to 1');
+			}
+			else
+			{
+				if( gCurrentError !== undefined && gCurrentState !== 1 )
+				{
+					window.debug('The error property is not set to undefined, value : ' + gCurrentError + ' and the state property is not set to 1, value : ' + gCurrentState);
+				}
+				else if( gCurrentError !== undefined )
+				{
+					window.debug('The error property is not set to undefined, value : ' + gCurrentError + ' .');
+				}
+				else
+				{
+					window.debug('The state property is not set to 1, value : ' + gCurrentState + ' .');
+				}
+			}
+			cleanUp();
+			return;
+		}
+		
+		function OnPresentingNotCalled()
+		{
+			if( document.getElementById('videoBc').playState === 0 )
+			{
+				window.console('Video Broadcast Object was initialized successfully');
+			}
+				
+			window.console('The PlayStateChanged event did not fire within 10 seconds.');
+			cleanUp();
+			return;
+		}
+		
+		function bc_stop()
+		{
+				document.getElementById('videoBc').stop();
+		}
+		
+		function bindToCurrentChannel1()
+		{
+				document.getElementById('videoBc').bindToCurrentChannel();
+		}
+//]]>
+	</script>
+
+</head>
+<body style="background: #fff">
+	
+  <button style="width:150px;"onclick="hbbtv_00001710()"> 00001710 </button>
+  <button style="width:150px;"onclick="hbbtv_00001720()"> 00001720 </button>
+  <button style="width:150px;"onclick="hbbtv_00001730()"> 00001730 </button>
+  <br>
+  <button style="width:150px;"onclick="bc_stop()"> stop </button>
+  <button style="width:150px;"onclick="bindToCurrentChannel1()"> bindToCurrentChannel </button>
+	<object id="appmgr" type="application/oipfApplicationManager" style="visibility: hidden;"></object>
+	<div id="BcVideo">
+	</div>
+
+</body>
+</html>

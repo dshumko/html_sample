@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+	<script type="text/javascript">
+		function init() {
+		var SAMPLE_VIDEO = "http://10.0.14.41/streams/sstr/sunnyhill_FirstEx_30/SunnyHill_TheGrasshopperSong.ism/manifest";//"http://video-js.zencoder.com/oceans-clip.mp4";
+		// var SAMPLE_VIDEO2 = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+		var vodObject;
+        var loop_val = 0;
+		var btnCreate = document.getElementById("buttonCreate");
+		var btnPlay = document.getElementById("buttonPlay");
+		var btnStop = document.getElementById("buttonStop");
+		var btnPause = document.getElementById("buttonPause");
+		var btnSeek = document.getElementById("buttonSeek");
+        var btnLoop = document.getElementById("buttonLoop");
+		
+		var tagLog = document.getElementById("log");
+		var tagVod = document.getElementById("vod");
+
+		var printLog = function(str) {
+			tagLog.value += str + '\n';
+			tagLog.scrollTop = tagLog.scrollHeight;
+			window.debug("(WEBLOG)========> " + str);
+            //console.log("(WEBLOG)========> " + str);
+		};
+		
+		var onPlayStateChange = function() {
+			if(vodObject) {
+				printLog("onPlayStateChange playState="+vodObject.playState);
+                if ( (vodObject.playState == 5) && loop_val )
+                {
+                    vodObject.stop();
+                    vodObject.play(1);
+                    loop_val++;
+                    printLog("loop count : " + (loop_val-1));
+                }
+			}
+		}
+		var onPlayPositionChanged = function(position) {
+			if(vodObject) {
+				//printLog("onPlayPositionChanged position="+position+", playPosition="+vodObject.playPosition+", playTime="+vodObject.playTime);
+			}
+		}
+		var onPlaySpeedChanged = function(speed) {
+			if(vodObject) {
+				printLog("onPlaySpeedChanged speed="+speed);
+			}
+		}
+		
+		btnCreate.onclick = function clickBtnCreate() {
+			printLog('clickBtnCreate !!');	
+			createObject(SAMPLE_VIDEO);
+		};
+
+		btnPlay.onclick = function clickBtnPlay() {
+			printLog('clickBtnPlay !!');	
+			vodObject.play(1);
+		};
+
+        btnLoop.onclick = function clickBtnLoop() {
+            loop_val = 1;
+		};
+		
+		btnStop.onclick = function clickBtnStop() {
+			printLog('clickBtnStop !!');	
+			vodObject.stop();
+		};
+		
+		btnPause.onclick = function clickBtnPause() {
+			printLog('clickBtnPause !!');	
+			vodObject.play(0);
+		};
+		
+		btnSeek.onclick = function clickBtnSeek() {
+			printLog('clickBtnSeek !!');	
+			vodObject.seek(vodObject.playPosition+10);
+		};
+		
+		function createObject(videoSrc) {
+			vodObject = null;
+			vodObject = document.createElement("object");  // create new object
+			vodObject.setAttribute("id", "video");
+			vodObject.setAttribute("data", videoSrc);
+			vodObject.setAttribute("type", "video/mpeg4"); // set correct mimetype
+			vodObject.setAttribute("width", 320);
+			vodObject.setAttribute("height", 240);
+			
+			vodObject.addEventListener("PlayStateChange", onPlayStateChange);
+			vodObject.addEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.addEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+
+			var mainVideoDiv = document.getElementById('mainvideo');
+			if(mainVideoDiv.firstChild) {
+				mainVideoDiv.removeChild(mainVideoDiv.firstChild);
+			}
+			mainVideoDiv.appendChild(vodObject);
+		}
+
+		function destroyObject() {
+			document.getElementById("mainvideo").innerHTML = "";
+		}
+	}
+	</script>
+</head>
+<body onload="init()">
+	<div id="mainvideo"></div>
+	<div>
+		<button id="buttonCreate">create</button>
+		<button id="buttonPlay">play</button>
+		<button id="buttonStop">stop</button>
+		<button id="buttonPause">pause</button>
+        <button id="buttonLoop">Loop</button>
+		<button id="buttonSeek">seek+10</button>
+	</div>	
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

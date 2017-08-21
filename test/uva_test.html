@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<script>
+			var player;
+			var preload;
+			var src;
+			function control(c){
+				if(c == 'create'){
+					var pos = document.getElementById("node");
+					player = document.createElement('video');
+					player.src = src;
+					player.setAttribute('id', 'player');
+					player.setAttribute('controls', true);
+					player.setAttribute('width', 800);
+					player.setAttribute('height', 600);
+					player.setAttribute('preload', preload);
+					player.style.display = "block";
+					pos.appendChild(player);
+				}
+				if(c == 'play'){
+					player.play();
+				}
+				if(c == 'load'){
+					if( player )
+					{
+						player.src = src;
+						player.load();
+					}
+				}
+				else if(c == 'pause'){
+					player.pause();
+				}
+				else if(c == 'remove'){
+					player.src = "";
+					player.load();
+				}
+				else if(c == 'auto'){
+					preload = 'auto';
+				}
+				else if(c == 'metadata'){
+					preload = 'metadata';
+				}
+				else if(c == 'none'){
+					preload = 'none';
+				}
+				else if(c == 'player1'){
+					src = "http://10.0.12.35/media/dizzy.mp4";
+				}
+				else if(c == 'player2'){
+					src = "http://10.0.12.35/media/Avatar.mp4";
+				}
+				else if(c == 'player3'){
+					src = "http://s3-eu-west-1.amazonaws.com/mediaservices-samples/elementalGPU2_2_1/current/cleared_flv_avc1_high_stb.mp4";//"http://10.0.12.35/media/video_sample.mp4";
+				}
+			}
+		</script>
+	</head>
+	<body bgcolor="white">
+		<button style="width:70px;" onclick="control('player1')"> player1 </button>
+	 	<button style="width:70px;" onclick="control('player2')"> player2 </button>
+		<button style="width:70px;" onclick="control('player3')"> player3 </button>
+		<br>
+		<button style="width:70px;" onclick="control('auto')"> auto </button>
+	 	<button style="width:70px;" onclick="control('metadata')"> metadata </button>
+		<button style="width:70px;" onclick="control('none')"> none </button>
+		<br>
+		<button style="width:70px;" onclick="control('create')">create </button>
+		<button style="width:70px;" onclick="control('load')"> load </button>
+		<button style="width:70px;" onclick="control('play')"> play </button> 
+		<button style="width:70px;" onclick="control('pause')"> pause </button>
+		<button style="width:70px;" onclick="control('remove')"> remove </button>
+		<br>
+		<button style="width:100px;" onclick="control('switch')"> switch </button>
+		<br>
+		<div id="node"> 
+		</div>
+	</body>
+</html>

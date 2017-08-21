@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function checkCookie() {
+            var d = new Date();
+            var min = d.getMinutes();
+            var sec = d.getSeconds();
+            var hour = d.getHours();
+
+            document.cookie = "last_time=" + hour + ":" + min + ":" + sec + ";";
+            document.getElementById("demo").innerHTML = document.cookie;
+
+            delete d;
+        }
+
+        function clearCookie() {
+            document.cookie = "last_time=;";
+            document.getElementById("demo").innerHTML = document.cookie;
+        }
+
+        function getCookie() {
+            document.getElementById("demo").innerHTML = document.cookie;
+        }
+
+    </script>
+</head>
+<body bgcolor="#FFFFFF" onload="getCookie()">
+<button onclick="clearCookie()">Clear Cookie</button>
+<button onclick="checkCookie()">Get Cookie</button>
+<div id="demo"></div>
+
+</body>
+</html>

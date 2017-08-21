@@ -1,0 +1,109 @@
+describe("3.4 Storage Extension APIs",function(){
+	var oipfobjectFactory = window.oipfObjectFactory;
+	var hStorageUtil=oipfobjectFactory.createHumaxStorageUtilObject();
+	
+	describe("3.4.1 HMXStorageUtil class", function(){
+  		describe("3.4.1.1 Properties",function(){
+  			it("onPhysicalStorageAttached",function(){expect(hStorageUtil.onPhysicalStorageAttached).toBeDefined();});//error
+	  		it("onPhysicalStorageDetached",function(){expect(hStorageUtil.onPhysicalStorageDetached).toBeDefined();});//error
+ 			it("onPhysicalStorageStatus",function(){expect(hStorageUtil.onPhysicalStorageStatus).toBeDefined();});//error
+		});
+		describe("3.4.1.2 Methods",function(){
+			it("getPhysicalStorages",function(){expect(hStorageUtil.getPhysicalStorages).toBeDefined();});
+  			it("supportedFormatTypes",function(){expect(hStorageUtil.supportedFormatTypes).toBeDefined();});
+		});
+	});
+
+	describe("3.4.2 HMXPhysicalStorage class", function(){
+		var hPhysicalStorages = hStorageUtil.getPhysicalStorages();
+		it("hPhysicalStorages length",function(){expect(hPhysicalStorages.length).toBeGreaterThan(0)});
+		var hPhysicalStorage0=hPhysicalStorages.item(0);
+		
+	  	describe("3.4.2.1 Constants",function(){
+  			it("EInterfaceUnknown",function(){expect(hPhysicalStorage0.EInterfaceUnknown).toBeDefined();});
+	 		it("EInterfaceSATA",function(){expect(hPhysicalStorage0.EInterfaceSATA).toBeDefined();});
+	  		it("EInterfaceUSB",function(){expect(hPhysicalStorage0.EInterfaceUSB).toBeDefined();});
+	  		it("ETypeUnknown",function(){expect(hPhysicalStorage0.ETypeUnknown).toBeDefined();});
+  			it("ETypeInternal",function(){expect(hPhysicalStorage0.ETypeInternal).toBeDefined();});
+	  		it("ETypeExternal",function(){expect(hPhysicalStorage0.ETypeExternal).toBeDefined();});
+	  		it("EKindUnknown",function(){expect(hPhysicalStorage0.EKindUnknown).toBeDefined();});
+	  		it("EKindHDD",function(){expect(hPhysicalStorage0.EKindHDD).toBeDefined();});
+	  		it("EKindUSBMemory",function(){expect(hPhysicalStorage0.EKindUSBMemory).toBeDefined();});
+	  		it("EKindSDMemory",function(){expect(hPhysicalStorage0.EKindSDMemory).toBeDefined();});
+	  		it("EUsageUnkown",function(){expect(hPhysicalStorage0.EUsageUnkown).toBeDefined();});
+	  		it("EUsagePVR",function(){expect(hPhysicalStorage0.EUsagePVR).toBeDefined();});
+	  		it("EUsageSubPVR",function(){expect(hPhysicalStorage0.EUsageSubPVR).toBeDefined();});
+	  		it("EUsageStorage",function(){expect(hPhysicalStorage0.EUsageStorage).toBeDefined();});
+	  		it("EPairingUnkown",function(){expect(hPhysicalStorage0.EPairingUnkown).toBeDefined();});
+	  		it("EPairingOK",function(){expect(hPhysicalStorage0.EPairingOK).toBeDefined();});
+	  		it("EPairingFail",function(){expect(hPhysicalStorage0.EPairingFail).toBeDefined();});
+	  		it("EPairingNoInfo",function(){expect(hPhysicalStorage0.EPairingNoInfo).toBeDefined();});
+	  		it("EPairingNow",function(){expect(hPhysicalStorage0.EPairingNow).toBeDefined();});
+		});
+
+		describe("3.4.2.2 Properties",function(){
+			it("id",function(){expect(hPhysicalStorage0.id).toBeDefined();});
+	  		it("label",function(){expect(hPhysicalStorage0.label).toBeDefined();});
+	  		it("interfaceType",function(){expect(hPhysicalStorage0.interfaceType).toBeDefined();});  		
+	  		it("type",function(){expect(hPhysicalStorage0.type).toBeDefined();});
+	  		it("kind",function(){expect(hPhysicalStorage0.kind).toBeDefined();});
+	  		it("usage",function(){expect(hPhysicalStorage0.usage).toBeDefined();});
+	  		it("pairing",function(){expect(hPhysicalStorage0.pairing).toBeDefined();});
+	  		it("uuid",function(){expect(hPhysicalStorage0.uuid).toBeDefined();});
+	  		it("availableSize",function(){expect(hPhysicalStorage0.availableSize).toBeDefined();});
+	  		it("availablePvrSize",function(){expect(hPhysicalStorage0.availablePvrSize).toBeDefined();});
+	  		it("usedSize",function(){expect(hPhysicalStorage0.usedSize).toBeDefined();});
+	  		it("reservedSize",function(){expect(hPhysicalStorage0.reservedSize).toBeDefined();});
+	  		it("totalSize",function(){expect(hPhysicalStorage0.totalSize).toBeDefined();});
+	  		it("ismount",function(){expect(hPhysicalStorage0.ismount).toBeDefined();});
+	  		it("onFormatProgress",function(){expect(hPhysicalStorage0.onFormatProgress).toBeDefined();});
+	  		it("onDetachProgress",function(){expect(hPhysicalStorage0.onDetachProgress).toBeDefined();});
+	  		it("onRecoveryProgress",function(){expect(hPhysicalStorage0.onRecoveryProgress).toBeDefined();});
+	  		it("onUsbSpeedResult",function(){expect(hPhysicalStorage0.onUsbSpeedResult).toBeDefined();});
+		});
+		
+		describe("3.4.2.3 Methods",function(){
+			it("getLogicalStorages",function(){expect(hPhysicalStorage0.getLogicalStorages).toBeDefined();});
+			it("detach",function(){expect(hPhysicalStorage0.detach).toBeDefined();});
+			it("formatAll",function(){expect(hPhysicalStorage0.formatAll).toBeDefined();});			
+			it("recovery",function(){expect(hPhysicalStorage0.recovery).toBeDefined();});
+			it("setStorageName",function(){expect(hPhysicalStorage0.setStorageName).toBeDefined();});
+			it("setSwitchHddForPvr",function(){expect(hPhysicalStorage0.setSwitchHddForPvr).toBeDefined();});
+		});
+	});
+	
+	
+	describe("3.4.3 HMXLogicalStorage class", function(){
+		var hPhysicalStorages = hStorageUtil.getPhysicalStorages();
+		it("hPhysicalStorages length",function(){expect(hPhysicalStorages.length).toBeGreaterThan(0)});
+		var hPhysicalStorage0=hPhysicalStorages.item(0);
+		var hLogicalStorages = hPhysicalStorage0.getLogicalStorages();
+		it("hLogicalStorages length",function(){expect(hLogicalStorages.length).toBeGreaterThan(0)});
+		var hLogicalStorage0 = hLogicalStorages.item(0);
+		
+  		describe("3.4.3.1 Properties",function(){
+	  		it("id",function(){expect(hLogicalStorage0.id).toBeDefined();});
+	  		it("available",function(){expect(hLogicalStorage0.available).toBeDefined();});
+	  		it("pvr",function(){expect(hLogicalStorage0.pvr).toBeDefined();});
+	  		it("availableSize",function(){expect(hLogicalStorage0.availableSize).toBeDefined();});
+	  		it("usedSize",function(){expect(hLogicalStorage0.usedSize).toBeDefined();});
+	  		it("reservedSize",function(){expect(hLogicalStorage0.reservedSize).toBeDefined();});
+	  		it("totalSpace",function(){expect(hLogicalStorage0.totalSpace).toBeDefined();});
+	  		it("formatType",function(){expect(hLogicalStorage0.formatType).toBeDefined();});
+	  		it("path",function(){expect(hLogicalStorage0.path).toBeDefined();}); 
+	  		it("label",function(){expect(hLogicalStorage0.label).toBeDefined();}); 
+	  		it("onFormatProgress",function(){expect(hLogicalStorage0.onFormatProgress).toBeDefined();}); 
+		});
+
+		describe("3.4.3.2 Methods",function(){
+			it("getPhysicalStorages",function(){expect(hStorageUtil.getPhysicalStorages).toBeDefined();});
+	  		it("supportedFormatTypes",function(){expect(hStorageUtil.supportedFormatTypes).toBeDefined();});
+		});
+	});
+	
+	describe("3.4.4 HMXLogicalStorageCollection",function(){
+	});
+	
+	describe("3.4.5 HMXPhysicalStorageCollection",function(){
+	});
+});

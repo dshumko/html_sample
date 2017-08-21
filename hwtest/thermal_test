@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="thermal_test.css">
+</head>
+<body onload="init()" onkeydown="keydown(event)" style="margin:0px;">
+<video id="video1" width="100%" height="100%" loop>
+</video>
+<script>
+    var current_focus = 0;
+
+    function init()
+    {
+        $("body").append('<div id="d1" style="width:100px; height:40px; position:absolute; top:100px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d2" style="width:100px; height:40px; position:absolute; top:150px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d3" style="width:100px; height:40px; position:absolute; top:200px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d4" style="width:100px; height:40px; position:absolute; top:250px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d5" style="width:100px; height:40px; position:absolute; top:300px; left:1000px; background-color: red;"></div>');
+        $("body").append('<div id="d6" style="width:100px; height:40px; position:absolute; top:350px; left:1000px; background-color: red;"></div>');
+
+        var video = document.getElementById("video1");
+        if ( video )
+        {
+            video.src = "http://10.0.14.169/streams/4k/4k_vp9.webm";
+            video.play();
+        }
+
+        $("#d1").hide();
+        $("#d2").hide();
+        $("#d3").hide();
+        $("#d4").hide();
+        $("#d5").hide();
+        $("#d6").hide();
+    }
+
+    function keydown(event)
+    {
+        switch(event.keyCode)
+        {
+            case 40://down
+                if(++current_focus > 6) current_focus = 1;
+                moveFocus(current_focus);
+                break;
+            case 38://up
+                if(--current_focus < 1) current_focus = 6;
+                moveFocus(current_focus);
+                break;
+            default: break;
+        }
+        console.log(event.keyCode);
+    }
+
+    function moveFocus(index)
+    {
+        for(var i=1; i<7; i++)
+        {
+            var s = "#d"+i;
+            if(index==i) $(s).show();
+            else $(s).hide();
+        }
+    }
+</script>
+<div class="name">
+    <div>Gerwin van Royen</div>
+    <div><a target="_blank" href="http://www.twitter.com/gerwinvanroyen">@gerwinvanroyen</a></div>
+</div>
+<div class="perspective">
+    <div class="tardis-wrap">
+        <div class="tardis">
+            <!-- start of side -->
+            <div class="side">
+                <div class="top-sign">
+                    <div class="text">
+                        <span class="left">POLICE</span>
+                        <span class="tiny">PUBLIC CALL</span>
+                        <span class="right">BOX</span>
+                    </div>
+                </div>
+                <div class="door-frame">
+                    <div class="door door-left">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="sign"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                    <div class="door door-right">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of side -->
+
+            <!-- start of side -->
+            <div class="side">
+                <div class="top-sign">
+                    <div class="text">
+                        <span class="left">POLICE</span>
+                        <span class="tiny">PUBLIC CALL</span>
+                        <span class="right">BOX</span>
+                    </div>
+                </div>
+                <div class="door-frame">
+                    <div class="door door-left">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                    <div class="door door-right">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of side -->
+
+            <!-- start of side -->
+            <div class="side">
+                <div class="top-sign">
+                    <div class="text">
+                        <span class="left">POLICE</span>
+                        <span class="tiny">PUBLIC CALL</span>
+                        <span class="right">BOX</span>
+                    </div>
+                </div>
+                <div class="door-frame">
+                    <div class="door door-left">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                    <div class="door door-right">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of side -->
+
+            <!-- start of side -->
+            <div class="side">
+                <div class="top-sign">
+                    <div class="text">
+                        <span class="left">POLICE</span>
+                        <span class="tiny">PUBLIC CALL</span>
+                        <span class="right">BOX</span>
+                    </div>
+                </div>
+                <div class="door-frame">
+                    <div class="door door-left">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                    <div class="door door-right">
+                        <div class="door-inset"></div>
+                        <div class="door-inset b"></div>
+                        <div class="door-inset c"></div>
+                        <div class="window">
+                            <div class="pane a"></div><div class="pane b"></div><div class="pane c"></div>
+                            <div class="pane d"></div><div class="pane e"></div><div class="pane f"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end of side -->
+
+            <div class="roof"></div>
+
+
+            <div class="roof-top">
+                <div class="roof-panel a"></div>
+                <div class="roof-panel b"></div>
+                <div class="roof-panel c"></div>
+                <div class="roof-panel d"></div>
+                <div class="top-lid"></div>
+            </div>
+
+
+            <div class="light">
+                <div class="light-panel a"><div class="bottom"></div><div class="top"></div></div>
+                <div class="light-panel b"><div class="bottom"></div><div class="top"></div></div>
+                <div class="light-panel c"><div class="bottom"></div><div class="top"></div></div>
+                <div class="light-panel d"><div class="bottom"></div><div class="top"></div></div>
+                <div class="light-lid"></div>
+            </div>
+
+
+            <!-- start of floor -->
+            <div class="floor">
+                <div class="floor-panel a"></div>
+                <div class="floor-panel b"></div>
+                <div class="floor-panel c"></div>
+                <div class="floor-panel d"></div>
+                <div class="floor-lid"></div>
+            </div>
+            <!-- end of floor -->
+
+
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

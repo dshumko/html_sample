@@ -1,0 +1,142 @@
+
+#container  {
+    background-color:#F0F0F0;
+    width:1280px;
+    margin:0 auto;
+}
+
+#runner, #lister { visibility:hidden; display:none; }
+
+div:focus {
+    background-color: #CCB989;
+}
+
+.zone1_board {
+    background-color: #4C5444;
+    font-size: 130%;
+    width:1280px;
+    height: 40px;
+    overflow:hidden;
+    /*transition: all 1s;*/
+}
+
+.zone2_board {
+    background-color: #A2A69E;
+    font-size: 150%;
+    height:680px;
+    float:left;
+    overflow:hidden;
+    /*transition: all 1s;*/
+}
+
+.zone3_board {
+    background-color: #EDEDE7;
+    font-size: 120%;
+    height:680px;
+    float:left;
+    overflow:hidden;
+    /*transition: all 1s;*/
+}
+
+.zone4_board {
+    background-color:#DACBA3;
+    font-size: 90%;
+    height:680px;
+    float:left;
+    overflow:hidden;
+    /*transition: all 1s;*/
+}
+.zone2_p_width  {
+    width:1200px;
+}
+.zone2_p_width .zone2_c_width {
+    width:inherit;
+}
+
+.zone3_p_width {
+    width:40px;
+}
+.zone3_p_width .zone3_c_width {
+    width:inherit;
+}
+
+.zone4_p_width {
+    width:40px;
+}
+.zone4_p_width .zone4_c_width {
+    width:inherit;
+}
+
+.zone1_btn {
+    background-color: #4C5444;
+    font-size: 130%;
+    text-align:center;
+    width: 120px;
+    height: 40px;
+    float:left;
+    tab-index: -1;
+    /*transition: all 1s;*/
+}
+
+.zone2_btn {
+    background-color: #A2A69E;
+    font-size: 110%;
+    height: 36px;
+    tab-index: -1;
+    float:left;
+    /*transition: all 1s;*/
+}
+
+.zone3_btn {
+    background-color: #EDEDE7;
+    font-size: 100%;
+    height:32px;
+    float:left;
+    tab-index: -1;
+    /*transition: all 1s;*/
+}
+
+.zone4_btn {
+    background-color:#DACBA3;
+    font-size: 90%;
+    height:20px;
+    tab-index: -1;
+    float:left;
+    /*transition: all 1s;*/
+}
+
+.checked {
+    background-color:#AC9959;
+}
+
+.width40 {
+width: 40px;
+}
+
+.width400 {
+width: 400px;
+}
+
+.width840 {
+width: 840px;
+}
+
+.width1200 {
+width: 1200px;
+}
+
+.result_pass {
+    color:green;
+}
+
+.result_fail {
+    color:red;
+}
+
+.logo {
+    width: 90px;
+    height: 40px;
+    float:left;
+    background-image: url("../../res/zebra_logo1.png");
+    background-size: contain;
+}

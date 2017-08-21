@@ -1,0 +1,82 @@
+describe("3.3 Content Manager()", function() {
+    var humaxobjectFactory;
+    var contentManager;
+
+    beforeEach(function() {
+        humaxobjectFactory = window.humaxObjectFactory;
+        contentManager = humaxobjectFactory.createContentManagerObject;
+    });
+
+    describe("3.3.1 HcontentManager()", function() {
+
+        describe("3.3.1.1 Properties", function() {
+            it("browseState", function() { expect(contentManager().browseState).toBeDefined(); });
+            it("onContentBrowse", function() { expect(contentManager().onContentBrowse).toBeDefined(); });
+            it("onContentSearch", function() { expect(contentManager().onContentSearch).toBeDefined(); });
+            it("onContentOperate", function() { expect(contentManager().onContentOperate).toBeDefined(); });
+            it("onContentMonitor", function() { expect(contentManager().onContentMonitor).toBeDefined(); });
+            it("onContentScanSurvey", function() { expect(contentManager().onContentScanSurvey).toBeDefined(); }); 
+        });
+
+        describe("3.3.1.2 Methods", function() {
+            it("autoCopy", function() { expect(contentManager().autoCopy).toBeDefined(); });
+            it("copyContent", function() { expect(contentManager().copyContent).toBeDefined(); });
+            it("deleteContent", function() { expect(contentManager().deleteContent).toBeDefined(); });
+            it("moveContent", function() { expect(contentManager().moveContent).toBeDefined(); });
+            it("makeDir", function() { expect(contentManager().makeDir).toBeDefined(); });
+            it("removeDir", function() { expect(contentManager().removeDir).toBeDefined(); });
+            it("getSize", function() { expect(contentManager().getSize).toBeDefined(); });
+            it("stopFileOperation", function() { expect(contentManager().stopFileOperation).toBeDefined(); });
+            it("browseContent", function() { expect(contentManager().browseContent).toBeDefined(); });
+            it("searchContent", function() { expect(contentManager().searchContent).toBeDefined(); });
+            it("getOperationState", function() { expect(contentManager().getOperationState).toBeDefined(); });
+            it("reScan", function() { expect(contentManager().reScan).toBeDefined(); });
+            it("startAutoScan", function() { expect(contentManager().startAutoScan).toBeDefined(); });
+            it("stopAutoScan", function() { expect(contentManager().stopAutoScan).toBeDefined(); });
+            it("isExist", function() { expect(contentManager().isExist).toBeDefined(); });
+            it("hasFile", function() { expect(contentManager().hasFile).toBeDefined(); });
+            it("isScanning", function() { expect(contentManager().isScanning).toBeDefined(); });
+            it("requestScanNotify", function() { expect(contentManager().requestScanNotify).toBeDefined(); });
+            it("extensionMonitor", function() { expect(contentManager().extensionMonitor).toBeDefined(); });
+            it("createOperationToken", function() { expect(contentManager().createOperationToken).toBeDefined(); });
+        });
+    });
+
+    describe("3.3.2 HContent", function() {
+
+        describe("3.3.2.1 Properties", function() {
+            it("contentType", function() { expect(content().contentType).toBeDefined(); });
+            it("fileType", function() { expect(Content().fileType).toBeDefined(); });
+            it("fullPath", function() { expect(Content().fullPath).toBeDefined(); });
+            it("hasSubitem", function() { expect(Content().hasSubitem).toBeDefined(); });
+            it("size", function() { expect(Content().size).toBeDefined(); });
+            it("date", function() { expect(Content().date).toBeDefined(); });
+            it("duration", function() { expect(Content().duration).toBeDefined(); });
+            it("lastViewTime", function() { expect(Content().lastViewTime).toBeDefined(); });
+            it("largeThumbnailUrl", function() { expect(Content().largeThumbnailUrl).toBeDefined(); });
+            it("thumbnailUrl", function() { expect(Content().thumbnailUrl).toBeDefined(); });
+            it("resolution", function() { expect(Content().resolution).toBeDefined(); });
+            it("pictureDate", function() { expect(Content().pictureDate).toBeDefined(); });
+            it("album", function() { expect(Content().album).toBeDefined(); });
+            it("artist", function() { expect(Content().artist).toBeDefined(); });
+            it("title", function() { expect(Content().title).toBeDefined(); });
+            it("genre", function() { expect(Content().genre).toBeDefined(); });
+            it("watched", function() { expect(Content().watched).toBeDefined(); });
+            it("storageCategory", function() { expect(Content().storageCategory).toBeDefined(); }); 
+        });
+    });
+
+    describe("3.3.3 HContentCollection", function() {
+    });
+
+    describe("3.3.4 HcontentManager()OperationToken", function() { 
+        describe("3.3.4.2 Methods", function() {
+            it("addPath", function() { expect(contentManagerOperationToken().addPath).toBeDefined(); });
+            it("removePath", function() { expect(contentManagerOperationToken().removePath).toBeDefined(); }); 
+        });
+    });
+
+});
+
+
+

@@ -1,0 +1,46 @@
+describe("3.11 HAirplay", function() {
+    var humaxobjectFactory;
+    var airplayManager;
+    var airplay
+
+    beforeEach(function() {
+        humaxobjectFactory = window.humaxObjectFactory;
+        airplayManager = humaxobjectFactory.createAirplayManagerObject;
+        airplay = airplayManager().airplay;
+    });
+
+    describe("3.11.1 HAirplayManager", function() { 
+        describe("3.11.1.1 Properties", function() {
+            it("airplay", function() { expect(airplayManager().airplay).toBeDefined(); });
+        });
+    });
+
+    describe("3.11.2 HAirplay", function() { 
+        describe("3.11.2.1 Properties", function() {
+            it("started", function() { expect(airplay.started).toBeDefined(); });
+            it("activated", function() { expect(airplay.activated).toBeDefined(); });
+            it("PlaybackStatus", function() { expect(airplay.PlaybackStatus).toBeDefined(); });
+            it("BufferedRange", function() { expect(airplay.BufferedRange).toBeDefined(); });
+            it("SeekableRange", function() { expect(airplay.SeekableRange).toBeDefined(); });
+            it("Duration", function() { expect(airplay.Duration).toBeDefined(); });
+            it("Position", function() { expect(airplay.Position).toBeDefined(); });
+            it("Rate", function() { expect(airplay.Rate).toBeDefined(); });
+            it("onReqPlay", function() { expect(airplay.onReqPlay).toBeDefined(); });
+            it("onReqStop", function() { expect(airplay.onReqStop).toBeDefined(); });
+            it("onReqSetPosition", function() { expect(airplay.onReqSetPosition).toBeDefined(); });
+            it("onReqSetSpeed", function() { expect(airplay.onReqSetSpeed).toBeDefined(); });
+            it("onReqShowPhoto", function() { expect(airplay.onReqShowPhoto).toBeDefined(); });
+            it("onReqAudioPlay", function() { expect(airplay.onReqAudioPlay).toBeDefined(); });
+            it("onReqAudioStop", function() { expect(airplay.onReqAudioStop).toBeDefined(); });
+            it("onReqAudioFlush", function() { expect(airplay.onReqAudioFlush).toBeDefined(); });
+            it("onReqSetMetadata", function() { expect(airplay.onReqSetMetadata).toBeDefined(); });
+            it("onReqSetAlbumart", function() { expect(airplay.onReqSetAlbumart).toBeDefined(); });
+        });
+
+        describe("3.11.2.2 Methods", function() {
+            it("start", function() { expect(airplay.start).toBeDefined(); });
+            it("stop", function() { expect(airplay.stop).toBeDefined(); });
+        });
+    });
+
+});

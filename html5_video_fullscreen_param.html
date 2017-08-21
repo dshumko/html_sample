@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body onload="init()" style="margin:0px;">
+<video id="video1" width="100%" height="100%" loop>
+</video>
+<script>
+    function init()
+    {
+        var video = document.getElementById("video1");
+        var p = getParams();
+        if ( video )
+        {
+            video.src = p["src"];//"http://www.w3schools.com/html/mov_bbb.mp4";
+            video.play();
+        }
+    }
+
+    function getParams() {
+        var param = new Array();
+    
+        var url = decodeURIComponent(location.href);
+        url = decodeURIComponent(url);
+    
+        var params;
+        params = url.substring( url.indexOf('?')+1, url.length );
+        params = params.split("&");
+
+        var size = params.length;
+        var key, value;
+        for(var i=0 ; i < size ; i++) {
+            key = params[i].split("=")[0];
+            value = params[i].split("=")[1];
+
+            param[key] = value;
+        }
+        return param;
+    }
+
+</script>
+</body>
+</html>

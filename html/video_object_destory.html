@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var source = "http://www.w3schools.com/html/mov_bbb.mp4";
+        var video = null;
+        function load() {
+            video = document.getElementById("video1");
+            video.addEventListener("ended", end);
+            video.play();
+        }
+
+        function end() {
+            video.pause();
+        }
+
+        function nullSource() {
+            var source = video.getElementsByTagName('source');
+            source[0].src = null;
+            //video.load();
+        }
+
+        function play() {
+            video.play();
+        }
+
+    </script>
+</head>
+<body bgcolor="#FFFFFF" onload="load()">
+<button onclick="nullSource()">source null</button>
+<button onclick="play()">play</button>
+<video id="video1" width="320" height="240">
+    <source src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+</video>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+	<object id="dvb" style="position: absolute; width: 1px; height: 1px; top: 1px; left: 1px;" type="video/broadcast">
+  </object>
+  
+	<script type="text/javascript">
+		function init() {
+		var SAMPLE_VIDEO = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+		var SAMPLE_VIDEO2 = "http://video-js.zencoder.com/oceans-clip.mp4";
+		var vodObject;
+		var myInterval;
+		var btnPlay = document.getElementById("buttonPlay");
+		var btnPause = document.getElementById("buttonPause");
+		var btnStop = document.getElementById("buttonStop");
+		var btnSource = document.getElementById("buttonSetsource");
+		var btnSeek = document.getElementById("buttonSeek");
+		var btnCreate = document.getElementById("buttonCreate");
+		var btnRelease = document.getElementById("buttonRelease");
+		var dvb = document.getElementById("dvb");
+		
+		var tagLog = document.getElementById("log");
+		var tagVod = document.getElementById("vod");
+
+		var printLog = function(str) {
+			tagLog.value += str + '\n';
+			tagLog.scrollTop = tagLog.scrollHeight;
+			console.log("THIS IS WEBLOG !!!!! ===> " + str);
+		};
+		var onPlayStateChange = function() {
+			if(vodObject) {
+				printLog("onPlayStateChange=" + vodObject.playState);
+				//printLog("onPlayStateChange playState="+vodObject.playState);
+			}else
+			{
+					printLog("onPlayStateChange " + "not vodobject");
+			}
+		}
+		var onPlayPositionChanged = function() {
+			if(vodObject) {
+				//printLog("vodObject.playPosition="+vodObject.playPosition); 
+				//printLog("onPlayPositionChanged");
+			}
+			else
+			{
+				printLog("onPlayPositionChanged " + "not vodobject");
+			}
+		}
+		var onPlaySpeedChanged = function(speed) {
+			if(vodObject) {
+				printLog("onPlaySpeedChanged");
+				//printLog("onPlaySpeedChanged speed="+speed+", vodObject.speed="+vodObject.speed);
+			}
+			else
+			{
+				printLog("onPlaySpeedChanged " + "not vodobject");
+			}
+		}
+
+		btnPlay.onclick = function clickBtnPlay() {
+			printLog('clickBtnPlay !!');	
+			//createObject(SAMPLE_VIDEO);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			myInterval = setInterval(updateProperty, 450);
+			printLog('clickBtnPlay:video played.');
+		};
+
+		btnPause.onclick = function clickBtnPause() {
+		};
+
+		btnStop.onclick = function clickBtnStop() {
+			printLog('clickBtnStop !!');	
+			var result = vodObject.stop();
+			vodObject = null;
+			destroyObject();
+			clearInterval(myInterval);
+			vodObject.removeEventListener("PlayStateChange",onPlayStateChange);
+			vodObject.removeEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.removeEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+			printLog('clickBtnPlay:video stopped.');
+		};
+		
+		btnSource.onclick = function clickBtnSetSource() {
+			printLog('clickBtnSetSource !!');	
+			vodObject.stop();
+			vodObject.setSource(SAMPLE_VIDEO2);
+			vodObject.play(1);
+		};
+		
+		btnSeek.onclick = function clickBtnSeek() {
+			printLog('clickBtnSeek !!');	
+			vodObject.seek(2);
+		};
+
+		btnCreate.onclick = function clickBtnCreate() {
+			printLog('clickBtnCreate !!');	
+			createObject(SAMPLE_VIDEO);
+		};
+		
+		btnRelease.onclick = function clickBtnRelese() {
+			printLog('btnRelease !!');	
+			if( vodObject )
+			{
+				vodObject.stop();
+				document.location = './release_test.html';//http://10.0.14.42/asgard/box/index.html?cat=1&list=0&offset=0';
+			}
+		};
+		
+		
+		function updateProperty() {
+			printLog('updateProperty playposition = ' + getPlaypos());
+			//if(vodObject)
+				//printLog('playposition = ' + vodObject.playPosition); //+ vodObject.playPosition);
+			//else
+				//printLog('playposition = ' + 'error');
+		}
+		
+		function getPlaypos() {
+				return vodObject.playPosition;
+		}
+		
+		function createObject(videoSrc) {
+			vodObject = null;
+			vodObject = document.createElement("object");  // create new object
+			vodObject.setAttribute("id", "video");
+			vodObject.setAttribute("data", videoSrc);
+			vodObject.setAttribute("type", "video/mpeg4"); // set correct mimetype
+			vodObject.setAttribute("width", 100);
+			vodObject.setAttribute("height", 100);
+			vodObject.addEventListener("PlayStateChange", onPlayStateChange);
+			vodObject.addEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.addEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+
+			var mainVideoDiv = document.getElementById('mainvideo');
+			if(mainVideoDiv.firstChild) {
+				mainVideoDiv.removeChild(mainVideoDiv.firstChild);
+			}
+			mainVideoDiv.appendChild(vodObject);
+		}
+
+		function destroyObject() {
+			document.getElementById("mainvideo").innerHTML = "";
+		}
+	}
+	</script>
+</head>
+<body onload="init()">
+	<div id="mainvideo"></div>
+	<div>
+		<button id="buttonCreate">create</button>
+		<button id="buttonPlay">Play</button>
+		<button id="buttonPause">Pause</button>
+		<button id="buttonStop">Stop</button>
+		<button id="buttonSetsource">SetSource</button>
+		<button id="buttonSeek">Seek</button>
+		<button id="buttonRelease">Relese</button>
+	</div>	
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

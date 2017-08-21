@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body onload="vid_load()">
+    <script>
+        var playlist = [
+            'http://www.w3schools.com/html/mov_bbb.mp4',
+            'https://media.w3.org/2010/05/sintel/trailer.mp4',
+            'https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm'
+        ];
+
+        var player;
+        var playindex = 0;
+
+        var onended = function(e)
+        {
+            if ( playlist.length <= (++playindex) )
+            {
+                playindex = 0;
+                player.src = playlist[playindex];
+            }
+            else
+            {
+                player.src = playlist[playindex];
+            }
+            player.load();
+            player.play();
+        }
+
+        function vid_load()
+        {
+            var play_count = 0;
+            player = document.createElement('video');
+            player.setAttribute('id', 'video2');
+            //player.setAttribute('controls', true);
+            player.setAttribute('preload', 'none');
+            if(playlist.length) player.src = playlist[playindex];
+            player.addEventListener('ended', onended);
+            document.body.appendChild(player);
+            $("#video2").css("width", "auto");
+            $("#video2").css("height", "auto");
+            $("#video2").css("min-width", "100%");
+            $("#video2").css("min-height", "100%");
+            $("#video2").css("position", "fixed");
+            $("#video2").css("right", "0");
+            $("#video2").css("bottom", "0");
+            $("#video2").css("z-index", "-100");
+            player.load();
+            player.play();
+        }
+    </script>
+</body>
+</html>

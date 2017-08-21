@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<script>
+			function control(c){
+				var p = document.getElementById("player");
+				if( p == 'undefined') return;
+				if(c == 'play'){
+					p.play();
+				}
+				else if(c == 'pause'){
+					p.pause();
+				}
+				else if(c == 'show'){
+					p.style.display = "block";
+				}
+				else if(c == 'hide'){
+					p.style.display = "none";
+				}
+				else if(c == 'create'){
+					var pos = document.getElementById("node");
+					var player4 = document.createElement('video');
+					pos.appendChild(player4);
+					
+					player4.src = "http://www.w3schools.com/tags/mov_bbb.mp4";//"http://10.0.12.35/media/1.mp4";
+					player4.setAttribute('id', 'player');
+					player4.setAttribute('controls', true);
+					player4.setAttribute('width', 640);
+					player4.setAttribute('height', 480);
+					player4.setAttribute('preload', 'auto');
+					player4.style.display = "block";
+				}
+			}
+		</script>
+	</head>
+	<body bgcolor="white">
+		<button style="width:70px;" onclick="control('create')"> create </button> 
+		<button style="width:70px;" onclick="control('play')"> play </button> 
+		<button style="width:70px;" onclick="control('pause')"> pause </button>
+		<button style="width:70px;" onclick="control('show')"> show </button> 
+		<button style="width:70px;" onclick="control('hide')"> hide </button> 
+		<button style="width:70px;" onclick="control('audiotrack')"> audiotrack </button>
+
+		<div id="node"> </div>
+		
+	</body>
+</html>

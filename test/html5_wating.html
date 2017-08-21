@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    </title>
+    <script>
+        var player1 = null;
+        var player2 = null;
+        var VIDEO_SRC2 = "https://media.w3.org/2010/05/sintel/trailer.mp4";
+        var VIDEO_SRC1 = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+
+        function LOG(log) {
+            console.log("############### WEBLOG : " + log);
+        }
+
+        function control(player, c){
+            var p = document.getElementById(player);
+
+            if(c == 'play_ad1'){
+                console.log("play_ad1");
+                player1 = media_create(VIDEO_SRC1);
+                media_play(player1);
+            }
+            else if(c == 'create_ad2'){
+                console.log("create_ad2");
+                player2 = media_create(VIDEO_SRC2);
+            }
+            else if(c == 'stop_all'){
+                console.log("stop_all");
+                media_stop(player1);
+                media_stop(player2);
+            }
+        }
+
+        function media_create(url)
+        {
+            var pos = document.getElementById("node");
+            player = document.createElement('video');
+            pos.appendChild(player);
+
+            player.src = url;
+            player.setAttribute('width', 640);
+            player.setAttribute('height', 480);
+            player.setAttribute('preload', "auto");
+            player.addEventListener('waiting', onwating);
+            player.addEventListener('ended', onended);
+
+            return player;
+        }
+
+        function media_play(player)
+        {
+            if(player) {
+                player.play();
+            }
+        }
+
+        function media_stop(player)
+        {
+            if(player) {
+                player.pause();
+                player.removeEventListener('wating', onwating);
+                player.removeEventListener('ended', onended);
+                player.src = "";
+                player.load();
+                player.parentNode.removeChild(player);
+                player = null;
+            }
+        }
+
+        function onwating()
+        {
+            LOG("wating");
+        }
+
+        function onended()
+        {
+            LOG("onended");
+            if(player2)
+            {
+                player2.play();
+            }
+        }
+
+    </script>
+</head>
+<body bgcolor="white">
+<br>
+<button style="width:70px;" onclick="control('player4','play_ad1')"> ad1_play </button>
+<button style="width:70px;" onclick="control('player4','create_ad2')"> create_ad2 </button>
+<button style="width:70px;" onclick="control('player4','stop_all')"> stop_all </button>
+<br>
+
+<div id="node">
+</div>
+</body>
+</html>

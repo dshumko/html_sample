@@ -1,0 +1,26 @@
+    <head>
+        <script src="main.js"></script>
+    </head>
+    <body>
+    	<button style="width:150px;"onclick="hbbtvOnLoad()"> component </button>
+        <object
+          type="application/oipfApplicationManager"
+          id="app-man" style="visibility: hidden;"></object>
+        <video id="html5video">
+            <source src="http://10.0.12.35/media/HTML50600.mpd" type="application/dash+xml">
+        </video>
+        <div id="ui">
+            <div id="header">
+                <div id="logo-container">
+                    <div id="logo-container-middle" class="middle">
+                    </div>
+                </div>
+                <div id="test-id-container">
+                    <div id="test-id" class="middle">org.hbbtv_HTML50600</div>
+                </div>
+            </div>
+            <div id="test-title">AudioTrack.id with MPEG DASH</div>
+            <div id="debugging"></div>
+        </div>
+    </body>
+</html>

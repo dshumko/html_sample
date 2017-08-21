@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<script>
+		try {
+
+		function LocalProgramme() {
+			var programmeID = "";
+			var genre = "";
+			var startTime = "";
+			var duration = "";
+			var endTime = "";
+			var parentalRating = "";
+			var episode = "";
+			var totalEpisodes = "";
+			var isHD = "";
+			var shortDescription = "";
+			var longDescription = "";
+			var seriesID = "";
+			var season = "";
+			var drm = "";
+			var isAC3 = "";
+			var isAC3P = "";
+			var channel = "";
+			var channelType = "";
+			var ccid = "";
+			var groupCRIDs = "";
+			var actor = "";
+			var actress = "";
+			var director = "";
+			var guidance = "";
+			var isAD = "";
+			var programmeCRID = "";
+		}
+
+		function getTime() {
+			var now = new Date();                                                
+			var nowMills = now.getSeconds()*1000 + now.getMilliseconds();
+			return nowMills;
+		}
+
+		function doTest() {
+			var vbObj = oipfObjectFactory.createVideoBroadcastObject();
+			var obj = new LocalProgramme();
+            for (i = 0; i < 10; i += 1) {
+				window.debug("loop: " + i);
+				var oipfObj = vbObj.programmes[0];
+				obj.programmeID = oipfObj.programmeID;
+				obj.genre = oipfObj.genre;
+				obj.startTime = oipfObj.startTime;
+				obj.duration = oipfObj.duration;
+				obj.endTime = this.startTime + this.duration;
+				obj.parentalRating = oipfObj.parentalRating;
+				obj.episode = oipfObj.episode;
+				obj.totalEpisodes = oipfObj.totalEpisodes;
+				obj.isHD = oipfObj.isHD;
+				obj.shortDescription = oipfObj.description;
+				obj.longDescription = oipfObj.longDescription;
+				obj.seriesID = oipfObj.getField("seriesID");
+				obj.season = oipfObj.getField("season");
+				obj.drm = oipfObj.getField("drm");
+				obj.isAC3 = oipfObj.getField("isAC3");
+				obj.isAC3P = oipfObj.getField("isAC3P");
+				obj.groupCRIDs = oipfObj.groupCRIDs;
+				obj.actor = oipfObj.getField("actor");
+				obj.actress = oipfObj.getField("actress");
+				obj.director = oipfObj.getField("director");
+				obj.guidance = oipfObj.getField("freeview/guidance");
+				obj.isAD = oipfObj.getField("freeview/hasAudioDescription");
+				obj.programmeCRID = oipfObj.programmeCRID;
+			}
+		}
+
+		document.onkeypress = function(event) { 
+			window.debug("key="+event.keyCode);
+			switch (event.keyCode || event.which) {
+				case 49:
+					var s = getTime();
+					window.debug(s.toString());
+					doTest();
+					var e = getTime();
+					window.debug(e.toString());
+					var diff = e - s;
+					window.debug("it takes [" + diff.toString() + " msecs]");
+					break;
+			}
+		};
+
+		} catch(e) {
+			alert(e);
+		}
+		</script>
+	</head>
+	<body style="background-color:#FFFFFF">
+	</body>
+</html>

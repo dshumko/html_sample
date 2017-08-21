@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		</title>
+		<style>
+		div#node,div#m_e {
+    float:left;
+		}
+		table, td {
+    	border: 1px solid black;
+		}
+		</style>
+
+		<script>
+			var VIDEO_SRC = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";//"http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+			var player;
+			var event_table;
+			var property_table;
+			var myInterval;
+
+			var media_event = new Array(
+			'abort',
+			'canplay',
+			'canplaythrough',
+			'durationchange',
+			'emptied', 
+			'ended',  
+			'error', 
+			'loadeddata',
+			'loadedmetadata', 
+			'loadstart',
+			'pause', 
+			'play', 
+			'playing', 
+			'progress',
+			'ratechange', 
+			'seeked',
+			'seeking', 
+			'stalled',  
+			'suspend', 
+			'timeupdate',
+			'volumechange', 
+			'waiting'); 
+			
+			var media_property = new Array(
+			'currentTime',
+			'duration',
+			'error', 
+			'currentSrc',
+			'preload', 
+			'loop', 
+			'seekable',  
+			'width', 
+			'height',
+			'playbackRate', 
+			'videoTracks',
+			'audioTracks',
+			'textTracks',
+			'autoplay',
+			'buffered',
+			'ended',
+			'networkState',
+			'paused',
+			'startDate',
+			'controller',
+			'controls',
+			'mediaGroup',
+			'muted',
+			'played',
+			'readyState',
+			'seeking',
+			'volume'); 
+			
+			function LOG(log) {
+				//window.debug("WEBLOG ===> " + log);
+				//alert(log);
+				console.log("WEBLOG ===> " + log);
+			}
+			
+			function updateProperty()
+			{
+				if( check_var() == 0 ) return;
+				set_media_property_to_table(0, player.currentTime);
+				set_media_property_to_table(1, player.duration);
+				if(player.error != undefined) set_media_property_to_table(2, player.error.code);
+				if( (player.currentSrc != undefined) && (player.currentSrc.length > 15)) 
+					set_media_property_to_table(3,"..."+player.currentSrc.slice(player.currentSrc.length - 15, player.currentSrc.length));
+				set_media_property_to_table(4, player.preload);
+				set_media_property_to_table(5, player.loop);
+				set_media_property_to_table(6, player.seekable);
+				set_media_property_to_table(7, player.getAttribute('width'));
+				set_media_property_to_table(8, player.getAttribute('height'));
+				set_media_property_to_table(9, player.playbackRate);
+				if(player.videoTracks != undefined) set_media_property_to_table(10, player.videoTracks.length);
+				if(player.audioTracks != undefined) set_media_property_to_table(11, player.audioTracks.length);
+				if(player.textTracks != undefined) set_media_property_to_table(12, player.textTracks.length);
+				set_media_property_to_table(13, player.autoplay);
+				set_media_property_to_table(14, player.buffered);
+				set_media_property_to_table(15, player.ended);
+				set_media_property_to_table(16, player.networkState);
+				set_media_property_to_table(17, player.paused);
+				set_media_property_to_table(18, player.startDate);
+				set_media_property_to_table(19, player.controller);
+				set_media_property_to_table(20, player.controls);
+				set_media_property_to_table(21, player.mediaGroup);
+				set_media_property_to_table(22, player.muted);
+				set_media_property_to_table(23, player.played);
+				set_media_property_to_table(24, player.readyState);
+				set_media_property_to_table(25, player.seeking);
+				set_media_property_to_table(26, player.volume);
+				// src, defaultPlaybackRate, crossOrigin, defaultMuted �� ����, width, height attribute �߰� ( �� 29 + 2 ) 
+				
+			}
+			
+			function check_var()
+			{
+				if((player == undefined) 
+				|| (pos == undefined)) 
+				{
+					LOG("undefined");
+					return 0;
+				}
+
+				return 1;
+			}
+			
+			function setTable(i){
+				var count = Number(event_table.rows[i].cells[1].innerText);
+				event_table.rows[i].cells[1].innerText = count+1;
+				LOG("(EVENT)on" + media_event[i]);
+			}
+			
+			function set_media_property_to_table(p_index, p_val){
+				property_table.rows[p_index].cells[1].innerText = p_val;
+			}
+			
+			function create_table(tableName, tableArray){
+				table = document.getElementById(tableName);
+				for(i=0; i<tableArray.length; i++)
+				{
+					var y = document.createElement("TR");
+					y.setAttribute("id", tableName+i);
+					table.appendChild(y);
+					
+					var z = document.createElement("TD");
+					var t = document.createTextNode(tableArray[i]);
+					z.appendChild(t);
+					y.appendChild(z);
+					
+					var z2 = document.createElement("TD");
+					t = document.createTextNode(0);
+					z2.appendChild(t);
+					y.appendChild(z2);
+				}
+				
+				return table;
+			}
+			
+			function remove_table()
+			{
+				for(i=0; i<media_event.length; i++)
+				{
+					event_table.deleteRow(0);
+				}	
+				for(i=0; i<media_property.length; i++)
+				{
+					property_table.deleteRow(0);
+				}	
+			}
+			
+			function add_media_event_listener(){
+				player.addEventListener(media_event[0], onabort);
+				player.addEventListener(media_event[1], oncanplay);
+				player.addEventListener(media_event[2], oncanplaythrough);
+				player.addEventListener(media_event[3], ondurationchange);
+				player.addEventListener(media_event[4], onemptied);
+				player.addEventListener(media_event[5], onended);
+				player.addEventListener(media_event[6], onerror);
+				player.addEventListener(media_event[7], onloadeddata);
+				player.addEventListener(media_event[8], onloadedmetadata);
+				player.addEventListener(media_event[9], onloadstart);
+				player.addEventListener(media_event[10], onpause);
+				player.addEventListener(media_event[11], onplay);
+				player.addEventListener(media_event[12], onplaying);
+				player.addEventListener(media_event[13], onprogress);
+				player.addEventListener(media_event[14], onratechange);
+				player.addEventListener(media_event[15], onseeked);
+				player.addEventListener(media_event[16], onseeking);
+				player.addEventListener(media_event[17], onstalled);
+				player.addEventListener(media_event[18], onsuspend);
+				player.addEventListener(media_event[19], ontimeupdate);
+				player.addEventListener(media_event[20], onvolumechange);
+				player.addEventListener(media_event[21], onwaiting);
+			}
+			
+			function remove_media_event_listener(){
+				player.removeEventListener(media_event[0], onabort);
+				player.removeEventListener(media_event[1], oncanplay);
+				player.removeEventListener(media_event[2], oncanplaythrough);
+				player.removeEventListener(media_event[3], ondurationchange);
+				player.removeEventListener(media_event[4], onemptied);
+				player.removeEventListener(media_event[5], onended);
+				player.removeEventListener(media_event[6], onerror);
+				player.removeEventListener(media_event[7], onloadeddata);
+				player.removeEventListener(media_event[8], onloadedmetadata);
+				player.removeEventListener(media_event[9], onloadstart);
+				player.removeEventListener(media_event[10], onpause);
+				player.removeEventListener(media_event[11], onplay);
+				player.removeEventListener(media_event[12], onplaying);
+				player.removeEventListener(media_event[13], onprogress);
+				player.removeEventListener(media_event[14], onratechange);
+				player.removeEventListener(media_event[15], onseeked);
+				player.removeEventListener(media_event[16], onseeking);
+				player.removeEventListener(media_event[17], onstalled);
+				player.removeEventListener(media_event[18], onsuspend);
+				player.removeEventListener(media_event[19], ontimeupdate);
+				player.removeEventListener(media_event[20], onvolumechange);
+				player.removeEventListener(media_event[21], onwaiting);
+			}
+
+				function onabort(){setTable(0);}
+				function oncanplay(){setTable(1);}
+				function oncanplaythrough(){setTable(2);}
+				function ondurationchange(){setTable(3);}
+				function onemptied(){setTable(4);}
+				function onended(){setTable(5);}
+				function onerror(){setTable(6);}
+				function onloadeddata(){setTable(7);}
+				function onloadedmetadata(){setTable(8);}
+				function onloadstart(){setTable(9);}
+				function onpause(){setTable(10);}
+				function onplay(){setTable(11);}
+				function onplaying(){setTable(12);}
+				function onprogress(){setTable(13);}
+				function onratechange(){setTable(14);}
+				function onseeked(){setTable(15);}
+				function onseeking(){setTable(16);}
+				function onstalled(){setTable(17);}
+				function onsuspend(){setTable(18);}
+				function ontimeupdate(){setTable(19);}
+				function onvolumechange(){setTable(20);}
+				function onwaiting(){setTable(21);}
+
+				function _create(c){
+				event_table = create_table("media_event", media_event);
+				property_table = create_table("media_property", media_property);
+
+				pos = document.getElementById("node");
+				LOG(c);
+				player = document.createElement('video');
+				player.setAttribute('id', c);
+				player.setAttribute('controls', true);
+
+				player.setAttribute('width', 640);
+				player.setAttribute('height', 480);
+
+				player.style.display = "block";
+
+				add_media_event_listener();
+
+				myInterval = setInterval(updateProperty, 300);
+			}
+
+			function _load(c) {
+				if( check_var() == 0 ) return;
+				player.setAttribute('preload', 'auto');
+				player.src = VIDEO_SRC;
+				pos.appendChild(player);
+				LOG(c);
+				player.load();
+			}
+
+			function _play(c) {
+				if( check_var() == 0 ) return;
+				LOG(c);
+				player.play();
+			}
+
+			function _pause(c) {
+				if( check_var() == 0 ) return;
+				LOG(c);
+				player.pause();
+			}
+
+			function _rate(c) {
+				if( check_var() == 0 ) return;
+				LOG(c);
+				player.playbackRate += 0.1;
+			}
+
+			function _seek(c) {
+				if( check_var() == 0 ) return;
+				LOG(c);
+				player.currentTime += 10;
+			}
+
+			function _error(c) {
+				if( check_var() == 0 ) return;
+				LOG(c);
+				try {
+					player.src = "http://www.quirksmode.org/html5/videos/error.mp4"
+					player.load();
+					player.play();
+				}
+				catch(err) {
+					LOG("ERROR !!!! " + err.message);
+				}
+			}
+
+			function _destroy(c) {
+				if( check_var() == 0 ) return;
+
+				clearInterval(myInterval);
+				remove_table();
+				remove_media_event_listener();
+
+				player.src = "";
+				LOG(c);
+				pos.removeChild(player);
+				player.load();
+			}
+
+			function control(c){
+				
+				switch(c)
+				{
+					case "create":
+						_create(c); break;
+					case "load":
+						_load(c); break;
+					case "play":
+						_play(c); break;
+					case "pause":
+						_pause(c); break;
+					case "seek":
+						_seek(c); break;
+					case "rate":
+						_rate(c); break;
+					case "error":
+						_error(c); break;
+					case "destroy":
+						_destroy(c); break;
+					default: 
+						break;
+				}
+			}
+
+			function keydown(event) {
+				var x = event.keyCode;
+				switch(x)
+				{
+					case 49:	// 1 : create
+						_create("create"); break;
+					case 50:   // 2 : load
+						_load("load"); break;
+					case 51:   // 3. : play
+						_play("play"); break;
+					case 52:   // 4 : pause
+						_pause("pause"); break;
+					case 53:  // 5 : seek
+						_seek("seek"); break;
+					case 54:  // 6 : play rate
+						_rate("play rate"); break;
+					case 55:  // 7 : error
+						_error("error"); break;
+					case 56:   // 8 : destroy
+						_destroy("destroy"); break;
+					default:
+						break;
+				}
+			}
+			
+		</script>
+	</head>
+	<body bgcolor="white" onkeydown="keydown(event)">
+		<div id="butt">
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button style="width:70px;" onclick="control('create')">[1]create</button>
+		<button style="width:70px;" onclick="control('load')">[2]load</button>
+		<button style="width:70px;" onclick="control('play')">[3]play</button>
+		<button style="width:70px;" onclick="control('pause')">[4]pause</button>
+		<button style="width:70px;" onclick="control('destroy')">[8]destroy</button>
+		<button style="width:70px;" onclick="control('seek')">[5]seek+10</button>
+		<button style="width:70px;" onclick="control('rate')">[6]playrate+0.1</button>
+	 	<button style="width:70px;" onclick="control('error')">[7]error</button>
+	  <br>
+	  </div>
+		<div id="node"> 
+		</div>
+		<div id="m_e">
+			<table id="media_event">
+			</table>
+		</div>
+		<div id="m_p">
+			<table id="media_property">
+			</table>
+		</div>
+	</body>
+</html>

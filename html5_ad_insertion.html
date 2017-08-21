@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    </title>
+    <script>
+        var player1 = null;
+        var player2 = null;
+        var i = 0;
+        var VIDEO_SRC2 = "https://media.w3.org/2010/05/sintel/trailer.mp4";
+        var VIDEO_SRC1 = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+
+            function LOG(log) {
+                console.log("############### WEBLOG : " + log);
+            }
+
+            function control(c){
+                if(c == 'create'){
+                    LOG("create");
+                    player1 = media_create(VIDEO_SRC1);
+                    player2 = media_create(VIDEO_SRC2);
+                }
+                else if(c == 'play'){
+                    LOG("play");
+                    if(player1) {
+                        media_play(player1);
+                    }
+                }
+                else if(c == 'stop'){
+                    LOG("stop");
+                    media_stop(player1);
+                    media_stop(player2);
+                }
+        }
+
+        function media_create(url)
+        {
+            var pos = document.getElementById("node");
+            player = document.createElement('video');
+            pos.appendChild(player);
+
+            player.src = url;
+            player.setAttribute('id', "vod"+(i++));
+            player.setAttribute('width', 640);
+            player.setAttribute('height', 480);
+            player.setAttribute('preload', 'auto');
+            player.addEventListener('waiting', onwating);
+            player.addEventListener('ended', onended);
+            player.addEventListener('playing', onplaying);
+
+            return player;
+        }
+
+        function media_play(player)
+        {
+            if(player) {
+                player.play();
+            }
+        }
+
+        function media_stop(player)
+        {
+            if(player) {
+                player.pause();
+                player.removeEventListener('wating', onwating);
+                player.removeEventListener('ended', onended);
+                player.removeEventListener('playing', onplaying);
+                player.src = "";
+                player.load();
+                player.parentNode.removeChild(player);
+                player = null;
+            }
+        }
+
+        function onwating()
+        {
+            LOG("waiting");
+        }
+
+        function onended()
+        {
+            LOG("ended");
+        }
+
+        function onplaying()
+        {
+            LOG("playing");
+        }
+
+    </script>
+</head>
+<body bgcolor="white">
+<br>
+<button style="width:70px;" onclick="control('create')"> create </button>
+<button style="width:70px;" onclick="control('play')"> play </button>
+<button style="width:70px;" onclick="control('stop')"> stop </button>
+<br>
+
+<div id="node">
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Media Test
+        </title>
+        <style>
+            body {
+                background-color: white;
+                padding: 50px;
+            }
+
+            video {
+                position: absolute;
+                width: 640px;
+                height: 360px;
+            }
+
+            #logArea {
+                background-color: #eee;
+                position: absolute;
+                width: 450px;
+                height: 360px;
+                left: 750px;
+            }
+        </style>
+        <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript">
+            window.addEventListener("load", function() {
+                window.app.start();
+
+                app.addEventListener("timeupdate", function(){
+                    document.getElementById("time").innerText = app.getCurrentTime();
+                });
+
+                app.addEventListener("durationchange", function() {
+                    document.getElementById("duration").innerText = app.getDuration() | 0;
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h4>Switch &lt;video&gt;</h4>
+        <div id="logArea"></div>
+        <div id="info">
+            <div id="src"></div>
+            <div>
+                <span id="time">00:00</span>/<span id="duration">00:00</span>
+            </div>
+        </div>
+    </body>
+</html>

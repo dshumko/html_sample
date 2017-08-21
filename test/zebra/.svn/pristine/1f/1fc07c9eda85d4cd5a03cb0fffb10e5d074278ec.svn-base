@@ -1,0 +1,39 @@
+describe("7.17 DLNA RUI Remote Control Function APIs", function() {
+    var object;
+
+    beforeEach(function() {
+        var oipfobjectFactory = window.oipfObjectFactory;
+        object = oipfobjectFactory.createRemoteControlFunctionObject;
+    });
+
+
+    describe("7.17.1 The application/oipfRemoteControlFunction embedded object", function() {
+        /* todo - add check spec that made by mime type <object type="application/oipfRemoteControlFunction"/> */
+
+        describe("7.17.1.1 Constants", function() {
+            it("REQUEST_CUI", function() { expect(object.REQUEST_CUI).toBeDefined(); });
+            it("REQUEST_MSG", function() { expect(object.REQUEST_MSG).toBeDefined(); });
+            it("CREATE_APP", function() { expect(object.CREATE_APP).toBeDefined(); });
+
+        });
+
+        describe("7.17.1.2 Properties", function() {
+            it("currentRemoteDeviceHandle", function() { expect(object.currentRemoteDeviceHandle).toBeDefined(); });
+            it("currentRemoteDeviceUA", function() { expect(object.currentRemoteDeviceUA).toBeDefined(); });
+            it("onReceiveRemoteMessage", function() { expect(object.onReceiveRemoteMessage).toBeDefined(); });
+        });
+
+        describe("7.17.1.3 Methods", function() {
+            it("useServerSideXMLUIListing", function() { expect(object.useServerSideXMLUIListing).toBeDefined(); });
+            it("sendRemoteMessage", function() { expect(object.sendRemoteMessage).toBeDefined(); });
+            it("sendMulticastNotif", function() { expect(object.sendMulticastNotif).toBeDefined(); });
+            it("sendInternalServerError", function() { expect(object.sendInternalServerError).toBeDefined(); });
+            it("dropConnection", function() { expect(object.dropConnection).toBeDefined(); });
+        });
+
+        describe("7.17.1.4 Events", function() {
+            it("onReceiveRemoteMessage", function() { expect(object.onReceiveRemoteMessage).toBeDefined(); });
+            it("onResultMuticastNotif", function() { expect(object.onResultMuticastNotif).toBeDefined(); });
+        });
+    });
+});

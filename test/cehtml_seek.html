@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+	<script type="text/javascript">
+		function init() {
+		var SAMPLE_VIDEO = "http://video-js.zencoder.com/oceans-clip.mp4";
+		var SAMPLE_VIDEO2 = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+		var vodObject;
+		var btnPlay = document.getElementById("buttonPlay");
+		var btnPlayOnly = document.getElementById("buttonPlayOnly");
+		var btnPause = document.getElementById("buttonPause");
+		var btnStop = document.getElementById("buttonStop");
+		var btnSeek = document.getElementById("buttonSeek");
+		var tagLog = document.getElementById("log");
+		var tagVod = document.getElementById("vod");
+
+		var printLog = function(str) {
+			tagLog.value += str + '\n';
+			tagLog.scrollTop = tagLog.scrollHeight;
+			window.debug("(WEBLOG)========> " + str);
+		};
+		
+		var onPlayStateChange = function() {
+			if(vodObject) {
+				printLog("onPlayStateChange playState="+vodObject.playState);
+			}
+		}
+		var onPlayPositionChanged = function(position) {
+			if(vodObject) {
+				printLog("onPlayPositionChanged position="+position+", playPosition="+vodObject.playPosition+", playTime="+vodObject.playTime);
+			}
+		}
+		var onPlaySpeedChanged = function(speed) {
+			if(vodObject) {
+				printLog("onPlaySpeedChanged speed="+speed+", vodObject.speed="+vodObject.speed);
+			}
+		}
+
+		btnPlay.onclick = function clickBtnPlay() {
+			printLog('clickBtnPlay !!');	
+			createObject(SAMPLE_VIDEO);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			printLog('clickBtnPlay:video played.');
+		};
+		
+		btnPlayOnly.onclick = function clickBtnPlayOnly() {
+			printLog('clickBtnPlayOnly!!');	
+			vodObject.play(1);
+		};
+
+		btnPause.onclick = function clickBtnPause() {
+			vodObject.play(0);
+		};
+
+		btnStop.onclick = function clickBtnStop() {
+			printLog('clickBtnStop !!');	
+			var result = vodObject.stop();
+			vodObject = null;
+			destroyObject();
+			printLog('clickBtnPlay:video stopped.');
+		};
+		
+		btnSeek.onclick = function clickBtnSeek() {
+			printLog('clickBtnSeek !!');	
+			vodObject.seek(10);
+		};
+		
+		function createObject(videoSrc) {
+			vodObject = null;
+			vodObject = document.createElement("object");  // create new object
+			vodObject.setAttribute("id", "video");
+			vodObject.setAttribute("data", videoSrc);
+			vodObject.setAttribute("type", "video/mpeg4"); // set correct mimetype
+			vodObject.setAttribute("width", 100);
+			vodObject.setAttribute("height", 100);
+			
+			vodObject.addEventListener("PlayStateChange", onPlayStateChange);
+			vodObject.addEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.addEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+
+			var mainVideoDiv = document.getElementById('mainvideo');
+			if(mainVideoDiv.firstChild) {
+				mainVideoDiv.removeChild(mainVideoDiv.firstChild);
+			}
+			mainVideoDiv.appendChild(vodObject);
+		}
+
+		function destroyObject() {
+			document.getElementById("mainvideo").innerHTML = "";
+		}
+	}
+	</script>
+</head>
+<body onload="init()">
+	<div id="mainvideo"></div>
+	<div>
+		<button id="buttonPlay">Play</button>
+		<button id="buttonPlayOnly">PlayOnly</button>
+		<button id="buttonPause">Pause</button>
+		<button id="buttonStop">Stop</button>
+		<button id="buttonSeek">Seek 10</button>
+	</div>	
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

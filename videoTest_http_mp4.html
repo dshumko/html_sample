@@ -1,0 +1,40 @@
+<html>
+<head>
+    <style>
+    *{
+        color:black;
+        background-color:grey;
+    }
+    </style>
+    <script>
+    function init(){
+        var obj = document.getElementById("vdo"),
+            log = document.getElementById("log");
+        
+        log.innerHTML += "init the page";
+        
+        obj.load();
+        obj.play();
+        
+        obj.addEventListener("error", function(e){
+            log.innerHTML = log.innerHTML + "<br> receive the error : errorCode" + e.target.error.code;
+            log.innerHTML = log.innerHTML + "<br> receive the error : networkState" + obj.networkState;
+        });
+        obj.addEventListener("loadedmetadata", function(){
+            log.innerHTML += "<br> receive meta data" + obj.duration;
+        });
+        obj.addEventListener("canplay", function(){
+            log.innerHTML += "<br> receive canplay";
+        });
+        obj.addEventListener("timeupdate", function(){
+            log.innerHTML += "<br> receive timeupdate" + obj.currentTime;
+        });
+    }
+    </script>
+</head>
+<body onload="init()">
+    <h1>Video Testing</h1>
+    <video id="vdo" width="500" controls src="http://test-hk.appglobe.accedo.tv/Avatar.mp4" ></video>
+    <div id="log"></div>
+</body>
+</html>

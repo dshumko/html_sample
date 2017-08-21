@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>focus problem</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <style type="text/css">
+        div:focus {
+            background-color: red;
+        }
+        div {
+            width: 100px;
+            background-color: yellow;
+        }
+    </style>
+    <script>
+        var divs = [];
+        var index = 0;
+        function onLoad(){
+            document.addEventListener("keydown", onKeydown);
+            for(var i=0; i<6; i++)
+            {
+                divs[divs.length] = document.getElementById(("d"+(i+1)));
+            }
+        }
+        function onKeydown(e){
+            var keyCode = e.keyCode;
+            if(keyCode==40)
+            {
+                if(index==6) index = 0;
+                divs[index++].focus();
+            }
+        }
+    </script>
+
+</head>
+
+<body onload="onLoad();">
+
+<iframe id="i1" src="" width="0" height="0" title="empty" class="hidden"></iframe>
+<iframe id="i2" src="" width="0" height="0" title="empty" class="hidden"></iframe>
+<div id="c1" tabindex="-1">
+    <div id="c2" tabindex="-1">
+        <div id="d1" tabindex="-1">div 1</div>
+        <div id="d2" tabindex="-1">div 2</div>
+        <div id="d3" tabindex="-1">div 3</div>
+        <div id="d4" tabindex="-1">div 4</div>
+        <div id="d5" tabindex="-1">div 5</div>
+        <div id="d6" tabindex="-1">div 6</div>
+    </div>
+</div>
+
+</body>
+</html>

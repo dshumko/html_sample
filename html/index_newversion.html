@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<script>
+		function MyFunction() {
+			console.log("hello!!!!");
+			var app = document.getElementById('appmgr').getOwnerApplication(document);
+			app.show();
+		};
+	</script>
+        <title>HbbTV Test App</title>
+        <meta http-equiv="content-type" content="Content-Type: application/vnd.hbbtv.xhtml+xml; charset=UTF-8" />
+</head>
+
+<body onload="MyFunction()">
+        <object id="appmgr" type="application/oipfApplicationManager" style="position: absolute; left: 0px; top: 0px; width: 0px; height: 0px;"></object>
+        <div id ="bod" style="left: 0px; top: 0px; width: 1280px; height: 720px;">
+        	<iframe style="left: 0px; top: 0px; width: 1280px; height: 720px;" src="css3-transform-scale.html" />
+	</div>
+</body>
+</html>

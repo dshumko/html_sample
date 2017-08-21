@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        p {
+            margin: 20px;
+            font-size: 40px;
+            color: red;
+        }
+    </style>
+</head>
+<body onload="vid_load()" onkeydown="myFunction(event)">
+<p></p>
+<script>
+    var playlist = [
+        'http://10.0.14.169/dikim/Audio_Test_Stream/100hz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/10khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/11khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/12khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/13khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/14khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/15khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/16khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/17khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/18khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/19khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz-36dBu.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz-left-off.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz-right-off.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/20hz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/20khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/2khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/3khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/4khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/500hz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/5khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/6khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/7khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/8khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/9khz.mp4'
+    ];
+
+    var player;
+    var playindex = 0;
+
+    var onended = function(e)
+    {
+        if ( playlist.length <= (++playindex) )
+        {
+            playindex = 0;
+            player.src = playlist[playindex];
+        }
+        else
+        {
+            player.src = playlist[playindex];
+        }
+        player.load();
+        start();
+    }
+
+    var start = function()
+    {
+        $("p").text("(" + (playindex+1)+"/"+playlist.length + ")" + player.src);
+        player.play();
+    }
+
+    function vid_load()
+    {
+        var play_count = 0;
+        player = document.createElement('video');
+        player.setAttribute('id', 'video2');
+        //player.setAttribute('controls', true);
+        player.setAttribute('preload', 'none');
+        if(playlist.length) player.src = playlist[playindex];
+        player.addEventListener('ended', onended);
+        document.body.appendChild(player);
+        $("#video2").css("width", "auto");
+        $("#video2").css("height", "auto");
+        $("#video2").css("min-width", "100%");
+        $("#video2").css("min-height", "100%");
+        $("#video2").css("position", "fixed");
+        $("#video2").css("right", "0");
+        $("#video2").css("bottom", "0");
+        $("#video2").css("z-index", "-100");
+        player.load();
+        start();
+    }
+
+    function myFunction(event)
+    {
+        switch(event.keyCode)
+        {
+            case 40: //down
+                break;
+            case 38: //up
+                break;
+            case 37:
+                break;
+            case 39:
+                break;
+            default: break;
+        }
+    }
+
+</script>
+</body>
+</html>

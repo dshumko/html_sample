@@ -1,0 +1,240 @@
+body { 
+  margin: 0;
+  height: 720px;
+  width: 1280px; 
+  font-family: "새굴림", "New Gulim";
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+#div {
+	background-color: #bcf;
+}
+
+#display {
+  background-color: #ffffff;
+  background-repeat : repeat;
+  height: 620px;
+  width: 1080px;
+  padding: 50px 100px;
+  /*font-size: 30px;*/
+  background-color : #000000;
+}
+
+#layout { 
+  	background-color : #000000;
+  	background-repeat : repeat;
+	height: 620px;
+  	width: 1080px;
+}
+
+#Logo {
+  	background-repeat : repeat;
+	color : white;
+	font-family:"맑은 고딕",Verdana;
+	font-size: 50px;
+	text-align: center;
+	top: 0px;
+	left: 0px;
+	width: 1080px;
+	height: 70px;
+}
+
+#category {
+	position: absolute;
+	font-size:30px;
+	color : orange;
+	font-family:"맑은 고딕",Verdana;
+	text-align: center;
+	top: 120px;
+	left : 300px;
+	width: 140px;	
+	height: 40px;
+}
+
+#contentList {
+	position: absolute;
+	text-align: center;
+	color : white;  
+	top: 180px;
+	left: 100px;
+	width: 530px;
+	height: 490px;
+	margin : 0;
+	padding : 0;
+	vertical-align:top;
+}
+
+#contentList ul {
+	padding: 0 0px;
+	margin: 0 0 0 10px;
+	list-style:none;
+}
+
+#contentList #up {
+	height: 24px;
+}
+
+#contentList #down {
+	height: 24px;
+}
+
+#contentList .element {
+  	background-color: #0F0F0F;
+	border : #141414 solid 1px;
+	color : white;
+	width : 500px;
+	height: 50px;
+	margin : 8px 0px 8px 0;
+}
+
+#contentList .element .thumbnail {
+	float: left;
+	left : 10px;
+	top : 10px;
+	width : 50px;
+	height : 50px;
+	border: #1E1E1E solid 1px;
+}
+
+#contentList .element .title {
+	font-size: 21px; 
+	height: 30px;	
+	vertical-align:middle;
+}
+
+#contentList .element .miniinfo {
+	text-align: right;
+	font-size: 15px;
+	background-color: #282828;
+}
+
+#contentList .element .drm {
+	position : relative;
+	top : -48px;
+	left : -7px;
+	vertical-align : middle;
+	text-align: right;
+	font-size: 15px;
+	background-color: ;
+}
+
+#contentList .element .indicator {
+	position : relative;
+	top : -75px;
+	left : 34px;
+	z-index:10;
+	vertical-align : middle;
+	text-align: right;
+	font-size: 15px;
+	background-color: ;
+}
+
+#metaData {
+  position: absolute;
+  background-color: #101010;
+  border : #333333 solid 2px;
+  color : #828282;
+  top: 180px; 
+  left: 633px;
+  width: 456px;
+  height: 376px;
+  margin: 10px;
+  padding: 50px 20px 20px 40px;
+}
+
+#player {
+  background-color: #000000;
+  background-repeat: repeat;
+  height: 720px;
+  margin: 0;
+  color: #ffffff;
+  position: relative;
+  width: 1280px;
+}
+
+#play {
+  top : 50px;
+  left : 100px;
+  height: 500px;
+  width: 1200px;
+  color : white;
+  position: relative;
+}
+
+.duration
+{
+    position: absolute;
+    top: 520px;
+    left: 275px;
+    width: 530px;
+    height: 16px;
+    text-align: left;
+    font-size: 20px;
+    font-family: Arial;
+    color: #dedbdb;
+    z-index: 20;
+}
+
+.dInfo
+{
+    position: absolute;
+    text-align: left;
+    font-size: 18px;
+    font-family: Arial;
+    color: #dedbdb;
+    top: 10px;
+    left: 395px;
+    z-index: 32;
+}
+.playerfullscreen {
+    position: fixed;
+	background-color: black;
+    top: 0px;
+    left: 0px;
+    width: 1280px;
+    height: 720px;
+    z-index: 15;
+}
+
+.playerdefault
+{
+    position: absolute;
+    top: 50px;
+    left: 75px;
+    width: 640px;
+    height: 360px;
+}
+.trickPlayArea
+{
+    position: absolute;
+    top: 50px;
+    left: 1040px;
+    width:  120px;
+    height: 60px;
+	font-size : 300%;
+	padding-left: 5px;
+    border: 2px solid white;
+    #background-color: #FFE5CB;
+    visibility: hidden;
+    z-index: 100;
+}
+
+table { 
+  border: 6px solid #1f394d; 
+  border-collapse: collapse; 
+  padding: 0 0 20px 0; 
+  width: 95%; 
+}
+
+td, th { 
+  border: 6px solid #1f394d; 
+  padding: 6px; 
+}
+
+form {
+  margin: 20px;
+}
+

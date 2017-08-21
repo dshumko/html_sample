@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var avControl = null;
+        function play() {
+            avControl = document.getElementById("video");
+            avControl.onPlayStateChange = checkState;
+            avControl.play(1);
+        }
+
+        function pause() {
+            if(avControl) avControl.play(0);
+        }
+
+        function checkState() {
+            document.getElementById("myTextarea").value = "State : " + avControl.playState;
+            window.debug("(#### WEBLOG #####) State : " + avControl.playState);
+            console.log("(#### WEBLOG #####) State : " + avControl.playState);
+        }
+
+    </script>
+</head>
+<body bgcolor="#FFFFFF">
+<button onclick="play()">play</button>
+<button onclick="pause()">pause</button>
+<textarea id="myTextarea">State : 0</textarea>
+<br>
+<object type="video/mp4" id="video" width="640" height="480" data="http://www.w3schools.com/html/mov_bbb.mp4" />
+
+</body>
+</html>

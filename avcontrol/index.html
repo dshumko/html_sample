@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<script type="text/javascript" src="main.js"></script>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	#vodObject {
+		width: 300px;
+		height: 200px;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+</head>
+<body>
+	<div>
+		<button id="btnCreate">Create Video</button>
+		<button id="btnCreateByOIPF">Create Video by OIPF</button>
+		<button id="btnCreateDummy">Create Dummy</button>
+		<button id="btnPlay">Play</button>
+		<button id="btnPause">Pause</button>
+		<button id="btnStop">Stop</button>
+		<button id="btnSeekMinus10">Seek -10</button>
+		<button id="btnSeekPlus10">Seek +10</button>
+		<button id="btnSpeedsGet">Get playSpeeds</button>
+		<button id="btnSpeedMinus2">Speed -2</button>
+		<button id="btnSpeedPlus2">Speed +2</button>
+		<button id="btnDestroy">Destroy</button>
+	</div>	
+	<div>
+		<button id="btnCreate2">Create Video 2</button>
+		<button id="btnPlay2">Play2</button>
+		<button id="btnDestroy2">Destroy2</button>
+	</div>	
+	<div>
+		<button id="btnChangeData">Change Data</button>
+		<button id="btnSetWidth200">Set Width 200</button>
+		<button id="btnSetWidth400">Set Width 400</button>
+		<button id="btnGetWidth">Get Width</button>
+		<button id="btnSetHeight200">Set Height 200</button>
+		<button id="btnSetHeight400">Set Height 400</button>
+		<button id="btnGetHeight">Get Height</button>
+		<button id="btnSetFullScreenTrue">Set FullScreen True</button>
+		<button id="btnSetFullScreenFalse">Set FullScreen False</button>
+	</div>
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

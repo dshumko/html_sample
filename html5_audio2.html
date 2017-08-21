@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        p {
+            margin-bottom: 1px;
+            margin-top: 1px;
+            font-size: 20px;
+            color: dodgerblue;
+        }
+        .textred {
+            color: red;
+            font-weight: bold;
+        }
+        .position {
+            position: fixed;
+            top: 10px;
+            left: 1050px;
+            font-size: 30px;
+            color: white;
+        }
+
+    </style>
+</head>
+<body onload="vid_load()" onkeydown="myFunction(event)">
+<script>
+    var playlist = [
+        'http://10.0.14.169/dikim/Audio_Test_Stream/100hz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/10khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/11khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/12khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/13khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/14khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/15khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/16khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/17khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/18khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/19khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz-36dBu.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz-left-off.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/1khz-right-off.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/20hz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/20khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/2khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/3khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/4khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/500hz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/5khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/6khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/7khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/8khz.mp4',
+        'http://10.0.14.169/dikim/Audio_Test_Stream/9khz.mp4'
+    ];
+
+    var player;
+    var playindex = 0;
+    var plist = [];
+    var replayoption = 0;
+    var repeatcount = 0;
+    var positionp;
+
+    var onended = function(e)
+    {
+        if(replayoption==0)
+        {
+            changeIndex(1);
+            playerstart();
+        }
+        else if(replayoption==1)
+        {
+            repeatcount += 1;
+            updateRepeat();
+            replay();
+        }
+    }
+
+    function vid_load()
+    {
+        var play_count = 0;
+        player = document.createElement('video');
+        player.setAttribute('id', 'video2');
+        //player.setAttribute('controls', true);
+        player.setAttribute('preload', 'none');
+        if(playlist.length) player.src = playlist[playindex];
+        player.addEventListener('ended', onended);
+        document.body.appendChild(player);
+        $("#video2").css("width", "auto");
+        $("#video2").css("height", "auto");
+        $("#video2").css("min-width", "100%");
+        $("#video2").css("min-height", "100%");
+        $("#video2").css("position", "fixed");
+        $("#video2").css("right", "0");
+        $("#video2").css("bottom", "0");
+        $("#video2").css("z-index", "-100");
+        //player.load();
+        ui_media_list();
+        //player.play();
+        plist[playindex].className += "textred";
+
+        positionp = document.createElement('p');
+        positionp.className = "position";
+        document.body.appendChild(positionp);
+
+        setInterval(function(){
+            updatePosition();
+            player.currentTime;
+            player.duration;
+        }, 100);
+    }
+
+    function updatePosition()
+    {
+        if(player)
+        {
+            positionp.innerText = player.currentTime + "/" + player.duration + " sec";
+        }
+    }
+
+    function ui_media_list()
+    {
+        for(var i = 0; i<playlist.length; i++)
+        {
+            var p = document.createElement('p');
+            p.innerText= playlist[i];
+            document.body.appendChild(p);
+            plist.push(p);
+        }
+    }
+
+    function changeIndex(v)
+    {
+        plist[playindex].className = "";
+
+        playindex += v;
+
+        if ( playindex < 0 ) playindex = playlist.length - 1;
+        else if ( (playlist.length - 1) < playindex ) playindex = 0;
+
+        plist[playindex].className = "textred";
+    }
+
+    function playerstart()
+    {
+        repeatuiupdate();
+        player.src = playlist[playindex];
+        player.load();
+        player.play();
+    }
+
+    function repeatuiupdate()
+    {
+        for(var i = 0; i<plist.length; i++ )
+        {
+            plist[i].innerText = playlist[i];
+        }
+        repeatcount = 0;
+        replayoption = 0;
+    }
+
+    function replay()
+    {
+        player.src = "";//playlist[playindex];
+        player.load();
+        player.src = playlist[playindex];
+        player.load();
+        player.play();
+    }
+
+    function setreplay()
+    {
+        if(replayoption) replayoption = 0;
+        else replayoption = 1;
+
+        if( replayoption )
+        {
+            updateRepeat();
+        }
+        else
+        {
+            plist[playindex].innerText = playlist[playindex];
+            repeatcount = 0;
+        }
+    }
+
+    function updateRepeat()
+    {
+        plist[playindex].innerText = playlist[playindex] + " (repeat : " + repeatcount + ")";
+    }
+
+    function myFunction(event)
+    {
+        switch(event.keyCode)
+        {
+            case 13: // enter
+                playerstart();
+                break;
+            case 40: //down
+                changeIndex(1);
+                break;
+            case 38: //up
+                changeIndex(-1);
+                break;
+            case 37:
+                break;
+            case 39:
+                break;
+            case 49:
+                setreplay();
+                break;
+            default: break;
+        }
+    }
+
+
+
+</script>
+</body>
+</html>

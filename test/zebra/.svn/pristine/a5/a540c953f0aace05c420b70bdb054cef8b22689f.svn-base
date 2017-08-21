@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>BRunner</title>
+
+    <link rel="stylesheet" type="text/css" href="src/css/style.css">
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="./src/js/config.js"></script>
+    <script src="./src/js/debug.js"></script>
+    <script src="./src/js/ui.js"></script>
+    <script src="./src/js/main.js"></script>
+
+</head>
+
+<body>
+<iframe id="lister" src="" width="0" height="0" title="empty" class="hidden"></iframe>
+<iframe id="runner" src="" width="0" height="0" title="empty" class="hidden"></iframe>
+    <div id="container">
+        <div id="zone1" class="zone1_board"></div>
+        <div id="zone2" class="zone2_board zone2_p_width"></div>
+        <div id="zone3" class="zone3_board zone3_p_width"></div>
+        <div id="zone4" class="zone4_board zone4_p_width"></div>
+        <div id="zone5" class="zone5_board"></div>
+    </div>
+    <div class="layer">
+        <div class="bg"></div>
+        <div id="poplayer" class="pop-layer">
+            <div class="pop-container">
+                <div class="pop-conts">
+                    <p id="poptext" class="ctxt mb20"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

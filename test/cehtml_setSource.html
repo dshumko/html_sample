@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AV Control</title>
+	<style type="text/css">
+	#log {
+		display: inline;
+		width: 500px;
+		height: 500px;
+		border: 1px blue solid;
+	}
+	#vod {
+		position: absolute;
+		display: inline;
+	}
+	button:focus { 
+	    background-color: yellow;
+	}
+	</style>
+	<script type="text/javascript">
+		function init() {
+		var SAMPLE_VIDEO = "http://video-js.zencoder.com/oceans-clip.mp4";
+		var SAMPLE_VIDEO2 = "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4";
+		var vodObject;
+		var btnPlay = document.getElementById("buttonPlay");
+		var btnSetSource = document.getElementById("buttonSetSource");
+		var btnSetSourcePlay = document.getElementById("buttonSetSourcePlay");
+		var btnStop = document.getElementById("buttonStop");
+		var btnPlayOnly = document.getElementById("buttonPlayOnly");
+		var btnSetSourceOther = document.getElementById("buttonSetSourceOther");
+		var tagLog = document.getElementById("log");
+		var tagVod = document.getElementById("vod");
+
+		var printLog = function(str) {
+			tagLog.value += str + '\n';
+			tagLog.scrollTop = tagLog.scrollHeight;
+			window.debug("(WEBLOG)========> " + str);
+		};
+		
+		var onPlayStateChange = function() {
+			if(vodObject) {
+				printLog("onPlayStateChange playState="+vodObject.playState);
+				/*
+				if( vodObject.playState == 5 )
+				{
+					printLog("stop!!");
+					vodObject.stop();
+				}
+				*/
+			}
+		}
+		var onPlayPositionChanged = function(position) {
+			if(vodObject) {
+				//printLog("onPlayPositionChanged position="+position+", playPosition="+vodObject.playPosition+", playTime="+vodObject.playTime);
+			}
+		}
+		var onPlaySpeedChanged = function(speed) {
+			if(vodObject) {
+				printLog("onPlaySpeedChanged speed="+speed+", vodObject.speed="+vodObject.speed);
+			}
+		}
+
+		btnPlay.onclick = function clickBtnPlay() {
+			printLog('clickBtnPlay !!');	
+			createObject(SAMPLE_VIDEO);
+			printLog('clickBtnPlay:object created.');
+			var result = vodObject.play(1);
+			printLog('clickBtnPlay:video played.');
+		};
+		
+		btnPlayOnly.onclick = function clickBtnPlayOnly() {
+			printLog('clickBtnPlay-only!!');	
+			vodObject.play(1);
+		};
+		
+		btnStop.onclick = function clickBtnStop() {
+			printLog('clickBtnStop !!');	
+			vodObject.stop();
+		};
+		
+		btnSetSource.onclick = function clickBtnSetSource() {
+			printLog('clickBtnSetSource !!');	
+			vodObject.setSource(SAMPLE_VIDEO);
+		};
+		
+		btnSetSourcePlay.onclick = function clickBtnSetSourcePlay() {
+			printLog('clickBtnSetSourcePlay !!');	
+			vodObject.setSource(SAMPLE_VIDEO);
+			vodObject.play(1);
+		};
+		
+		btnSetSourceOther.onclick = function clickBtnSetSourceOther() {
+			printLog('clickBtnSetSourceOther !!');	
+			vodObject.setSource(SAMPLE_VIDEO2);
+			vodObject.play(1);
+		};
+		
+		function createObject(videoSrc) {
+			vodObject = null;
+			vodObject = document.createElement("object");  // create new object
+			vodObject.setAttribute("id", "video");
+			vodObject.setAttribute("data", videoSrc);
+			vodObject.setAttribute("type", "video/mpeg4"); // set correct mimetype
+			vodObject.setAttribute("width", 100);
+			vodObject.setAttribute("height", 100);
+			
+			vodObject.addEventListener("PlayStateChange", onPlayStateChange);
+			vodObject.addEventListener("PlayPositionChanged", onPlayPositionChanged);
+			vodObject.addEventListener("PlaySpeedChanged", onPlaySpeedChanged);
+
+			var mainVideoDiv = document.getElementById('mainvideo');
+			if(mainVideoDiv.firstChild) {
+				mainVideoDiv.removeChild(mainVideoDiv.firstChild);
+			}
+			mainVideoDiv.appendChild(vodObject);
+		}
+
+		function destroyObject() {
+			document.getElementById("mainvideo").innerHTML = "";
+		}
+	}
+	</script>
+</head>
+<body onload="init()">
+	<div id="mainvideo"></div>
+	<div>
+		<button id="buttonPlay">Play</button>
+		<button id="buttonSetSourcePlay">setSource-play</button>
+		<button id="buttonSetSource">setSource</button>
+		<button id="buttonPlayOnly">play-only</button>
+		<button id="buttonStop">stop</button>
+		<button id="buttonSetSourceOther">setSource-Other</button>
+	</div>	
+	<div id="container">
+		<textarea id="log"></textarea>
+		<div id="vod">
+	</div>
+</body>
+</html>

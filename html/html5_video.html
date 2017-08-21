@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var video = null;
+        function keydown(event) {
+            var x = event.keyCode;
+            video = document.getElementById("video1");
+            switch(x)
+            {
+                case 49:    // 1 : play
+                    video.play();
+                    break;
+                case 50:    // 2 : pause
+                    video.pause();
+                    break;
+                case 51:    // 3 : seek
+                    video.currentTime = video.currentTime + 10;
+            }
+        }
+    </script>
+</head>
+<body bgcolor="#FFFFFF" onkeydown="keydown(event)">
+<video id="video1" width="640" height="480">
+    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+</video>
+
+</body>
+</html>

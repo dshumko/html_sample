@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    </title>
+    <script>
+
+    var VK_BACK                     = 461;//57951;//461;
+    var VK_ENTER                    =  13;
+    var VK_PAUSE                    =  19;
+    var VK_PAGE_UP                  =  33;
+    var VK_PAGE_DOWN                =  34;
+    var VK_LEFT                     =  37;
+    var VK_UP                       =  38;
+    var VK_RIGHT                    =  39;
+    var VK_DOWN                     =  40;
+    var VK_0                        =  48;
+    var VK_1                        =  49;
+    var VK_2                        =  50;
+    var VK_3                        =  51;
+    var VK_4                        =  52;
+    var VK_5                        =  53;
+    var VK_6                        =  54;
+    var VK_7                        =  55;
+    var VK_8                        =  56;
+    var VK_9                        =  57;
+    var VK_RED                      = 403;
+    var VK_GREEN                    = 404;
+    var VK_YELLOW                   = 405;
+    var VK_BLUE                 = 406;
+
+    var VK_REWIND                   = 412;
+    var VK_FAST_FWD                 = 417;
+
+    var VK_STOP                 = 413;
+    var VK_STOP_ALT                 = 57903;
+    var VK_PLAY                 = 415
+
+        var player4 = null;
+        var HLS_URL = "";
+
+         var URL_HLS400 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV400_16X9.mp4/master.m3u8";
+         var URL_HLS600 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV600_16X9.mp4/master.m3u8";
+         var URL_HLS800 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV800_16X9.mp4/master.m3u8";
+         var URL_HLS1200 = "https://itvmenota-vh.akamaihd.net/i/scratchpad/Test_Bars_Clock_16x9_160513_ITV1200_16X9.mp4/master.m3u8";
+
+         /*
+         var URL_HLS400 = "http://10.0.12.35/media/1.mp4";
+         var URL_HLS600 = "http://10.0.12.35/media/2.mp4";
+         var URL_HLS800 = "http://10.0.12.35/media/3.mp4";
+         var URL_HLS1200 = "http://10.0.12.35/media/1.mp4";
+         */
+
+        function LOG(log) {
+            window.debug("#### WEBLOG : " + log);
+        }
+
+        function control(player, c){
+            var p = document.getElementById(player);
+
+            if(c == 'play'){
+                media_play();
+                console.log("play");
+            }
+            else if(c == 'pause'){
+                p.pause();
+                console.log("pause");
+            }
+            else if(c == 'stop'){
+                media_stop();
+            }
+        }
+
+        function media_play(){
+            if( player4 )
+            {
+                if( player4.paused )
+                {
+                    media_play_only();
+                }
+                else
+                {
+                    media_stop();
+                    media_create_play();
+                }
+            }
+            else
+            {
+                media_create_play();
+            }
+        }
+
+        function media_create_play(){
+            var pos = document.getElementById("node");
+            player4 = document.createElement('video');
+            pos.appendChild(player4);
+
+            player4.src = HLS_URL;
+            player4.setAttribute('id', 'player4');
+            player4.setAttribute('width', 640);
+            player4.setAttribute('height', 480);
+            player4.style.display = "block";
+            //player4.load();
+            player4.play();
+        }
+
+        function media_stop() {
+            if(player4) {
+                player4.pause();
+                player4.src = "";
+                player4.load();
+                player4.parentNode.removeChild(player4);
+                player4 = null;
+            }
+        }
+
+        function media_pause() {
+            if(player4) player4.pause();
+        }
+
+        function media_play_only() {
+            if(player4) player4.play();
+        }
+
+        function select_change() {
+            var x = document.getElementById("select_url").value;
+            var url_text = URL_HLS400;
+            switch(x)
+            {
+                case "HLS400":
+                    HLS_URL = url_text = URL_HLS400;
+                    break;
+                case "HLS600":
+                    HLS_URL = url_text = URL_HLS600;
+                    break;
+                case "HLS800":
+                    HLS_URL = url_text = URL_HLS800;
+                    break;
+                case "HLS1200":
+                    HLS_URL = url_text = URL_HLS1200;
+                    break;
+                case "HLSEMPTY":
+                    HLS_URL = url_text = URL_HLS400;
+                    break;
+            }
+            document.getElementById("select_hls_url").innerHTML = url_text;
+        }
+
+
+function playerKeyHandler(e) {
+    var e = window.event || e;
+    switch (e.keyCode) {
+        case VK_PLAY:
+            control('player4','play');
+            break;
+        case VK_PAUSE:
+            control('player4','pause');
+            break;            
+        case VK_BACK:         
+        case VK_STOP: case VK_STOP_ALT:
+            control('player4','stop');
+            break;            
+
+        case VK_0:            
+            HLS_URL = url_text = URL_HLS400;
+            break;
+        case VK_1:
+            HLS_URL = url_text = URL_HLS600;
+            break;
+        case VK_2:
+            HLS_URL = url_text = URL_HLS800;
+            break;
+        case VK_3:
+            HLS_URL = url_text = URL_HLS1200;
+            break;
+
+        default:
+            break;
+    }
+}
+
+function init()
+{
+    document.onkeydown = playerKeyHandler;
+}
+
+</script>
+</head>
+<body bgcolor="white" onload="init()">
+<br>
+<select id="select_url" onchange="select_change()">
+    <option value="HLSEMPTY"></option>
+    <option value="HLS400">400 HLS stream</option>
+    <option value="HLS600">600 HLS stream</option>
+    <option value="HLS800">800 HLS stream</option>
+    <option value="HLS1200">1200 HLS stream</option>
+</select>
+<p id="select_hls_url"></p>
+<br>
+<button style="width:70px;" onclick="control('player4','play')"> play </button>
+<button style="width:70px;" onclick="control('player4','pause')"> pause </button>
+<button style="width:70px;" onclick="control('player4','stop')"> stop </button>
+<br>
+
+<div id="node">
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function vid_load()
+        {
+            var play_count = 0;
+            var player = document.createElement('video');
+            player.setAttribute('id', 'video1');
+            player.setAttribute('controls', true);
+            player.setAttribute('width', 640);
+            player.setAttribute('height', 480);
+            player.setAttribute('preload', 'none');
+            //player.setAttribute('crossorigin', 'anonymous');
+
+            var track = document.createElement('track');
+            track.setAttribute('kind', 'subtitles');
+            track.setAttribute('src', 'http://algamza.ipdisk.co.kr:80/publist/HDD1/util/Little.Forest.Winter.Spring.2015.1080p.BRRip.x264-PSW.srt');
+            track.setAttribute('srclang', 'ko');
+            track.setAttribute('label', 'korean');
+
+            player.appendChild(track);
+
+            document.body.appendChild(player);
+            player.src = "http://algamza.ipdisk.co.kr:80/publist/HDD1/util/Little.Forest.Winter.Spring.2015.1080p.BRRip.x264-PSW.mp4";
+
+            // case1
+            player.load();
+            player.play();
+        }
+    </script>
+</head>
+<body onload="vid_load()">
+</body>
+</html>
